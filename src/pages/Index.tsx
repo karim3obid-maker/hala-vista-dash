@@ -8,9 +8,10 @@ import { ReturnReasonsChart } from "@/components/analytics/ReturnReasonsChart";
 import { ProductsTable } from "@/components/analytics/ProductsTable";
 import { RegionsTable } from "@/components/analytics/RegionsTable";
 import { ReasonsTable } from "@/components/analytics/ReasonsTable";
+import { MediaBuyersTable } from "@/components/analytics/MediaBuyersTable";
 import { FooterActions } from "@/components/analytics/FooterActions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Package, MapPin, AlertCircle } from "lucide-react";
+import { Package, MapPin, AlertCircle, Users } from "lucide-react";
 
 const kpis = [
   {
@@ -102,24 +103,31 @@ const Index = () => {
 
         {/* Tabbed Tables Section */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
-          <TabsList className="flex w-full justify-end bg-card border border-border p-1 h-14 mb-6">
+          <TabsList className="flex w-full justify-end bg-card border border-border p-1 h-14 mb-6 rounded-2xl">
             <TabsTrigger
               value="products"
-              className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6"
+              className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6 rounded-xl"
             >
               <Package className="w-4 h-4" />
               المنتجات
             </TabsTrigger>
             <TabsTrigger
               value="regions"
-              className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6"
+              className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6 rounded-xl"
             >
               <MapPin className="w-4 h-4" />
               المناطق
             </TabsTrigger>
             <TabsTrigger
+              value="mediaBuyers"
+              className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6 rounded-xl"
+            >
+              <Users className="w-4 h-4" />
+              الميديا باير
+            </TabsTrigger>
+            <TabsTrigger
               value="reasons"
-              className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6"
+              className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6 rounded-xl"
             >
               <AlertCircle className="w-4 h-4" />
               الأسباب
@@ -132,6 +140,10 @@ const Index = () => {
 
           <TabsContent value="regions" className="animate-fade-in">
             <RegionsTable />
+          </TabsContent>
+
+          <TabsContent value="mediaBuyers" className="animate-fade-in">
+            <MediaBuyersTable />
           </TabsContent>
 
           <TabsContent value="reasons" className="animate-fade-in">
