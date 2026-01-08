@@ -9,9 +9,10 @@ import { ProductsTable } from "@/components/analytics/ProductsTable";
 import { RegionsTable } from "@/components/analytics/RegionsTable";
 import { ReasonsTable } from "@/components/analytics/ReasonsTable";
 import { MediaBuyersTable } from "@/components/analytics/MediaBuyersTable";
+import { ConfirmationAgentsTable } from "@/components/analytics/ConfirmationAgentsTable";
 import { FooterActions } from "@/components/analytics/FooterActions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Package, MapPin, AlertCircle, Users } from "lucide-react";
+import { Package, MapPin, AlertCircle, Users, Phone } from "lucide-react";
 
 const kpis = [
   {
@@ -126,6 +127,13 @@ const Index = () => {
               الميديا باير
             </TabsTrigger>
             <TabsTrigger
+              value="confirmationAgents"
+              className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6 rounded-xl"
+            >
+              <Phone className="w-4 h-4" />
+              موظفي التأكيد
+            </TabsTrigger>
+            <TabsTrigger
               value="reasons"
               className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6 rounded-xl"
             >
@@ -144,6 +152,10 @@ const Index = () => {
 
           <TabsContent value="mediaBuyers" className="animate-fade-in">
             <MediaBuyersTable />
+          </TabsContent>
+
+          <TabsContent value="confirmationAgents" className="animate-fade-in">
+            <ConfirmationAgentsTable />
           </TabsContent>
 
           <TabsContent value="reasons" className="animate-fade-in">
