@@ -84,8 +84,8 @@ export default {
         "3xl": "1.5rem",
       },
       boxShadow: {
-        card: "0 6px 18px hsla(0, 0%, 0%, 0.06)",
-        hover: "0 8px 24px hsla(255, 65%, 63%, 0.15)",
+        card: "0 6px 20px hsla(256, 58%, 30%, 0.06)",
+        hover: "0 10px 30px hsla(256, 58%, 35%, 0.12)",
       },
       spacing: {
         "18": "4.5rem",
