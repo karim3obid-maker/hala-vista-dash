@@ -94,22 +94,27 @@ const cancelledProducts = [
 export function ProductsTable() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const getCancelBadge = (rate: number) => {
-    if (rate >= 10) return "badge-danger";
-    if (rate >= 5) return "badge-warning";
-    return "badge-success";
+  const getInitialBgColor = (index: number) => {
+    const colors = [
+      "bg-[hsl(var(--primary)/0.15)] text-primary",
+      "bg-[hsl(var(--accent)/0.15)] text-accent",
+      "bg-emerald-100 text-emerald-600",
+      "bg-amber-100 text-amber-600",
+      "bg-rose-100 text-rose-600",
+    ];
+    return colors[index % colors.length];
   };
 
   return (
-    <div className="space-y-8">
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
       {/* Top Selling Products */}
-      <div className="data-table">
+      <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
         <div className="p-5 border-b border-border">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-bold text-foreground">
               أهم المنتجات مبيعًا
             </h3>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="h-8 w-8">
               <MoreVertical className="w-4 h-4" />
             </Button>
           </div>
@@ -119,52 +124,55 @@ export function ProductsTable() {
               placeholder="بحث في المنتجات..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pr-10"
+              className="pr-10 bg-muted/50 border-0 rounded-xl h-11"
             />
           </div>
         </div>
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="hover:bg-transparent">
-                <TableHead className="text-right">المنتج</TableHead>
-                <TableHead className="text-right">SKU</TableHead>
-                <TableHead className="text-right">
-                  <Button variant="ghost" size="sm" className="h-8 px-2 -mr-2">
+              <TableRow className="hover:bg-transparent border-b border-border">
+                <TableHead className="text-right text-muted-foreground font-medium text-sm py-4">المنتج</TableHead>
+                <TableHead className="text-right text-muted-foreground font-medium text-sm py-4">SKU</TableHead>
+                <TableHead className="text-right text-muted-foreground font-medium text-sm py-4">
+                  <Button variant="ghost" size="sm" className="h-8 px-2 -mr-2 text-muted-foreground font-medium">
                     عدد الطلبات
                     <ArrowUpDown className="w-3 h-3 mr-1" />
                   </Button>
                 </TableHead>
-                <TableHead className="text-right">الكمية</TableHead>
-                <TableHead className="text-right">الإيراد</TableHead>
-                <TableHead className="text-right">هامش الربح</TableHead>
-                <TableHead className="text-right">% إلغاء</TableHead>
+                <TableHead className="text-right text-muted-foreground font-medium text-sm py-4">الكمية</TableHead>
+                <TableHead className="text-right text-muted-foreground font-medium text-sm py-4">الإيراد</TableHead>
+                <TableHead className="text-right text-muted-foreground font-medium text-sm py-4">هامش الربح</TableHead>
+                <TableHead className="text-right text-muted-foreground font-medium text-sm py-4">% إلغاء</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {topProducts.map((product) => (
-                <TableRow key={product.id} className="h-12 cursor-pointer">
-                  <TableCell className="font-medium">
+              {topProducts.map((product, index) => (
+                <TableRow 
+                  key={product.id} 
+                  className={`h-14 cursor-pointer border-0 ${index % 2 === 1 ? 'bg-muted/30' : ''} hover:bg-muted/50 transition-colors`}
+                >
+                  <TableCell className="font-medium py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center text-xs font-bold text-muted-foreground">
+                      <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold ${getInitialBgColor(index)}`}>
                         {product.name.charAt(0)}
                       </div>
                       {product.name}
                     </div>
                   </TableCell>
-                  <TableCell className="text-muted-foreground font-mono text-sm">
+                  <TableCell className="text-muted-foreground font-mono text-sm py-4">
                     {product.sku}
                   </TableCell>
-                  <TableCell>{product.orders.toLocaleString("ar-SA")}</TableCell>
-                  <TableCell>{product.quantity.toLocaleString("ar-SA")}</TableCell>
-                  <TableCell className="font-medium">
+                  <TableCell className="py-4">{product.orders.toLocaleString("ar-SA")}</TableCell>
+                  <TableCell className="py-4">{product.quantity.toLocaleString("ar-SA")}</TableCell>
+                  <TableCell className="font-medium py-4">
                     {product.revenue.toLocaleString("ar-SA")} SAR
                   </TableCell>
-                  <TableCell>
-                    <span className="badge-success">{product.margin}%</span>
+                  <TableCell className="py-4">
+                    <span className="text-emerald-600 font-semibold">{product.margin}%</span>
                   </TableCell>
-                  <TableCell>
-                    <span className={getCancelBadge(product.cancelRate)}>
+                  <TableCell className="py-4">
+                    <span className={`font-semibold ${product.cancelRate >= 10 ? 'text-destructive bg-destructive/10 px-2 py-1 rounded-md' : 'text-destructive'}`}>
                       {product.cancelRate}%
                     </span>
                   </TableCell>
@@ -176,7 +184,7 @@ export function ProductsTable() {
       </div>
 
       {/* Highest Cancelled Products */}
-      <div className="data-table">
+      <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
         <div className="p-5 border-b border-border">
           <h3 className="text-lg font-bold text-foreground">
             المنتجات الأعلى إلغاءً
@@ -185,26 +193,36 @@ export function ProductsTable() {
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="hover:bg-transparent">
-                <TableHead className="text-right">المنتج</TableHead>
-                <TableHead className="text-right">الإلغاءات</TableHead>
-                <TableHead className="text-right">إجمالي الطلبات</TableHead>
-                <TableHead className="text-right">% إلغاء</TableHead>
-                <TableHead className="text-right">ملاحظة</TableHead>
+              <TableRow className="hover:bg-transparent border-b border-border">
+                <TableHead className="text-right text-muted-foreground font-medium text-sm py-4">المنتج</TableHead>
+                <TableHead className="text-right text-muted-foreground font-medium text-sm py-4">الإلغاءات</TableHead>
+                <TableHead className="text-right text-muted-foreground font-medium text-sm py-4">إجمالي الطلبات</TableHead>
+                <TableHead className="text-right text-muted-foreground font-medium text-sm py-4">% إلغاء</TableHead>
+                <TableHead className="text-right text-muted-foreground font-medium text-sm py-4">ملاحظة</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {cancelledProducts.map((product) => (
-                <TableRow key={product.id} className="h-12 cursor-pointer">
-                  <TableCell className="font-medium">{product.name}</TableCell>
-                  <TableCell className="text-destructive font-medium">
+              {cancelledProducts.map((product, index) => (
+                <TableRow 
+                  key={product.id} 
+                  className={`h-14 cursor-pointer border-0 ${index % 2 === 1 ? 'bg-muted/30' : ''} hover:bg-muted/50 transition-colors`}
+                >
+                  <TableCell className="font-medium py-4">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold ${getInitialBgColor(index)}`}>
+                        {product.name.charAt(0)}
+                      </div>
+                      {product.name}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-destructive font-semibold py-4">
                     {product.cancellations}
                   </TableCell>
-                  <TableCell>{product.totalOrders}</TableCell>
-                  <TableCell>
-                    <span className="badge-danger">{product.cancelRate}%</span>
+                  <TableCell className="py-4">{product.totalOrders}</TableCell>
+                  <TableCell className="py-4">
+                    <span className="text-destructive bg-destructive/10 px-2 py-1 rounded-md font-semibold">{product.cancelRate}%</span>
                   </TableCell>
-                  <TableCell className="text-muted-foreground text-sm">
+                  <TableCell className="text-muted-foreground text-sm py-4">
                     {product.note}
                   </TableCell>
                 </TableRow>
