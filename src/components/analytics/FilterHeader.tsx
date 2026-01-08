@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calendar, ChevronDown, Filter, RotateCcw } from "lucide-react";
+import { Calendar, ChevronDown, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -8,8 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 
 interface FilterHeaderProps {
   onFilterChange?: (filters: FilterState) => void;
@@ -17,40 +15,52 @@ interface FilterHeaderProps {
 
 interface FilterState {
   period: string;
-  channel: string;
+  store: string;
+  product: string;
+  seller: string;
+  confirmAgent: string;
+  paymentMethod: string;
   country: string;
   shippingCompany: string;
-  product: string;
-  paymentMethod: string;
-  revenueAfterDelivery: boolean;
 }
 
 const periods = [
   { value: "today", label: "اليوم" },
+  { value: "yesterday", label: "أمس" },
   { value: "7days", label: "آخر 7 أيام" },
   { value: "30days", label: "آخر 30 يوم" },
-  { value: "custom", label: "مخصص" },
+  { value: "thisMonth", label: "هذا الشهر" },
+  { value: "lastMonth", label: "الشهر الماضي" },
+  { value: "custom", label: "فترة مخصصة" },
 ];
 
-const channels = [
-  { value: "all", label: "جميع القنوات" },
-  { value: "website", label: "الموقع" },
-  { value: "app", label: "التطبيق" },
-  { value: "whatsapp", label: "واتساب" },
+const stores = [
+  { value: "all", label: "جميع المتاجر" },
+  { value: "store1", label: "متجر الرياض" },
+  { value: "store2", label: "متجر جدة" },
+  { value: "store3", label: "متجر الدمام" },
 ];
 
-const countries = [
-  { value: "all", label: "جميع الدول" },
-  { value: "sa", label: "السعودية" },
-  { value: "ae", label: "الإمارات" },
-  { value: "eg", label: "مصر" },
+const products = [
+  { value: "all", label: "جميع المنتجات" },
+  { value: "prod1", label: "حقيبة جلد طبيعي" },
+  { value: "prod2", label: "ساعة كلاسيكية" },
+  { value: "prod3", label: "عطر فاخر" },
+  { value: "prod4", label: "نظارة شمسية" },
 ];
 
-const shippingCompanies = [
-  { value: "all", label: "جميع شركات الشحن" },
-  { value: "aramex", label: "أرامكس" },
-  { value: "smsa", label: "SMSA" },
-  { value: "dhl", label: "DHL" },
+const sellers = [
+  { value: "all", label: "جميع البائعين" },
+  { value: "seller1", label: "أحمد محمد" },
+  { value: "seller2", label: "سارة علي" },
+  { value: "seller3", label: "خالد عبدالله" },
+];
+
+const confirmAgents = [
+  { value: "all", label: "جميع الأيجنتس" },
+  { value: "agent1", label: "محمد أحمد" },
+  { value: "agent2", label: "فاطمة حسن" },
+  { value: "agent3", label: "عمر سعيد" },
 ];
 
 const paymentMethods = [
@@ -58,20 +68,39 @@ const paymentMethods = [
   { value: "cod", label: "الدفع عند الاستلام" },
   { value: "card", label: "بطاقة ائتمان" },
   { value: "mada", label: "مدى" },
+  { value: "stcpay", label: "STC Pay" },
+  { value: "tabby", label: "تابي" },
+];
+
+const countries = [
+  { value: "all", label: "جميع الدول" },
+  { value: "sa", label: "السعودية" },
+  { value: "ae", label: "الإمارات" },
+  { value: "eg", label: "مصر" },
+  { value: "kw", label: "الكويت" },
+];
+
+const shippingCompanies = [
+  { value: "all", label: "جميع شركات الشحن" },
+  { value: "aramex", label: "أرامكس" },
+  { value: "smsa", label: "SMSA" },
+  { value: "dhl", label: "DHL" },
+  { value: "zajil", label: "زاجل" },
 ];
 
 export function FilterHeader({ onFilterChange }: FilterHeaderProps) {
   const [filters, setFilters] = useState<FilterState>({
     period: "30days",
-    channel: "all",
+    store: "all",
+    product: "all",
+    seller: "all",
+    confirmAgent: "all",
+    paymentMethod: "all",
     country: "all",
     shippingCompany: "all",
-    product: "all",
-    paymentMethod: "all",
-    revenueAfterDelivery: false,
   });
 
-  const handleFilterChange = (key: keyof FilterState, value: string | boolean) => {
+  const handleFilterChange = (key: keyof FilterState, value: string) => {
     const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
     onFilterChange?.(newFilters);
@@ -80,12 +109,13 @@ export function FilterHeader({ onFilterChange }: FilterHeaderProps) {
   const resetFilters = () => {
     const defaultFilters: FilterState = {
       period: "30days",
-      channel: "all",
+      store: "all",
+      product: "all",
+      seller: "all",
+      confirmAgent: "all",
+      paymentMethod: "all",
       country: "all",
       shippingCompany: "all",
-      product: "all",
-      paymentMethod: "all",
-      revenueAfterDelivery: false,
     };
     setFilters(defaultFilters);
     onFilterChange?.(defaultFilters);
@@ -94,15 +124,16 @@ export function FilterHeader({ onFilterChange }: FilterHeaderProps) {
   return (
     <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border">
       <div className="container max-w-[1280px] mx-auto px-6 py-4">
-        <div className="flex flex-wrap items-center gap-3">
-          {/* Period Filter */}
+        {/* First Row - Main Filters */}
+        <div className="flex flex-wrap items-center gap-3 mb-3">
+          {/* Period Filter - Larger with icon */}
           <Select
             value={filters.period}
             onValueChange={(value) => handleFilterChange("period", value)}
           >
-            <SelectTrigger className="w-[140px] bg-background">
+            <SelectTrigger className="w-[180px] h-11 bg-background border-border rounded-xl">
               <Calendar className="w-4 h-4 ml-2 text-muted-foreground" />
-              <SelectValue />
+              <SelectValue placeholder="اختر الفترة الزمنية" />
             </SelectTrigger>
             <SelectContent>
               {periods.map((period) => (
@@ -113,18 +144,89 @@ export function FilterHeader({ onFilterChange }: FilterHeaderProps) {
             </SelectContent>
           </Select>
 
-          {/* Channel Filter */}
+          {/* Store Filter */}
           <Select
-            value={filters.channel}
-            onValueChange={(value) => handleFilterChange("channel", value)}
+            value={filters.store}
+            onValueChange={(value) => handleFilterChange("store", value)}
           >
-            <SelectTrigger className="w-[140px] bg-background">
-              <SelectValue />
+            <SelectTrigger className="w-[150px] h-11 bg-background border-border rounded-xl">
+              <SelectValue placeholder="اختر المتجر..." />
             </SelectTrigger>
             <SelectContent>
-              {channels.map((channel) => (
-                <SelectItem key={channel.value} value={channel.value}>
-                  {channel.label}
+              {stores.map((store) => (
+                <SelectItem key={store.value} value={store.value}>
+                  {store.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Product Filter */}
+          <Select
+            value={filters.product}
+            onValueChange={(value) => handleFilterChange("product", value)}
+          >
+            <SelectTrigger className="w-[160px] h-11 bg-background border-border rounded-xl">
+              <SelectValue placeholder="اختر المنتج..." />
+            </SelectTrigger>
+            <SelectContent>
+              {products.map((product) => (
+                <SelectItem key={product.value} value={product.value}>
+                  {product.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Seller Filter */}
+          <Select
+            value={filters.seller}
+            onValueChange={(value) => handleFilterChange("seller", value)}
+          >
+            <SelectTrigger className="w-[150px] h-11 bg-background border-border rounded-xl">
+              <SelectValue placeholder="اختر البائع..." />
+            </SelectTrigger>
+            <SelectContent>
+              {sellers.map((seller) => (
+                <SelectItem key={seller.value} value={seller.value}>
+                  {seller.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Confirmation Agent Filter */}
+          <Select
+            value={filters.confirmAgent}
+            onValueChange={(value) => handleFilterChange("confirmAgent", value)}
+          >
+            <SelectTrigger className="w-[160px] h-11 bg-background border-border rounded-xl">
+              <SelectValue placeholder="أيجنت التأكيد..." />
+            </SelectTrigger>
+            <SelectContent>
+              {confirmAgents.map((agent) => (
+                <SelectItem key={agent.value} value={agent.value}>
+                  {agent.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Second Row - Additional Filters */}
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Payment Method Filter */}
+          <Select
+            value={filters.paymentMethod}
+            onValueChange={(value) => handleFilterChange("paymentMethod", value)}
+          >
+            <SelectTrigger className="w-[160px] h-11 bg-background border-border rounded-xl">
+              <SelectValue placeholder="طريقة الدفع..." />
+            </SelectTrigger>
+            <SelectContent>
+              {paymentMethods.map((method) => (
+                <SelectItem key={method.value} value={method.value}>
+                  {method.label}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -135,8 +237,8 @@ export function FilterHeader({ onFilterChange }: FilterHeaderProps) {
             value={filters.country}
             onValueChange={(value) => handleFilterChange("country", value)}
           >
-            <SelectTrigger className="w-[140px] bg-background">
-              <SelectValue />
+            <SelectTrigger className="w-[140px] h-11 bg-background border-border rounded-xl">
+              <SelectValue placeholder="اختر الدولة..." />
             </SelectTrigger>
             <SelectContent>
               {countries.map((country) => (
@@ -152,8 +254,8 @@ export function FilterHeader({ onFilterChange }: FilterHeaderProps) {
             value={filters.shippingCompany}
             onValueChange={(value) => handleFilterChange("shippingCompany", value)}
           >
-            <SelectTrigger className="w-[160px] bg-background">
-              <SelectValue />
+            <SelectTrigger className="w-[170px] h-11 bg-background border-border rounded-xl">
+              <SelectValue placeholder="شركة الشحن..." />
             </SelectTrigger>
             <SelectContent>
               {shippingCompanies.map((company) => (
@@ -164,46 +266,12 @@ export function FilterHeader({ onFilterChange }: FilterHeaderProps) {
             </SelectContent>
           </Select>
 
-          {/* Payment Method Filter */}
-          <Select
-            value={filters.paymentMethod}
-            onValueChange={(value) => handleFilterChange("paymentMethod", value)}
-          >
-            <SelectTrigger className="w-[160px] bg-background">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {paymentMethods.map((method) => (
-                <SelectItem key={method.value} value={method.value}>
-                  {method.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          {/* Revenue Toggle */}
-          <div className="flex items-center gap-2 px-4 py-2 bg-background rounded-lg border border-border">
-            <Switch
-              id="revenue-toggle"
-              checked={filters.revenueAfterDelivery}
-              onCheckedChange={(checked) =>
-                handleFilterChange("revenueAfterDelivery", checked)
-              }
-            />
-            <Label
-              htmlFor="revenue-toggle"
-              className="text-sm font-medium cursor-pointer"
-            >
-              إيراد بعد التسليم
-            </Label>
-          </div>
-
           {/* Reset Button */}
           <Button
             variant="ghost"
             size="sm"
             onClick={resetFilters}
-            className="mr-auto text-muted-foreground hover:text-foreground"
+            className="h-11 px-4 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-xl mr-auto"
           >
             <RotateCcw className="w-4 h-4 ml-2" />
             إعادة تعيين
