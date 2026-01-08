@@ -10,9 +10,10 @@ import { RegionsTable } from "@/components/analytics/RegionsTable";
 import { ReasonsTable } from "@/components/analytics/ReasonsTable";
 import { MediaBuyersTable } from "@/components/analytics/MediaBuyersTable";
 import { ConfirmationAgentsTable } from "@/components/analytics/ConfirmationAgentsTable";
+import { FinancialTable } from "@/components/analytics/FinancialTable";
 import { FooterActions } from "@/components/analytics/FooterActions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Package, MapPin, AlertCircle, Users, Phone } from "lucide-react";
+import { Package, MapPin, AlertCircle, Users, Phone, Wallet } from "lucide-react";
 
 const kpis = [
   {
@@ -113,6 +114,13 @@ const Index = () => {
               المنتجات
             </TabsTrigger>
             <TabsTrigger
+              value="financial"
+              className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6 rounded-xl"
+            >
+              <Wallet className="w-4 h-4" />
+              المالية
+            </TabsTrigger>
+            <TabsTrigger
               value="regions"
               className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6 rounded-xl"
             >
@@ -144,6 +152,10 @@ const Index = () => {
 
           <TabsContent value="products" className="animate-fade-in">
             <ProductsTable />
+          </TabsContent>
+
+          <TabsContent value="financial" className="animate-fade-in">
+            <FinancialTable />
           </TabsContent>
 
           <TabsContent value="regions" className="animate-fade-in">
