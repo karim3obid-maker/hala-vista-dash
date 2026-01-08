@@ -102,7 +102,7 @@ const Index = () => {
 
         {/* Tabbed Tables Section */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
-          <TabsList className="w-full justify-start bg-card border border-border p-1 h-14 mb-6">
+          <TabsList className="flex w-full justify-end bg-card border border-border p-1 h-14 mb-6">
             <TabsTrigger
               value="products"
               className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6"
