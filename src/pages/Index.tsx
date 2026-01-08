@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FilterHeader } from "@/components/analytics/FilterHeader";
 import { KPICard } from "@/components/analytics/KPICard";
+import { OrderCountsBar } from "@/components/analytics/OrderCountsBar";
 import { RatesChart } from "@/components/analytics/RatesChart";
 import { OrderStatusChart } from "@/components/analytics/OrderStatusChart";
 import { CancellationReasonsChart } from "@/components/analytics/CancellationReasonsChart";
@@ -70,12 +71,15 @@ const Index = () => {
 
       <main className="container max-w-[1280px] mx-auto px-6 py-8">
         {/* Page Title */}
-        <div className="mb-8">
+        <div className="mb-6">
           <h1 className="text-2xl font-bold text-foreground">لوحة التحليلات</h1>
           <p className="text-muted-foreground mt-1">
             نظرة شاملة على أداء متجرك
           </p>
         </div>
+
+        {/* Order Counts Bar */}
+        <OrderCountsBar />
 
         {/* KPI Cards Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-8">
