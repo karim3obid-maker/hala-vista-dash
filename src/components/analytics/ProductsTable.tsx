@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, MoreVertical, ArrowUpDown, ChevronDown, ChevronUp } from "lucide-react";
+import { Search, MoreVertical, ArrowUpDown, ChevronDown, ChevronUp, Download } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -202,8 +202,9 @@ export function ProductsTable() {
             <h3 className="text-lg font-bold text-foreground">
               أهم المنتجات مبيعًا
             </h3>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <MoreVertical className="w-4 h-4" />
+            <Button variant="outline" size="sm" className="gap-2">
+              <Download className="w-4 h-4" />
+              تحميل
             </Button>
           </div>
           <div className="relative">
@@ -325,10 +326,14 @@ export function ProductsTable() {
 
       {/* Highest Cancelled Products */}
       <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
-        <div className="p-5 border-b border-border">
+        <div className="p-5 border-b border-border flex items-center justify-between">
           <h3 className="text-lg font-bold text-foreground">
             المنتجات الأعلى إلغاءً
           </h3>
+          <Button variant="outline" size="sm" className="gap-2">
+            <Download className="w-4 h-4" />
+            تحميل
+          </Button>
         </div>
         <div className="overflow-x-auto">
           <Table>

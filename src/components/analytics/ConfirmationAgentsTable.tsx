@@ -9,7 +9,8 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Search, TrendingUp, TrendingDown, Phone } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Search, TrendingUp, TrendingDown, Phone, Download } from "lucide-react";
 
 const agentsData = [
   { 
@@ -84,12 +85,18 @@ export const ConfirmationAgentsTable = () => {
           </div>
           <h3 className="text-lg font-semibold">أداء موظفي التأكيد</h3>
         </div>
-        <div className="relative w-64">
-          <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input 
-            placeholder="بحث عن موظف..." 
-            className="pr-10 rounded-xl bg-muted/50 border-0"
-          />
+        <div className="flex items-center gap-3">
+          <div className="relative w-64">
+            <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input 
+              placeholder="بحث عن موظف..." 
+              className="pr-10 rounded-xl bg-muted/50 border-0"
+            />
+          </div>
+          <Button variant="outline" size="sm" className="gap-2">
+            <Download className="w-4 h-4" />
+            تحميل
+          </Button>
         </div>
       </div>
       
