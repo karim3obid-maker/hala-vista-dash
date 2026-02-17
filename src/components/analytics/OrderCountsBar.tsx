@@ -4,7 +4,10 @@ import {
   Truck, 
   PackageCheck, 
   RotateCcw, 
-  XCircle 
+  XCircle,
+  Clock,
+  Ban,
+  AlertTriangle
 } from "lucide-react";
 
 const orderCounts = [
@@ -21,6 +24,13 @@ const orderCounts = [
     icon: CheckCircle2,
     color: "text-emerald-500",
     bgColor: "bg-emerald-500/10",
+  },
+  {
+    label: "جاري العمل عليها",
+    value: 312,
+    icon: Clock,
+    color: "text-amber-500",
+    bgColor: "bg-amber-500/10",
   },
   {
     label: "تم شحنها",
@@ -44,17 +54,31 @@ const orderCounts = [
     bgColor: "bg-orange-500/10",
   },
   {
+    label: "ملغاة",
+    value: 120,
+    icon: Ban,
+    color: "text-red-500",
+    bgColor: "bg-red-500/10",
+  },
+  {
     label: "ملغاة من الشحن",
     value: 80,
     icon: XCircle,
-    color: "text-red-500",
-    bgColor: "bg-red-500/10",
+    color: "text-red-400",
+    bgColor: "bg-red-400/10",
+  },
+  {
+    label: "فيك",
+    value: 64,
+    icon: AlertTriangle,
+    color: "text-rose-600",
+    bgColor: "bg-rose-600/10",
   },
 ];
 
 export function OrderCountsBar() {
   return (
-    <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mb-6">
+    <div className="grid grid-cols-3 md:grid-cols-9 gap-3 mb-6">
       {orderCounts.map((item, index) => {
         const Icon = item.icon;
         return (
