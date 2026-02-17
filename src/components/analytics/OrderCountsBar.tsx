@@ -78,7 +78,7 @@ const orderCounts = [
 
 export function OrderCountsBar() {
   return (
-    <div className="grid grid-cols-3 md:grid-cols-9 gap-3 mb-6">
+    <div className="grid grid-cols-3 md:grid-cols-5 gap-3 mb-6">
       {orderCounts.map((item, index) => {
         const Icon = item.icon;
         return (
