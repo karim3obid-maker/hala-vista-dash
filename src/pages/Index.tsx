@@ -78,22 +78,8 @@ const Index = () => {
           </p>
         </div>
 
-        {/* Order Counts Bar */}
+        {/* Order Counts Bar - 4 Sections */}
         <OrderCountsBar />
-
-        {/* KPI Cards Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-8">
-          {kpis.map((kpi, index) => (
-            <KPICard
-              key={index}
-              title={kpi.title}
-              value={kpi.value}
-              suffix={kpi.suffix}
-              change={kpi.change}
-              tooltip={kpi.tooltip}
-            />
-          ))}
-        </div>
 
         {/* Charts Grid - Row 1 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
