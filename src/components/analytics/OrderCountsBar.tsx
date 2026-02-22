@@ -20,9 +20,13 @@ import {
   TrendingDown,
   Megaphone,
   Target,
-  MousePointerClick
+  MousePointerClick,
+  Plus,
+  X
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 
 /* ── Data ── */
@@ -203,16 +207,36 @@ function FlowBanner() {
 
 /* ── Main Component ── */
 export function OrderCountsBar() {
-  const [adCosts, setAdCosts] = useState<Record<string, string>>({});
-  
-  const totalAdCost = Object.values(adCosts).reduce((sum, v) => sum + (parseFloat(v) || 0), 0);
+  const [adCosts, setAdCosts] = useState<{ productId: string; cost: string }[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<string>("");
+  const [currentCost, setCurrentCost] = useState<string>("");
+
+  const totalAdCost = adCosts.reduce((sum, item) => sum + (parseFloat(item.cost) || 0), 0);
   const totalOrders = 3456;
   const deliveredOrders = 2654;
   const totalSales = 245890;
 
-  const handleAdCostChange = (productId: string, value: string) => {
-    setAdCosts(prev => ({ ...prev, [productId]: value }));
+  const addAdCost = () => {
+    if (!selectedProduct || !currentCost) return;
+    // Update if product already exists, otherwise add
+    setAdCosts(prev => {
+      const existing = prev.findIndex(p => p.productId === selectedProduct);
+      if (existing >= 0) {
+        const updated = [...prev];
+        updated[existing] = { productId: selectedProduct, cost: currentCost };
+        return updated;
+      }
+      return [...prev, { productId: selectedProduct, cost: currentCost }];
+    });
+    setSelectedProduct("");
+    setCurrentCost("");
   };
+
+  const removeAdCost = (productId: string) => {
+    setAdCosts(prev => prev.filter(p => p.productId !== productId));
+  };
+
+  const getProductName = (id: string) => products.find(p => p.id === id)?.name || id;
 
   return (
     <div className="space-y-6 mb-8">
@@ -235,47 +259,81 @@ export function OrderCountsBar() {
         </div>
       </div>
 
-      {/* تكاليف الإعلان لكل منتج */}
+      {/* تكاليف الإعلان */}
       <div className="bg-orange-500/[0.02] rounded-2xl p-5 border border-orange-500/10">
-        <SectionHeader title="تكاليف الإعلان حسب المنتج" icon={Megaphone} accentColor="bg-orange-500" />
+        <SectionHeader title="تكاليف الإعلان" icon={Megaphone} accentColor="bg-orange-500" />
         
-        {/* Products ad cost inputs */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
-          {products.map((product) => {
-            const cost = parseFloat(adCosts[product.id] || "") || 0;
-            const costPerLead = cost > 0 ? (cost / product.orders).toFixed(2) : "—";
-            return (
-              <div key={product.id} className="bg-card rounded-xl border border-border p-3.5 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono text-muted-foreground">{product.id}</span>
-                  <span className="text-sm font-bold text-foreground">{product.name}</span>
-                </div>
-                <Input
-                  type="number"
-                  placeholder="تكلفة الإعلان (SAR)"
-                  value={adCosts[product.id] || ""}
-                  onChange={(e) => handleAdCostChange(product.id, e.target.value)}
-                  className="bg-muted/30 border-0 rounded-lg h-9 text-sm text-right"
-                  min="0"
-                />
-                <div className="flex items-center justify-between text-xs">
-                  <span className={`font-medium ${cost > 0 ? "text-orange-500" : "text-muted-foreground/40"}`}>
-                    {cost > 0 ? `${costPerLead} SAR/ليد` : "لم يُحدد"}
-                  </span>
-                  <span className="text-muted-foreground">{product.orders} طلب</span>
-                </div>
-              </div>
-            );
-          })}
+        {/* Add ad cost row: dropdown + input + button */}
+        <div className="flex items-center gap-3 mb-4">
+          <Select value={selectedProduct} onValueChange={setSelectedProduct}>
+            <SelectTrigger className="w-[200px] h-11 bg-card border-border rounded-xl">
+              <SelectValue placeholder="اختر المنتج..." />
+            </SelectTrigger>
+            <SelectContent className="bg-card border-border z-50">
+              {products.map((p) => (
+                <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <div className="relative w-[180px]">
+            <Input
+              type="number"
+              placeholder="تكلفة الإعلان (SAR)"
+              value={currentCost}
+              onChange={(e) => setCurrentCost(e.target.value)}
+              className="bg-card border-border rounded-xl h-11 text-right"
+              min="0"
+            />
+          </div>
+          <Button
+            onClick={addAdCost}
+            disabled={!selectedProduct || !currentCost}
+            className="h-11 px-4 rounded-xl gap-2 bg-orange-500 hover:bg-orange-600 text-white"
+          >
+            <Plus className="w-4 h-4" />
+            إضافة
+          </Button>
         </div>
 
-        {/* Summary cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <StatCard item={{ label: "إجمالي تكاليف الإعلان", value: totalAdCost > 0 ? totalAdCost.toLocaleString("ar-SA") : "—", suffix: "SAR", icon: Megaphone, color: "text-orange-500", bgColor: "bg-orange-500/10", highlight: totalAdCost > 0 }} />
-          <StatCard item={{ label: "تكلفة الليد الإجمالية", value: totalAdCost > 0 ? (totalAdCost / totalOrders).toFixed(2) : "—", suffix: "SAR", icon: MousePointerClick, color: "text-orange-600", bgColor: "bg-orange-600/10" }} />
-          <StatCard item={{ label: "تكلفة الطلب المستلم", value: totalAdCost > 0 ? (totalAdCost / deliveredOrders).toFixed(2) : "—", suffix: "SAR", icon: Target, color: "text-amber-600", bgColor: "bg-amber-600/10" }} />
-          <StatCard item={{ label: "ROAS", value: totalAdCost > 0 ? `${(totalSales / totalAdCost).toFixed(2)}x` : "—", icon: TrendingUp, color: "text-emerald-500", bgColor: "bg-emerald-500/10" }} />
-        </div>
+        {/* Added products list */}
+        {adCosts.length > 0 && (
+          <div className="space-y-2 mb-4">
+            {adCosts.map((item) => {
+              const product = products.find(p => p.id === item.productId);
+              const cost = parseFloat(item.cost) || 0;
+              const costPerLead = product && cost > 0 ? (cost / product.orders).toFixed(2) : "—";
+              return (
+                <div key={item.productId} className="flex items-center justify-between bg-card rounded-xl border border-border p-3">
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeAdCost(item.productId)}
+                      className="h-7 w-7 p-0 text-muted-foreground hover:text-red-500"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </Button>
+                    <span className="text-xs text-muted-foreground">{costPerLead} SAR/ليد</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="font-bold text-orange-500">{cost.toLocaleString("ar-SA")} SAR</span>
+                    <span className="text-sm font-medium text-foreground">{getProductName(item.productId)}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Summary */}
+        {totalAdCost > 0 && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-3 border-t border-orange-500/10">
+            <StatCard item={{ label: "إجمالي تكاليف الإعلان", value: totalAdCost.toLocaleString("ar-SA"), suffix: "SAR", icon: Megaphone, color: "text-orange-500", bgColor: "bg-orange-500/10", highlight: true }} />
+            <StatCard item={{ label: "تكلفة الليد", value: (totalAdCost / totalOrders).toFixed(2), suffix: "SAR", icon: MousePointerClick, color: "text-orange-600", bgColor: "bg-orange-600/10" }} />
+            <StatCard item={{ label: "تكلفة الطلب المستلم", value: (totalAdCost / deliveredOrders).toFixed(2), suffix: "SAR", icon: Target, color: "text-amber-600", bgColor: "bg-amber-600/10" }} />
+            <StatCard item={{ label: "ROAS", value: `${(totalSales / totalAdCost).toFixed(2)}x`, icon: TrendingUp, color: "text-emerald-500", bgColor: "bg-emerald-500/10" }} />
+          </div>
+        )}
       </div>
 
       {/* المالية */}
@@ -283,9 +341,7 @@ export function OrderCountsBar() {
         <SectionHeader title="المالية" icon={Wallet} accentColor="bg-emerald-600" />
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           {financialItems.map((item, i) => <StatCard key={i} item={item} />)}
-          {totalAdCost > 0 && (
-            <StatCard item={{ label: "تكاليف الإعلان", value: totalAdCost.toLocaleString("ar-SA"), suffix: "SAR", icon: Megaphone, color: "text-orange-500", bgColor: "bg-orange-500/10" }} />
-          )}
+          <StatCard item={{ label: "تكاليف الإعلان", value: totalAdCost > 0 ? totalAdCost.toLocaleString("ar-SA") : "0", suffix: "SAR", icon: Megaphone, color: "text-orange-500", bgColor: "bg-orange-500/10" }} />
         </div>
       </div>
 
