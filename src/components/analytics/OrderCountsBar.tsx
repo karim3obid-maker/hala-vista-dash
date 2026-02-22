@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { 
   ShoppingCart, 
   CheckCircle2, 
@@ -16,8 +17,12 @@ import {
   BarChart3,
   ArrowLeft,
   TrendingUp,
-  TrendingDown
+  TrendingDown,
+  Megaphone,
+  Target,
+  MousePointerClick
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 
 /* ── Data ── */
@@ -187,6 +192,16 @@ function FlowBanner() {
 
 /* ── Main Component ── */
 export function OrderCountsBar() {
+  const [adCost, setAdCost] = useState<string>("");
+  const adCostNum = parseFloat(adCost) || 0;
+  const totalOrders = 3456;
+  const deliveredOrders = 2654;
+  const totalSales = 245890;
+  const costPerLead = adCostNum > 0 ? (adCostNum / totalOrders).toFixed(2) : "0";
+  const costPerDelivered = adCostNum > 0 ? (adCostNum / deliveredOrders).toFixed(2) : "0";
+  const roas = adCostNum > 0 ? (totalSales / adCostNum).toFixed(2) : "0";
+  const adPercentage = adCostNum > 0 ? ((adCostNum / totalSales) * 100).toFixed(1) : "0";
+
   return (
     <div className="space-y-6 mb-8">
       {/* Flow Banner */}
@@ -211,11 +226,43 @@ export function OrderCountsBar() {
         </div>
       </div>
 
+      {/* تكاليف الإعلان - Input + Display */}
+      <div className="bg-orange-500/[0.02] rounded-2xl p-5 border border-orange-500/10">
+        <SectionHeader title="تكاليف الإعلان" icon={Megaphone} accentColor="bg-orange-500" />
+        <div className="flex items-center gap-4 mb-4">
+          <div className="relative flex-1 max-w-xs">
+            <Megaphone className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              type="number"
+              placeholder="أدخل تكلفة الإعلان (SAR)..."
+              value={adCost}
+              onChange={(e) => setAdCost(e.target.value)}
+              className="pr-10 bg-card border-border rounded-xl h-11 text-right"
+              min="0"
+            />
+          </div>
+          {adCostNum > 0 && (
+            <span className="text-sm text-muted-foreground">
+              الميزانية: <span className="font-bold text-foreground">{adCostNum.toLocaleString("ar-SA")} SAR</span>
+            </span>
+          )}
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <StatCard item={{ label: "تكلفة الإعلان", value: adCostNum > 0 ? adCostNum.toLocaleString("ar-SA") : "—", suffix: "SAR", icon: Megaphone, color: "text-orange-500", bgColor: "bg-orange-500/10", highlight: adCostNum > 0 }} />
+          <StatCard item={{ label: "تكلفة الليد", value: costPerLead, suffix: "SAR", icon: MousePointerClick, color: "text-orange-600", bgColor: "bg-orange-600/10" }} />
+          <StatCard item={{ label: "تكلفة الطلب المستلم", value: costPerDelivered, suffix: "SAR", icon: Target, color: "text-amber-600", bgColor: "bg-amber-600/10" }} />
+          <StatCard item={{ label: "ROAS", value: adCostNum > 0 ? `${roas}x` : "—", icon: TrendingUp, color: "text-emerald-500", bgColor: "bg-emerald-500/10" }} />
+        </div>
+      </div>
+
       {/* المالية */}
       <div className="bg-emerald-500/[0.02] rounded-2xl p-5 border border-emerald-500/10">
         <SectionHeader title="المالية" icon={Wallet} accentColor="bg-emerald-600" />
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           {financialItems.map((item, i) => <StatCard key={i} item={item} />)}
+          {adCostNum > 0 && (
+            <StatCard item={{ label: "تكاليف الإعلان", value: adCostNum.toLocaleString("ar-SA"), suffix: "SAR", icon: Megaphone, color: "text-orange-500", bgColor: "bg-orange-500/10" }} />
+          )}
         </div>
       </div>
 
