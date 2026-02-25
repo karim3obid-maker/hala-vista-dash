@@ -49,14 +49,14 @@ const shippingItems = [
 ];
 
 const products = [
-  { id: "BAG-001", name: "حقيبة جلد طبيعي", orders: 245, deliveredOrders: 220, salesRevenue: 48750 },
-  { id: "WTC-042", name: "ساعة كلاسيكية", orders: 198, deliveredOrders: 185, salesRevenue: 59400 },
-  { id: "PRF-115", name: "عطر فاخر", orders: 176, deliveredOrders: 155, salesRevenue: 44000 },
-  { id: "SUN-088", name: "نظارة شمسية", orders: 156, deliveredOrders: 145, salesRevenue: 27000 },
-  { id: "SHO-203", name: "حذاء رياضي", orders: 142, deliveredOrders: 118, salesRevenue: 31000 },
-  { id: "ELC-120", name: "جهاز إلكتروني", orders: 120, deliveredOrders: 95, salesRevenue: 36000 },
-  { id: "CLT-095", name: "ملابس موسمية", orders: 95, deliveredOrders: 57, salesRevenue: 19000 },
-  { id: "HOM-085", name: "إكسسوارات منزلية", orders: 85, deliveredOrders: 57, salesRevenue: 12750 },
+  { id: "BAG-001", name: "حقيبة جلد طبيعي", orders: 245, confirmedOrders: 228, deliveredOrders: 220, salesRevenue: 48750 },
+  { id: "WTC-042", name: "ساعة كلاسيكية", orders: 198, confirmedOrders: 190, deliveredOrders: 185, salesRevenue: 59400 },
+  { id: "PRF-115", name: "عطر فاخر", orders: 176, confirmedOrders: 162, deliveredOrders: 155, salesRevenue: 44000 },
+  { id: "SUN-088", name: "نظارة شمسية", orders: 156, confirmedOrders: 148, deliveredOrders: 145, salesRevenue: 27000 },
+  { id: "SHO-203", name: "حذاء رياضي", orders: 142, confirmedOrders: 130, deliveredOrders: 118, salesRevenue: 31000 },
+  { id: "ELC-120", name: "جهاز إلكتروني", orders: 120, confirmedOrders: 108, deliveredOrders: 95, salesRevenue: 36000 },
+  { id: "CLT-095", name: "ملابس موسمية", orders: 95, confirmedOrders: 72, deliveredOrders: 57, salesRevenue: 19000 },
+  { id: "HOM-085", name: "إكسسوارات منزلية", orders: 85, confirmedOrders: 68, deliveredOrders: 57, salesRevenue: 12750 },
 ];
 
 const financialItems = [
@@ -431,6 +431,79 @@ export function OrderCountsBar() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* أفضل المنتجات مبيعاً */}
+      <div className="bg-card rounded-2xl p-5 border border-border">
+        <SectionHeader title="أفضل المنتجات مبيعاً" icon={Package} accentColor="bg-primary" badge={`${products.length} منتج`} />
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-[11px] text-muted-foreground border-b border-border">
+                <th className="text-right py-2.5 px-3 font-medium">#</th>
+                <th className="text-right py-2.5 px-3 font-medium">المنتج</th>
+                <th className="text-center py-2.5 px-3 font-medium">إجمالي الطلبات</th>
+                <th className="text-center py-2.5 px-3 font-medium">المؤكد</th>
+                <th className="text-center py-2.5 px-3 font-medium">نسبة التأكيد</th>
+                <th className="text-center py-2.5 px-3 font-medium">المستلم</th>
+                <th className="text-center py-2.5 px-3 font-medium">نسبة التسليم</th>
+                <th className="text-center py-2.5 px-3 font-medium">الإيرادات</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[...products]
+                .sort((a, b) => b.deliveredOrders - a.deliveredOrders)
+                .map((p, i) => {
+                  const confirmRate = ((p.confirmedOrders / p.orders) * 100).toFixed(1);
+                  const deliveryRate = ((p.deliveredOrders / p.confirmedOrders) * 100).toFixed(1);
+                  return (
+                    <tr key={p.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                      <td className="py-3 px-3">
+                        <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                          i === 0 ? "bg-amber-500/20 text-amber-600" :
+                          i === 1 ? "bg-muted text-muted-foreground" :
+                          i === 2 ? "bg-orange-500/15 text-orange-600" :
+                          "bg-muted/50 text-muted-foreground/70"
+                        }`}>{i + 1}</span>
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="flex items-center gap-2 justify-end">
+                          <div className="text-right">
+                            <p className="text-xs font-semibold text-foreground">{p.name}</p>
+                            <p className="text-[10px] text-muted-foreground">{p.id}</p>
+                          </div>
+                          <div className="w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center shrink-0">
+                            <Package className="w-4 h-4 text-primary/60" />
+                          </div>
+                        </div>
+                      </td>
+                      <td className="text-center py-3 px-3 font-bold text-foreground">{p.orders.toLocaleString("ar-SA")}</td>
+                      <td className="text-center py-3 px-3 font-medium text-foreground">{p.confirmedOrders.toLocaleString("ar-SA")}</td>
+                      <td className="text-center py-3 px-3">
+                        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
+                          parseFloat(confirmRate) >= 85 ? "bg-emerald-500/10 text-emerald-600" :
+                          parseFloat(confirmRate) >= 70 ? "bg-amber-500/10 text-amber-600" :
+                          "bg-red-500/10 text-red-500"
+                        }`}>{confirmRate}%</span>
+                      </td>
+                      <td className="text-center py-3 px-3 font-medium text-foreground">{p.deliveredOrders.toLocaleString("ar-SA")}</td>
+                      <td className="text-center py-3 px-3">
+                        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
+                          parseFloat(deliveryRate) >= 85 ? "bg-green-500/10 text-green-600" :
+                          parseFloat(deliveryRate) >= 70 ? "bg-amber-500/10 text-amber-600" :
+                          "bg-red-500/10 text-red-500"
+                        }`}>{deliveryRate}%</span>
+                      </td>
+                      <td className="text-center py-3 px-3">
+                        <span className="font-bold text-foreground">{p.salesRevenue.toLocaleString("ar-SA")}</span>
+                        <span className="text-[10px] text-muted-foreground mr-1">SAR</span>
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* المالية */}
