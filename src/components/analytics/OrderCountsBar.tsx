@@ -347,6 +347,90 @@ export function OrderCountsBar() {
             </div>
           );
         })()}
+
+        {/* أفضل المنتجات مبيعاً */}
+        {adCosts.length > 0 && (
+          <div className="mt-4 pt-4 border-t border-orange-500/10">
+            <div className="flex items-center gap-2 mb-3">
+              <Package className="w-4 h-4 text-orange-500" />
+              <h4 className="text-xs font-bold text-foreground">أداء المنتجات الإعلاني</h4>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-[11px] text-muted-foreground border-b border-border">
+                    <th className="text-right py-2 px-3 font-medium">المنتج</th>
+                    <th className="text-center py-2 px-3 font-medium">الطلبات</th>
+                    <th className="text-center py-2 px-3 font-medium">نسبة التأكيد</th>
+                    <th className="text-center py-2 px-3 font-medium">المستلم</th>
+                    <th className="text-center py-2 px-3 font-medium">نسبة التسليم</th>
+                    <th className="text-center py-2 px-3 font-medium">تكلفة الإعلان</th>
+                    <th className="text-center py-2 px-3 font-medium">تكلفة الليد</th>
+                    <th className="text-center py-2 px-3 font-medium">ROAS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {products
+                    .sort((a, b) => b.deliveredOrders - a.deliveredOrders)
+                    .map((p) => {
+                      const adEntry = adCosts.find(a => a.productId === p.id);
+                      const adCost = adEntry ? parseFloat(adEntry.cost) || 0 : 0;
+                      const confirmRate = ((p.deliveredOrders / p.orders) * 100).toFixed(1);
+                      const deliveryRate = ((p.deliveredOrders / p.orders) * 100).toFixed(1);
+                      const costPerLead = adCost > 0 ? (adCost / p.orders).toFixed(2) : "—";
+                      const productRoas = adCost > 0 ? (p.salesRevenue / adCost).toFixed(2) : "—";
+                      return (
+                        <tr key={p.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                          <td className="py-2.5 px-3">
+                            <div className="flex items-center gap-2 justify-end">
+                              <div>
+                                <p className="text-xs font-semibold text-foreground">{p.name}</p>
+                                <p className="text-[10px] text-muted-foreground">{p.id}</p>
+                              </div>
+                              <div className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0">
+                                <Package className="w-4 h-4 text-muted-foreground" />
+                              </div>
+                            </div>
+                          </td>
+                          <td className="text-center py-2.5 px-3 font-bold text-foreground">{p.orders}</td>
+                          <td className="text-center py-2.5 px-3">
+                            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                              parseFloat(confirmRate) >= 80 ? "bg-emerald-500/10 text-emerald-600" :
+                              parseFloat(confirmRate) >= 60 ? "bg-amber-500/10 text-amber-600" :
+                              "bg-red-500/10 text-red-500"
+                            }`}>{confirmRate}%</span>
+                          </td>
+                          <td className="text-center py-2.5 px-3 font-medium text-foreground">{p.deliveredOrders}</td>
+                          <td className="text-center py-2.5 px-3">
+                            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                              parseFloat(deliveryRate) >= 80 ? "bg-green-500/10 text-green-600" :
+                              parseFloat(deliveryRate) >= 60 ? "bg-amber-500/10 text-amber-600" :
+                              "bg-red-500/10 text-red-500"
+                            }`}>{deliveryRate}%</span>
+                          </td>
+                          <td className="text-center py-2.5 px-3">
+                            {adCost > 0 ? (
+                              <span className="font-bold text-orange-500">{adCost.toLocaleString("ar-SA")} SAR</span>
+                            ) : (
+                              <span className="text-muted-foreground/50">—</span>
+                            )}
+                          </td>
+                          <td className="text-center py-2.5 px-3 text-xs font-medium text-muted-foreground">{costPerLead !== "—" ? `${costPerLead} SAR` : "—"}</td>
+                          <td className="text-center py-2.5 px-3">
+                            {productRoas !== "—" ? (
+                              <span className={`text-xs font-bold ${parseFloat(productRoas) >= 3 ? "text-emerald-500" : parseFloat(productRoas) >= 1 ? "text-amber-500" : "text-red-500"}`}>{productRoas}x</span>
+                            ) : (
+                              <span className="text-muted-foreground/50">—</span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* المالية */}
