@@ -160,21 +160,21 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
           {/* Quantity & Buy */}
           <div className="space-y-4">
             <div className="flex items-center gap-3 justify-end">
-              <div className="flex items-center gap-2 bg-muted/50 rounded-xl border border-border px-1">
-                <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="w-9 h-9 flex items-center justify-center hover:bg-card rounded-lg transition-colors">
+              
 
-                  <Plus className="w-4 h-4" />
-                </button>
-                <span className="w-10 text-center font-bold text-foreground text-lg">{quantity}</span>
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-9 h-9 flex items-center justify-center hover:bg-card rounded-lg transition-colors">
 
-                  <Minus className="w-4 h-4" />
-                </button>
-              </div>
+
+
+
+
+
+
+
+
+
+
+
+
             </div>
 
             <Button
