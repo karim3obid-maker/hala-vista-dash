@@ -77,9 +77,9 @@ export default function OrderDetail({ order, onBack, onNext, onPrev, hasNext, ha
   const orderSt = orderStatusLabel[order.status];
 
   return (
-    <div className="container max-w-[1280px] mx-auto px-6 py-8" dir="rtl">
+    <div className="h-[calc(100vh-3.5rem)] overflow-hidden flex flex-col px-4 py-3" dir="rtl">
       {/* Top Bar */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-3 shrink-0">
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
@@ -114,9 +114,9 @@ export default function OrderDetail({ order, onBack, onNext, onPrev, hasNext, ha
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-1 min-h-0 overflow-hidden">
         {/* Right Column - Sidebar Info */}
-        <div className="lg:col-span-1 space-y-4">
+        <div className="lg:col-span-1 space-y-3 overflow-y-auto pr-1">
           {/* Customer */}
           <Card title="العميل" icon={User}>
             <div className="flex items-center gap-3">
@@ -185,12 +185,12 @@ export default function OrderDetail({ order, onBack, onNext, onPrev, hasNext, ha
         </div>
 
         {/* Left Column - Main Content */}
-        <div className="lg:col-span-2 space-y-4">
+        <div className="lg:col-span-2 space-y-3 overflow-y-auto pl-1">
           {/* Products */}
           {order.products.map((product, i) => (
-            <div key={i} className="bg-card rounded-2xl border border-border p-5" style={{ boxShadow: "var(--shadow-card)" }}>
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-xl bg-muted/30 flex items-center justify-center shrink-0">
+            <div key={i} className="bg-card rounded-xl border border-border p-3" style={{ boxShadow: "var(--shadow-card)" }}>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-muted/30 flex items-center justify-center shrink-0">
                   <PackageCheck className="w-6 h-6 text-muted-foreground" />
                 </div>
                 <div>
@@ -211,7 +211,7 @@ export default function OrderDetail({ order, onBack, onNext, onPrev, hasNext, ha
 
           {/* Status Stepper */}
           {!isCancelled && (
-            <div className="bg-card rounded-2xl border border-border p-6" style={{ boxShadow: "var(--shadow-card)" }}>
+            <div className="bg-card rounded-xl border border-border p-4" style={{ boxShadow: "var(--shadow-card)" }}>
               <div className="flex items-center justify-between">
                 {statusSteps.map((step, i) => {
                   const isActive = i <= currentStep;
@@ -220,7 +220,7 @@ export default function OrderDetail({ order, onBack, onNext, onPrev, hasNext, ha
                     <div key={step.key} className="flex items-center flex-1 last:flex-none">
                       <div className="flex flex-col items-center gap-2">
                         <div
-                          className={`w-11 h-11 rounded-full flex items-center justify-center transition-colors ${
+                          className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
                             isActive
                               ? "bg-emerald-500/10 border-2 border-emerald-500 text-emerald-600"
                               : "bg-muted/50 border-2 border-border text-muted-foreground"
@@ -247,7 +247,7 @@ export default function OrderDetail({ order, onBack, onNext, onPrev, hasNext, ha
           )}
 
           {/* Quick Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             <StatCard
               icon={Activity}
               label="إجمالي الأنشطة"
@@ -271,7 +271,7 @@ export default function OrderDetail({ order, onBack, onNext, onPrev, hasNext, ha
 
           {/* Cancellation */}
           {isCancelled && order.cancellationReason && (
-            <div className="bg-destructive/5 border border-destructive/20 rounded-2xl p-5">
+            <div className="bg-destructive/5 border border-destructive/20 rounded-xl p-3">
               <div className="flex items-start gap-3">
                 <AlertTriangle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
                 <div>
@@ -319,11 +319,11 @@ export default function OrderDetail({ order, onBack, onNext, onPrev, hasNext, ha
           </Card>
 
           {/* Activity Log */}
-          <div className="bg-card rounded-2xl border border-border p-5" style={{ boxShadow: "var(--shadow-card)" }}>
-            <div className="flex items-center gap-2 mb-4">
-              <Activity className="w-5 h-5 text-muted-foreground" />
-              <h3 className="font-semibold text-foreground">سجل الأنشطة</h3>
-              <span className="px-2.5 py-1 rounded-lg bg-muted text-xs font-medium text-muted-foreground">
+          <div className="bg-card rounded-xl border border-border p-3" style={{ boxShadow: "var(--shadow-card)" }}>
+            <div className="flex items-center gap-2 mb-3">
+              <Activity className="w-4 h-4 text-muted-foreground" />
+              <h3 className="font-semibold text-foreground text-xs">سجل الأنشطة</h3>
+              <span className="px-2 py-0.5 rounded-lg bg-muted text-[10px] font-medium text-muted-foreground">
                 {order.activityLog.length} نشاط
               </span>
             </div>
@@ -332,14 +332,14 @@ export default function OrderDetail({ order, onBack, onNext, onPrev, hasNext, ha
               {/* Timeline line */}
               <div className="absolute right-[19px] top-0 bottom-0 w-px bg-border" />
 
-              <div className="space-y-6">
+              <div className="space-y-3">
                 {order.activityLog.map((log) => {
                   const iconData = activityIcons[log.icon] || activityIcons.create;
                   const Icon = iconData.icon;
                   return (
-                    <div key={log.id} className="flex items-start gap-4 relative">
+                    <div key={log.id} className="flex items-start gap-3 relative">
                       <div
-                        className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 z-10 ${iconData.color}`}
+                        className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 z-10 ${iconData.color}`}
                       >
                         <Icon className="w-4 h-4" />
                       </div>
@@ -373,10 +373,10 @@ function Card({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-card rounded-2xl border border-border p-5" style={{ boxShadow: "var(--shadow-card)" }}>
-      <div className="flex items-center gap-2 mb-4">
+    <div className="bg-card rounded-xl border border-border p-3" style={{ boxShadow: "var(--shadow-card)" }}>
+      <div className="flex items-center gap-2 mb-2">
         <Icon className="w-4 h-4 text-muted-foreground" />
-        <h3 className="font-semibold text-foreground text-sm">{title}</h3>
+        <h3 className="font-semibold text-foreground text-xs">{title}</h3>
       </div>
       {children}
     </div>
@@ -424,12 +424,12 @@ function StatCard({
   color: string;
 }) {
   return (
-    <div className="bg-card rounded-2xl border border-border p-4 text-center" style={{ boxShadow: "var(--shadow-card)" }}>
-      <div className={`w-10 h-10 rounded-full mx-auto mb-2 flex items-center justify-center ${color}`}>
-        <Icon className="w-5 h-5" />
+    <div className="bg-card rounded-xl border border-border p-3 text-center" style={{ boxShadow: "var(--shadow-card)" }}>
+      <div className={`w-8 h-8 rounded-full mx-auto mb-1 flex items-center justify-center ${color}`}>
+        <Icon className="w-4 h-4" />
       </div>
-      <p className="text-xs text-muted-foreground mb-1">{label}</p>
-      <p className="font-semibold text-foreground text-sm">{value}</p>
+      <p className="text-[10px] text-muted-foreground mb-0.5">{label}</p>
+      <p className="font-semibold text-foreground text-xs">{value}</p>
     </div>
   );
 }
