@@ -75,9 +75,60 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-hidden flex">
-        {/* Right Side - Product Info */}
-        <div className="w-[420px] shrink-0 border-l border-border overflow-y-auto p-5 space-y-4">
+      <div className="flex-1 overflow-hidden flex flex-row-reverse">
+        {/* Right Side - Images & Description */}
+        <div className="flex-1 overflow-y-auto p-5 space-y-5">
+          {/* Main Image */}
+          <div className="relative bg-card rounded-2xl border border-border overflow-hidden aspect-[4/3] max-h-[55vh]">
+            <img
+              src={product.images[selectedImage]}
+              alt={product.name}
+              className="w-full h-full object-contain p-4"
+            />
+            {product.images.length > 1 && (
+              <>
+                <button
+                  onClick={prevImage}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-card/90 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-card transition-colors shadow-md"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={nextImage}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-card/90 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-card transition-colors shadow-md"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Thumbnails */}
+          {product.images.length > 1 && (
+            <div className="flex items-center justify-center gap-3">
+              {product.images.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setSelectedImage(i)}
+                  className={`w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
+                    i === selectedImage ? "border-primary shadow-md scale-105" : "border-border opacity-60 hover:opacity-100"
+                  }`}
+                >
+                  <img src={img} alt="" className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Description */}
+          <div className="bg-card rounded-2xl border border-border p-5 space-y-3">
+            <h2 className="text-base font-bold text-foreground">الوصف التفصيلي:</h2>
+            <p className="text-sm leading-7 text-muted-foreground">{product.description}</p>
+          </div>
+        </div>
+
+        {/* Left Side - Product Info */}
+        <div className="w-[420px] shrink-0 border-r border-border overflow-y-auto p-5 space-y-4">
           {/* Stock Badge */}
           <div className="bg-gradient-to-l from-success/10 to-transparent rounded-xl p-3 flex items-center justify-between">
             <span className="font-bold text-foreground">{product.stock}</span>
@@ -173,57 +224,6 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
               <span>إضافة الى هلا ستور</span>
               <Store className="w-4 h-4" />
             </Button>
-          </div>
-        </div>
-
-        {/* Left Side - Images & Description */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-5">
-          {/* Main Image */}
-          <div className="relative bg-card rounded-2xl border border-border overflow-hidden aspect-[4/3] max-h-[55vh]">
-            <img
-              src={product.images[selectedImage]}
-              alt={product.name}
-              className="w-full h-full object-contain p-4"
-            />
-            {product.images.length > 1 && (
-              <>
-                <button
-                  onClick={prevImage}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-card/90 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-card transition-colors shadow-md"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={nextImage}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-card/90 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-card transition-colors shadow-md"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </>
-            )}
-          </div>
-
-          {/* Thumbnails */}
-          {product.images.length > 1 && (
-            <div className="flex items-center justify-center gap-3">
-              {product.images.map((img, i) => (
-                <button
-                  key={i}
-                  onClick={() => setSelectedImage(i)}
-                  className={`w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
-                    i === selectedImage ? "border-primary shadow-md scale-105" : "border-border opacity-60 hover:opacity-100"
-                  }`}
-                >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Description */}
-          <div className="bg-card rounded-2xl border border-border p-5 space-y-3">
-            <h2 className="text-base font-bold text-foreground">الوصف التفصيلي:</h2>
-            <p className="text-sm leading-7 text-muted-foreground">{product.description}</p>
           </div>
         </div>
       </div>
