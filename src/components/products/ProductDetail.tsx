@@ -11,17 +11,18 @@ import {
   Globe,
   Calendar,
   RefreshCw,
-  ShoppingCart,
   Store,
   Plus,
   Minus,
   ChevronLeft,
   ChevronRight,
-  CheckCircle2,
   Box,
+  Heart,
+  ShoppingCart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 
 interface ProductDetailProps {
@@ -40,53 +41,147 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
   const prevImage = () => setSelectedImage((i) => (i - 1 + product.images.length) % product.images.length);
 
   return (
-    <div className="h-[calc(100vh-3.5rem)] overflow-hidden flex flex-col max-w-6xl mx-auto">
-      {/* Top Bar - Quantity & Price */}
-      <div className="bg-gradient-to-l from-primary/10 via-accent/5 to-transparent border-b border-border px-6 py-3 flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 bg-card rounded-xl border border-border px-1">
-            <button
-              onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="w-8 h-8 flex items-center justify-center hover:bg-muted rounded-lg transition-colors"
-            >
-              <Minus className="w-4 h-4" />
-            </button>
-            <span className="w-10 text-center font-bold text-foreground">{quantity}</span>
-            <button
-              onClick={() => setQuantity(quantity + 1)}
-              className="w-8 h-8 flex items-center justify-center hover:bg-muted rounded-lg transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-            </button>
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-primary">{totalPrice}</span>
-            <span className="text-sm text-muted-foreground">{product.currency}</span>
-          </div>
-          <span className="text-xs text-muted-foreground">({quantity} قطعة)</span>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onBack}
-            className="w-9 h-9 rounded-xl bg-card border border-border flex items-center justify-center hover:bg-muted transition-colors"
-          >
-            <ArrowRight className="w-5 h-5 text-foreground" />
+    <div className="max-w-6xl mx-auto p-6 space-y-6 overflow-y-auto h-[calc(100vh-3.5rem)]">
+      {/* Breadcrumb & Back */}
+      <div className="flex items-center justify-between">
+        <div />
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <button onClick={onBack} className="hover:text-primary transition-colors flex items-center gap-1">
+            <ArrowRight className="w-4 h-4" />
+            <span>العودة</span>
           </button>
-          <h1 className="text-lg font-bold text-foreground">{product.name}</h1>
+          <span>/</span>
+          <span>المنتجات</span>
+          <span>/</span>
+          <span className="text-foreground font-medium">{product.name}</span>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 overflow-hidden flex flex-row-reverse">
-        {/* Right Side - Images & Description */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-5">
+      {/* Product Title */}
+      <h1 className="text-xl font-bold text-foreground text-right">{product.name}</h1>
+
+      {/* Main Content - Two Columns */}
+      <div className="flex flex-col-reverse lg:flex-row-reverse gap-8">
+        {/* Right Side - Product Info */}
+        <div className="lg:w-[380px] shrink-0 space-y-5">
+          {/* Name & Rating */}
+          <div className="space-y-2 text-right">
+            <p className="text-sm text-muted-foreground">{product.nameEn}</p>
+            <div className="flex items-center gap-3 justify-end">
+              <Badge className={`text-xs border-0 ${product.status === "متاح" ? "bg-success/15 text-success" : "bg-destructive/15 text-destructive"}`}>
+                {product.status}
+              </Badge>
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-muted-foreground">({product.stock} قطعة)</span>
+                <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                <span className="text-sm font-semibold">4.8</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Prices */}
+          <div className="flex items-center gap-6 justify-end border-b border-border pb-4">
+            <div className="text-right">
+              <p className="text-xs text-muted-foreground mb-1">سعر البيع الموصى به</p>
+              <p className="text-xl font-bold text-foreground">
+                {product.recommendedPrice.toFixed(2)} <span className="text-sm text-muted-foreground">{product.currency}</span>
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-xs text-muted-foreground mb-1">سعر القطعة</p>
+              <p className="text-xl font-bold text-primary">
+                {product.costPrice.toFixed(2)} <span className="text-sm text-muted-foreground">{product.currency}</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Stock Info */}
+          <div className="space-y-3 border-b border-border pb-4">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-foreground">{product.stock}</span>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>المخزون المتاح</span>
+                <Box className="w-4 h-4" />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <Badge variant="outline" className="font-mono text-xs">{product.sku}</Badge>
+              <span className="text-sm text-muted-foreground">SKU</span>
+            </div>
+          </div>
+
+          {/* Details Grid */}
+          <div className="space-y-2 border-b border-border pb-4">
+            <DetailRow icon={Package} label="الوزن" value={product.weight} />
+            <DetailRow icon={Ruler} label="الأبعاد" value={product.dimensions} />
+            <div className="flex items-center justify-between py-2">
+              <Badge className="bg-primary/10 text-primary border-0 text-xs">{product.category}</Badge>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>التصنيف</span>
+                <Tag className="w-4 h-4" />
+              </div>
+            </div>
+            <div className="flex items-center justify-between py-2">
+              <div className="flex flex-wrap gap-1">
+                {product.countries.map((c) => (
+                  <Badge key={c} variant="secondary" className="text-[10px]">{c}</Badge>
+                ))}
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground shrink-0">
+                <span>الدول</span>
+                <Globe className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+
+          {/* Quantity & Buy */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 justify-end">
+              <div className="flex items-center gap-2 bg-muted/50 rounded-xl border border-border px-1">
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="w-9 h-9 flex items-center justify-center hover:bg-card rounded-lg transition-colors"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+                <span className="w-10 text-center font-bold text-foreground text-lg">{quantity}</span>
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="w-9 h-9 flex items-center justify-center hover:bg-card rounded-lg transition-colors"
+                >
+                  <Minus className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            <Button
+              onClick={() => setShowAddDialog(true)}
+              className="w-full rounded-xl h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-base gap-2"
+            >
+              <Plus className="w-5 h-5" />
+              <span>إضافة الى منتجاتي</span>
+            </Button>
+
+            <Button
+              onClick={() => toast.success("تمت إضافة المنتج إلى هلا ستور")}
+              variant="outline"
+              className="w-full rounded-xl h-11 border-accent text-accent hover:bg-accent/10 font-semibold gap-2"
+            >
+              <Store className="w-4 h-4" />
+              <span>إضافة الى هلا ستور</span>
+            </Button>
+          </div>
+        </div>
+
+        {/* Left Side - Image Gallery */}
+        <div className="flex-1 space-y-4">
           {/* Main Image */}
-          <div className="relative bg-card rounded-2xl border border-border overflow-hidden aspect-[4/3] max-h-[55vh]">
+          <div className="relative bg-card rounded-2xl border border-border overflow-hidden aspect-square max-h-[500px]">
             <img
               src={product.images[selectedImage]}
               alt={product.name}
-              className="w-full h-full object-contain p-4"
+              className="w-full h-full object-contain p-6"
             />
             {product.images.length > 1 && (
               <>
@@ -122,120 +217,61 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
               ))}
             </div>
           )}
-
-          {/* Description */}
-          <div className="bg-card rounded-2xl border border-border p-5 space-y-3">
-            <h2 className="text-base font-bold text-foreground">الوصف التفصيلي:</h2>
-            <p className="text-sm leading-7 text-muted-foreground">{product.description}</p>
-          </div>
         </div>
+      </div>
 
-        {/* Middle - Calculator */}
-        <div className="w-[280px] shrink-0 border-r border-border overflow-y-auto p-4">
-          <ProductCalculator product={product} />
-        </div>
+      {/* Tabs Section */}
+      <Tabs defaultValue="description" dir="rtl" className="border-t border-border pt-6">
+        <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-end gap-4 h-auto p-0">
+          <TabsTrigger
+            value="calculator"
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 text-sm font-semibold"
+          >
+            حاسبة الأرباح
+          </TabsTrigger>
+          <TabsTrigger
+            value="info"
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 text-sm font-semibold"
+          >
+            معلومات إضافية
+          </TabsTrigger>
+          <TabsTrigger
+            value="description"
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 text-sm font-semibold"
+          >
+            الوصف
+          </TabsTrigger>
+        </TabsList>
 
-        {/* Left Side - Product Info */}
-        <div className="w-[420px] shrink-0 border-r border-border overflow-y-auto p-5 space-y-4">
-          {/* Stock Badge */}
-          <div className="bg-gradient-to-l from-success/10 to-transparent rounded-xl p-3 flex items-center justify-between">
-            <span className="font-bold text-foreground">{product.stock}</span>
-            <div className="flex items-center gap-2 text-success">
-              <span className="text-sm font-medium">المخزون المتاح</span>
-              <Box className="w-5 h-5" />
-            </div>
-          </div>
+        <TabsContent value="description" className="pt-6 text-right">
+          <h3 className="text-base font-bold text-foreground mb-3">وصف المنتج</h3>
+          <p className="text-sm leading-8 text-muted-foreground">{product.description}</p>
+        </TabsContent>
 
-          {/* SKU */}
-          <div className="space-y-1">
-            <p className="text-xs text-muted-foreground">SKUs:</p>
-            <Badge variant="outline" className="font-mono text-xs">
-              {product.sku}
-            </Badge>
-          </div>
-
-          {/* Prices */}
-          <div className="space-y-3">
-            <div className="bg-card rounded-xl border border-border p-3 flex items-center justify-between">
-              <div className="flex items-baseline gap-1">
-                <span className="text-xl font-bold text-foreground">{product.costPrice.toFixed(2)}</span>
-                <span className="text-sm text-muted-foreground">{product.currency}</span>
-              </div>
-              <span className="text-sm text-muted-foreground">سعر التكلفة:</span>
-            </div>
-
-            <div className="bg-gradient-to-l from-accent/10 to-accent/5 rounded-xl border border-accent/20 p-3 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Star className="w-4 h-4 text-accent" />
-                <div className="flex items-baseline gap-1">
-                  <span className="text-xl font-bold text-foreground">{product.recommendedPrice.toFixed(2)}</span>
-                  <span className="text-sm text-muted-foreground">{product.currency}</span>
-                </div>
-              </div>
-              <span className="text-sm text-accent font-medium">السعر الموصى به:</span>
-            </div>
-          </div>
-
-          {/* Details */}
-          <div className="space-y-3">
-            <DetailRow icon={Package} label="الوزن" value={product.weight} />
-            <DetailRow icon={Ruler} label="الأبعاد" value={product.dimensions} />
-            <div className="flex items-center justify-between py-2">
-              <Badge className="bg-primary/10 text-primary border-0 text-xs">{product.category}</Badge>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span>التصنيف:</span>
-                <Tag className="w-4 h-4" />
-              </div>
-            </div>
+        <TabsContent value="info" className="pt-6">
+          <div className="space-y-3 max-w-md mr-auto">
+            <DetailRow icon={Calendar} label="تاريخ الإضافة" value={product.dateAdded} />
+            <DetailRow icon={RefreshCw} label="آخر تحديث" value={product.lastUpdated} />
             <div className="flex items-center justify-between py-2">
               <div className="flex flex-wrap gap-1">
                 {product.countries.map((c) => (
-                  <Badge key={c} variant="secondary" className="text-[10px]">
-                    {c}
-                  </Badge>
+                  <Badge key={c} variant="secondary" className="text-[10px]">{c}</Badge>
                 ))}
               </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground shrink-0">
-                <span>الدول:</span>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>الدول المتاحة</span>
                 <Globe className="w-4 h-4" />
               </div>
             </div>
           </div>
+        </TabsContent>
 
-          {/* Additional Info */}
-          <div className="border-t border-border pt-3 space-y-2">
-            <p className="text-sm font-semibold text-foreground">معلومات إضافية:</p>
-            <DetailRow icon={Calendar} label="تاريخ الإضافة" value={product.dateAdded} />
-            <DetailRow icon={RefreshCw} label="آخر تحديث" value={product.lastUpdated} />
-            <div className="flex items-center justify-between py-2">
-              <Badge className={`text-xs border-0 ${product.status === "متاح" ? "bg-success/15 text-success" : "bg-destructive/15 text-destructive"}`}>
-                {product.status}
-              </Badge>
-              <span className="text-sm text-muted-foreground">الحالة:</span>
-            </div>
+        <TabsContent value="calculator" className="pt-6">
+          <div className="max-w-sm mr-auto">
+            <ProductCalculator product={product} />
           </div>
-
-
-          {/* Action Buttons */}
-          <div className="space-y-2 pt-2">
-            <Button
-              onClick={() => setShowAddDialog(true)}
-              className="w-full rounded-xl h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold gap-2"
-            >
-              <span>إضافة الى منتجاتي</span>
-              <Plus className="w-4 h-4" />
-            </Button>
-            <Button
-              onClick={() => toast.success("تمت إضافة المنتج إلى هلا ستور")}
-              variant="outline"
-              className="w-full rounded-xl h-11 border-accent text-accent hover:bg-accent/10 font-semibold gap-2"
-            >
-              <span>إضافة الى هلا ستور</span>
-              <Store className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-      </div>
+        </TabsContent>
+      </Tabs>
 
       <AddToMyProductsDialog product={product} open={showAddDialog} onOpenChange={setShowAddDialog} />
     </div>
@@ -247,7 +283,7 @@ function DetailRow({ icon: Icon, label, value }: { icon: any; label: string; val
     <div className="flex items-center justify-between py-2">
       <span className="text-sm font-medium text-foreground">{value}</span>
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <span>{label}:</span>
+        <span>{label}</span>
         <Icon className="w-4 h-4" />
       </div>
     </div>
