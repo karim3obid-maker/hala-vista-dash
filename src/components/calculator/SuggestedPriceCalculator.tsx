@@ -149,12 +149,12 @@ export function SuggestedPriceCalculator() {
                 <Tag className="w-7 h-7 text-primary" />
               </div>
               <p className="text-sm text-muted-foreground font-medium">سعر البيع المقترح (لكل قطعة)</p>
-              <div className="flex items-baseline gap-3">
-                <span className="text-4xl font-black tracking-tight text-primary">
+              <div className="flex flex-col items-center gap-1">
+                <span className="text-5xl font-black tracking-tight text-primary">
                   ${fmt(calc.suggestedPrice)}
                 </span>
-                <span className="text-lg text-muted-foreground font-medium">
-                  ({fmtSar(calc.suggestedPrice)} SAR)
+                <span className="text-2xl font-bold text-primary/70">
+                  {fmtSar(calc.suggestedPrice)} SAR
                 </span>
               </div>
               <div className="flex items-center gap-4 mt-1">
