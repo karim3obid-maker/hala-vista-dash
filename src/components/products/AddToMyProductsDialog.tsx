@@ -33,12 +33,12 @@ interface Offer {
 }
 
 const countries = [
-  { code: "SA", name: "المملكة العربية السعودية", currency: "ر.س" },
-  { code: "KW", name: "الكويت", currency: "د.ك" },
-  { code: "AE", name: "الإمارات", currency: "د.إ" },
-  { code: "BH", name: "البحرين", currency: "د.ب" },
-  { code: "OM", name: "عمان", currency: "ر.ع" },
-  { code: "QA", name: "قطر", currency: "ر.ق" },
+  { code: "SA", name: "المملكة العربية السعودية", currency: "ر.س", rate: 3.75 },
+  { code: "KW", name: "الكويت", currency: "د.ك", rate: 0.31 },
+  { code: "AE", name: "الإمارات", currency: "د.إ", rate: 3.67 },
+  { code: "BH", name: "البحرين", currency: "د.ب", rate: 0.38 },
+  { code: "OM", name: "عمان", currency: "ر.ع", rate: 0.38 },
+  { code: "QA", name: "قطر", currency: "ر.ق", rate: 3.64 },
 ];
 
 let nextId = 1;
@@ -87,6 +87,24 @@ export function AddToMyProductsDialog({ product, open, onOpenChange }: AddToMyPr
         </DialogHeader>
 
         <div className="p-6 space-y-5">
+          {/* Cost Price Banner */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-gradient-to-l from-primary/10 to-primary/5 rounded-xl border border-primary/20 p-4 text-center">
+              <p className="text-xs text-muted-foreground mb-1">
+                سعر التكلفة بعملة الدولة {country ? `(${country.currency})` : ""}
+              </p>
+              <span className="text-2xl font-bold text-primary">
+                {country ? (product.costPrice * (country.rate || 1)).toFixed(2) : "—"}
+              </span>
+              {country && <span className="text-sm text-primary mr-1">{country.currency}</span>}
+            </div>
+            <div className="bg-card rounded-xl border border-border p-4 text-center">
+              <p className="text-xs text-muted-foreground mb-1">سعر التكلفة بالدولار</p>
+              <span className="text-2xl font-bold text-foreground">{product.costPrice.toFixed(2)}</span>
+              <span className="text-sm text-muted-foreground mr-1">$</span>
+            </div>
+          </div>
+
           {/* Country Select */}
           <div className="space-y-2">
             <Label className="text-sm font-medium text-foreground">اختر البلد</Label>
