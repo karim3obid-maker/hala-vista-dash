@@ -54,7 +54,7 @@ const filterTabs: { label: string; value: OrderStatus | "all" }[] = [
 ];
 
 const OrdersPage = () => {
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [selectedOrderIndex, setSelectedOrderIndex] = useState<number | null>(null);
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState<OrderStatus | "all">("all");
 
@@ -67,11 +67,20 @@ const OrdersPage = () => {
     return matchesSearch && matchesFilter;
   });
 
-  if (selectedOrder) {
+  if (selectedOrderIndex !== null) {
+    const selectedOrder = filtered[selectedOrderIndex];
+    if (!selectedOrder) {
+      setSelectedOrderIndex(null);
+      return null;
+    }
     return (
       <OrderDetail
         order={selectedOrder}
-        onBack={() => setSelectedOrder(null)}
+        onBack={() => setSelectedOrderIndex(null)}
+        onNext={() => setSelectedOrderIndex(selectedOrderIndex + 1)}
+        onPrev={() => setSelectedOrderIndex(selectedOrderIndex - 1)}
+        hasNext={selectedOrderIndex < filtered.length - 1}
+        hasPrev={selectedOrderIndex > 0}
       />
     );
   }
@@ -146,7 +155,7 @@ const OrdersPage = () => {
                 <TableRow
                   key={order.id}
                   className="cursor-pointer hover:bg-muted/30 transition-colors"
-                  onClick={() => setSelectedOrder(order)}
+                  onClick={() => setSelectedOrderIndex(filtered.indexOf(order))}
                 >
                   <TableCell className="font-mono font-semibold text-foreground">
                     {order.orderNumber}

@@ -1,5 +1,7 @@
 import {
   ArrowRight,
+  ChevronRight,
+  ChevronLeft,
   User,
   Phone,
   MapPin,
@@ -24,6 +26,10 @@ import { Separator } from "@/components/ui/separator";
 interface OrderDetailProps {
   order: Order;
   onBack: () => void;
+  onNext?: () => void;
+  onPrev?: () => void;
+  hasNext?: boolean;
+  hasPrev?: boolean;
 }
 
 const statusSteps: { key: OrderStatus; label: string; icon: React.ElementType }[] = [
@@ -64,7 +70,7 @@ const orderStatusLabel: Record<OrderStatus, { label: string; color: string }> = 
   returned: { label: "مرتجع", color: "bg-orange-500/10 text-orange-600" },
 };
 
-export default function OrderDetail({ order, onBack }: OrderDetailProps) {
+export default function OrderDetail({ order, onBack, onNext, onPrev, hasNext, hasPrev }: OrderDetailProps) {
   const currentStep = statusIndex[order.status] ?? -1;
   const isCancelled = order.status === "cancelled";
   const payment = paymentStatusLabel[order.paymentStatus];
@@ -74,9 +80,24 @@ export default function OrderDetail({ order, onBack }: OrderDetailProps) {
     <div className="container max-w-[1280px] mx-auto px-6 py-8">
       {/* Top Bar */}
       <div className="flex items-center justify-between mb-6">
-        <div className="text-sm text-muted-foreground">
-          {order.date} في {order.time}
+        {/* Navigation buttons */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onPrev}
+            disabled={!hasPrev}
+            className="w-9 h-9 rounded-xl bg-muted/50 flex items-center justify-center hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            <ChevronLeft className="w-5 h-5 text-foreground" />
+          </button>
+          <button
+            onClick={onNext}
+            disabled={!hasNext}
+            className="w-9 h-9 rounded-xl bg-muted/50 flex items-center justify-center hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            <ChevronRight className="w-5 h-5 text-foreground" />
+          </button>
         </div>
+
         <div className="flex items-center gap-3">
           <span className={`px-3 py-1 rounded-lg text-xs font-medium ${payment.color}`}>
             {payment.label}
