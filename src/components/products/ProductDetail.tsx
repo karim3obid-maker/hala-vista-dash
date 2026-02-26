@@ -17,8 +17,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Box,
-  Heart,
-  ShoppingCart,
+  Copy,
+  CheckCircle2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -34,17 +34,24 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [skuCopied, setSkuCopied] = useState(false);
 
   const totalPrice = (product.costPrice * quantity).toFixed(2);
 
   const nextImage = () => setSelectedImage((i) => (i + 1) % product.images.length);
   const prevImage = () => setSelectedImage((i) => (i - 1 + product.images.length) % product.images.length);
 
+  const copySku = () => {
+    navigator.clipboard.writeText(product.sku);
+    setSkuCopied(true);
+    toast.success("تم نسخ SKU");
+    setTimeout(() => setSkuCopied(false), 2000);
+  };
+
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-6 overflow-y-auto h-[calc(100vh-3.5rem)]">
       {/* Breadcrumb & Back */}
-      <div className="flex items-center justify-between">
-        <div />
+      <div className="flex items-center justify-end">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <button onClick={onBack} className="hover:text-primary transition-colors flex items-center gap-1">
             <ArrowRight className="w-4 h-4" />
@@ -61,9 +68,9 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
       <h1 className="text-xl font-bold text-foreground text-right">{product.name}</h1>
 
       {/* Main Content - Two Columns */}
-      <div className="flex flex-col-reverse lg:flex-row-reverse gap-8">
-        {/* Right Side - Product Info */}
-        <div className="lg:w-[380px] shrink-0 space-y-5">
+      <div className="flex flex-col lg:flex-row gap-8">
+        {/* Right Side - Product Info (appears first in RTL) */}
+        <div className="lg:w-[380px] shrink-0 space-y-5 order-1 lg:order-2">
           {/* Name & Rating */}
           <div className="space-y-2 text-right">
             <p className="text-sm text-muted-foreground">{product.nameEn}</p>
@@ -73,42 +80,57 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
               </Badge>
               <div className="flex items-center gap-1">
                 <span className="text-xs text-muted-foreground">({product.stock} قطعة)</span>
-                <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                <Star className="w-4 h-4 fill-accent text-accent" />
                 <span className="text-sm font-semibold">4.8</span>
               </div>
             </div>
           </div>
 
-          {/* Prices */}
-          <div className="flex items-center gap-6 justify-end border-b border-border pb-4">
+          {/* Prices - highlighted cost price */}
+          <div className="flex items-center gap-4 justify-end border-b border-border pb-4">
             <div className="text-right">
               <p className="text-xs text-muted-foreground mb-1">سعر البيع الموصى به</p>
-              <p className="text-xl font-bold text-foreground">
+              <p className="text-lg font-bold text-foreground">
                 {product.recommendedPrice.toFixed(2)} <span className="text-sm text-muted-foreground">{product.currency}</span>
               </p>
             </div>
-            <div className="text-right">
-              <p className="text-xs text-muted-foreground mb-1">سعر القطعة</p>
-              <p className="text-xl font-bold text-primary">
-                {product.costPrice.toFixed(2)} <span className="text-sm text-muted-foreground">{product.currency}</span>
+            <div className="text-right bg-primary/10 rounded-xl px-5 py-3 border border-primary/20">
+              <p className="text-[11px] text-primary/70 mb-0.5">سعر القطعة</p>
+              <p className="text-2xl font-extrabold text-primary">
+                {product.costPrice.toFixed(2)} <span className="text-sm font-bold text-primary/70">{product.currency}</span>
               </p>
             </div>
           </div>
 
-          {/* Stock Info */}
-          <div className="space-y-3 border-b border-border pb-4">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-foreground">{product.stock}</span>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span>المخزون المتاح</span>
-                <Box className="w-4 h-4" />
-              </div>
+          {/* Stock - highlighted */}
+          <div className={`flex items-center justify-between rounded-xl px-4 py-3 ${
+            product.stock > 0 
+              ? "bg-success/10 border border-success/20" 
+              : "bg-destructive/10 border border-destructive/20"
+          }`}>
+            <span className={`text-lg font-extrabold ${product.stock > 0 ? "text-success" : "text-destructive"}`}>
+              {product.stock} <span className="text-xs font-medium">قطعة</span>
+            </span>
+            <div className={`flex items-center gap-2 text-sm font-semibold ${product.stock > 0 ? "text-success" : "text-destructive"}`}>
+              <span>المخزون المتاح</span>
+              <Box className="w-5 h-5" />
             </div>
+          </div>
 
-            <div className="flex items-center justify-between">
-              <Badge variant="outline" className="font-mono text-xs">{product.sku}</Badge>
-              <span className="text-sm text-muted-foreground">SKU</span>
-            </div>
+          {/* SKU - copyable */}
+          <div className="flex items-center justify-between border-b border-border pb-4">
+            <button
+              onClick={copySku}
+              className="flex items-center gap-2 font-mono text-xs bg-muted/50 hover:bg-muted rounded-lg px-3 py-2 border border-border transition-colors cursor-pointer group"
+            >
+              {skuCopied ? (
+                <CheckCircle2 className="w-3.5 h-3.5 text-success" />
+              ) : (
+                <Copy className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+              )}
+              <span>{product.sku}</span>
+            </button>
+            <span className="text-sm text-muted-foreground">SKU</span>
           </div>
 
           {/* Details Grid */}
@@ -174,8 +196,8 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
           </div>
         </div>
 
-        {/* Left Side - Image Gallery */}
-        <div className="flex-1 space-y-4">
+        {/* Left Side - Image Gallery (appears second in RTL) */}
+        <div className="flex-1 space-y-4 order-2 lg:order-1">
           {/* Main Image */}
           <div className="relative bg-card rounded-2xl border border-border overflow-hidden aspect-square max-h-[500px]">
             <img
@@ -249,7 +271,7 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
         </TabsContent>
 
         <TabsContent value="info" className="pt-6">
-          <div className="space-y-3 max-w-md mr-auto">
+          <div className="space-y-3 max-w-md ms-auto">
             <DetailRow icon={Calendar} label="تاريخ الإضافة" value={product.dateAdded} />
             <DetailRow icon={RefreshCw} label="آخر تحديث" value={product.lastUpdated} />
             <div className="flex items-center justify-between py-2">
@@ -267,7 +289,7 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
         </TabsContent>
 
         <TabsContent value="calculator" className="pt-6">
-          <div className="max-w-sm mr-auto">
+          <div className="max-w-sm ms-auto">
             <ProductCalculator product={product} />
           </div>
         </TabsContent>
