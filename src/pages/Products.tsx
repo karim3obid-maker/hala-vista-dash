@@ -92,6 +92,8 @@ export default function Products() {
             <div className="p-4 space-y-2">
               <h3 className="font-bold text-sm text-foreground line-clamp-1">{product.name}</h3>
               <p className="text-[11px] text-muted-foreground line-clamp-1">{product.nameEn}</p>
+              
+              {/* Price & Stock */}
               <div className="flex items-center justify-between pt-1">
                 <Badge
                   variant="outline"
@@ -103,6 +105,20 @@ export default function Products() {
                   <span className="text-lg font-bold text-primary">{product.costPrice.toFixed(2)}</span>
                   <span className="text-xs text-muted-foreground">{product.currency}</span>
                 </div>
+              </div>
+
+              {/* Countries */}
+              <div className="flex flex-wrap gap-1 pt-1">
+                {product.countries.slice(0, 2).map((c) => (
+                  <Badge key={c} variant="secondary" className="text-[9px] px-1.5 py-0">
+                    {c}
+                  </Badge>
+                ))}
+                {product.countries.length > 2 && (
+                  <Badge variant="secondary" className="text-[9px] px-1.5 py-0">
+                    +{product.countries.length - 2}
+                  </Badge>
+                )}
               </div>
             </div>
           </button>
