@@ -167,34 +167,38 @@ export function CODCalculator() {
   const fmtPctInput = (v: number) => `${v.toFixed(1)}%`;
   const fmtInt = (v: number) => v.toLocaleString();
 
+  const FX = CONSTANTS.fx_sar_to_usd;
+  const toSar = (usd: number) => fmtMoney(usd * FX, "SAR");
+
   type ResultRow = {
     label: string;
     value: string;
+    valueSar?: string;
     style?: "default" | "highlight-yellow" | "highlight-purple" | "highlight-green" | "highlight-red";
   };
 
   const resultRows: ResultRow[] = [
     { label: t("r_lead", lang), value: fmtInt(allOrders) },
-    { label: t("r_product", lang), value: fmtMoney(calc.productCostUsd) },
+    { label: t("r_product", lang), value: fmtMoney(calc.productCostUsd), valueSar: fmtMoney(productCostSar, "SAR") },
     { label: t("r_confirma_rate", lang), value: fmtPctInput(confirmaRate) },
     { label: t("r_confirmed", lang), value: fmtInt(calc.confirmed) },
     { label: t("r_delivered_rate", lang), value: fmtPctInput(deliveredRate) },
     { label: t("r_delivered", lang), value: fmtInt(calc.delivered), style: "highlight-yellow" },
     { label: t("r_failed", lang), value: fmtInt(calc.failedDelivered) },
-    { label: t("r_aov", lang), value: fmtMoney(calc.aovUsd), style: "highlight-purple" },
-    { label: t("r_sales", lang), value: fmtMoney(calc.salesUsd) },
-    { label: t("r_shipping", lang), value: fmtMoney(calc.shippingUsd) },
-    { label: t("r_callcenter", lang), value: fmtMoney(calc.callCenterUsd) },
-    { label: t("r_cod_fees", lang), value: fmtMoney(calc.codFeesUsd) },
-    { label: t("r_ads", lang), value: fmtMoney(calc.adsUsd) },
-    { label: t("r_product_sold", lang), value: fmtMoney(calc.productSoldUsd) },
-    { label: t("r_profits", lang), value: fmtMoney(calc.profitsUsd), style: calc.profitsUsd >= 0 ? "highlight-green" : "highlight-red" },
-    { label: t("r_ep_delivered", lang), value: fmtMoney(calc.epDelivered), style: "highlight-yellow" },
-    { label: t("r_invest", lang), value: fmtMoney(calc.investUsd) },
+    { label: t("r_aov", lang), value: fmtMoney(calc.aovUsd), valueSar: fmtMoney(sellingPriceSar, "SAR"), style: "highlight-purple" },
+    { label: t("r_sales", lang), value: fmtMoney(calc.salesUsd), valueSar: toSar(calc.salesUsd) },
+    { label: t("r_shipping", lang), value: fmtMoney(calc.shippingUsd), valueSar: toSar(calc.shippingUsd) },
+    { label: t("r_callcenter", lang), value: fmtMoney(calc.callCenterUsd), valueSar: toSar(calc.callCenterUsd) },
+    { label: t("r_cod_fees", lang), value: fmtMoney(calc.codFeesUsd), valueSar: toSar(calc.codFeesUsd) },
+    { label: t("r_ads", lang), value: fmtMoney(calc.adsUsd), valueSar: toSar(calc.adsUsd) },
+    { label: t("r_product_sold", lang), value: fmtMoney(calc.productSoldUsd), valueSar: toSar(calc.productSoldUsd) },
+    { label: t("r_profits", lang), value: fmtMoney(calc.profitsUsd), valueSar: toSar(calc.profitsUsd), style: calc.profitsUsd >= 0 ? "highlight-green" : "highlight-red" },
+    { label: t("r_ep_delivered", lang), value: fmtMoney(calc.epDelivered), valueSar: toSar(calc.epDelivered), style: "highlight-yellow" },
+    { label: t("r_invest", lang), value: fmtMoney(calc.investUsd), valueSar: toSar(calc.investUsd) },
     { label: t("r_roi", lang), value: fmtPct(calc.roi) },
     { label: t("r_net_profit_sales", lang), value: fmtPct(calc.netProfitSales) },
-    { label: t("r_fixed_costs", lang), value: fmtMoney(CONSTANTS.fixed_costs_usd) },
-    { label: t("r_sales_dashboard", lang), value: fmtMoney(calc.salesDashboard) },
+    { label: t("r_fixed_costs", lang), value: fmtMoney(CONSTANTS.fixed_costs_usd), valueSar: toSar(CONSTANTS.fixed_costs_usd) },
+    { label: t("r_sales_dashboard", lang), value: fmtMoney(calc.salesDashboard), valueSar: toSar(calc.salesDashboard) },
     { label: t("r_roi_dashboard", lang), value: fmtPct(calc.roiDashboard) },
   ];
 
@@ -323,14 +327,19 @@ export function CODCalculator() {
         <div className="order-2 lg:order-1">
           <div className="bg-card rounded-2xl border border-border overflow-hidden sticky top-20" style={{ boxShadow: "var(--shadow-card)" }}>
             {/* Purple header */}
-            <div className="bg-primary px-4 py-3">
-              <h3 className="text-sm font-bold text-primary-foreground text-center">{t("results", lang)}</h3>
+            <div className="bg-primary px-4 py-2.5 grid grid-cols-[1fr_auto_auto] gap-2 items-center">
+              <span className="text-[11px] font-bold text-primary-foreground/70 text-center">SAR</span>
+              <span className="text-[11px] font-bold text-primary-foreground/70 text-center w-[110px]">USD</span>
+              <span className="text-xs font-bold text-primary-foreground text-right">{t("results", lang)}</span>
             </div>
             <div className="divide-y divide-border">
               {resultRows.map((row, i) => (
-                <div key={i} className={`flex items-center justify-between px-4 py-2.5 ${rowBg(row.style)}`}>
-                  <span className={`text-sm font-medium ${rowText(row.style)}`}>{row.value}</span>
-                  <span className="text-xs text-muted-foreground">{row.label}</span>
+                <div key={i} className={`grid grid-cols-[1fr_auto_auto] gap-2 items-center px-4 py-2 ${rowBg(row.style)}`}>
+                  <span className="text-[11px] text-muted-foreground text-center">
+                    {row.valueSar || "—"}
+                  </span>
+                  <span className={`text-sm font-medium text-center w-[110px] ${rowText(row.style)}`}>{row.value}</span>
+                  <span className="text-xs text-muted-foreground text-right">{row.label}</span>
                 </div>
               ))}
             </div>
