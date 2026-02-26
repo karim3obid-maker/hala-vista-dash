@@ -119,12 +119,23 @@ export function WholesaleProductDetail({ product, onBack }: Props) {
             <span className="text-sm text-muted-foreground">{product.currency} / للقطعة</span>
           </div>
 
-          {/* MOQ Badge */}
-          <div className="flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-xl px-4 py-3">
-            <Package className="w-5 h-5 text-accent" />
-            <div>
-              <p className="text-xs text-muted-foreground">أقل طلب</p>
-              <p className="text-lg font-bold text-accent">{minOrder} قطعة</p>
+          {/* MOQ & Stock */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-xl px-4 py-3">
+              <Package className="w-5 h-5 text-accent" />
+              <div>
+                <p className="text-xs text-muted-foreground">أقل طلب</p>
+                <p className="text-lg font-bold text-accent">{minOrder} قطعة</p>
+              </div>
+            </div>
+            <div className={`flex items-center gap-2 rounded-xl px-4 py-3 border ${product.stock > 0 ? "bg-success/10 border-success/20" : "bg-destructive/10 border-destructive/20"}`}>
+              <Package className={`w-5 h-5 ${product.stock > 0 ? "text-success" : "text-destructive"}`} />
+              <div>
+                <p className="text-xs text-muted-foreground">الكمية المتوفرة</p>
+                <p className={`text-lg font-bold ${product.stock > 0 ? "text-success" : "text-destructive"}`}>
+                  {product.stock > 0 ? `${product.stock} قطعة` : "نفذ المخزون"}
+                </p>
+              </div>
             </div>
           </div>
 
