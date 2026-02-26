@@ -16,6 +16,7 @@ export interface Product {
   lastUpdated: string;
   description: string;
   currency: string;
+  minOrder?: number;
 }
 
 export const productsData: Product[] = [

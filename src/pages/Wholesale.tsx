@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { wholesaleProductsData } from "@/data/wholesaleProductsData";
 import { Product } from "@/data/productsData";
-import { ProductDetail } from "@/components/products/ProductDetail";
+import { WholesaleProductDetail } from "@/components/wholesale/WholesaleProductDetail";
 import { Search, ShoppingBag, Flame } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -21,7 +21,7 @@ export default function WholesalePage() {
   });
 
   if (selectedProduct) {
-    return <ProductDetail product={selectedProduct} onBack={() => setSelectedProduct(null)} />;
+    return <WholesaleProductDetail product={selectedProduct} onBack={() => setSelectedProduct(null)} />;
   }
 
   return (
