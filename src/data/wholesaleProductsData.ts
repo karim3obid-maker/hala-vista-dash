@@ -22,6 +22,7 @@ export const wholesaleProductsData: Product[] = [
     lastUpdated: "2036/2/25",
     description: "عطر فرنسي فاخر بتركيز عالي يدوم طويلاً. مزيج من المسك والعنبر مع لمسات خشبية أنيقة. حجم 100 مل مناسب للبيع بالجملة.",
     currency: "$",
+    minOrder: 50,
   },
   {
     id: "w2",
@@ -43,6 +44,7 @@ export const wholesaleProductsData: Product[] = [
     lastUpdated: "2036/2/20",
     description: "كريم تبييض بمكونات طبيعية 100% مع فيتامين C وحمض الهيالورونيك. نتائج مرئية خلال أسبوعين.",
     currency: "$",
+    minOrder: 100,
   },
   {
     id: "w3",
@@ -65,6 +67,7 @@ export const wholesaleProductsData: Product[] = [
     lastUpdated: "2036/2/18",
     description: "مجموعة مكياج متكاملة تحتوي على كريم أساس، بودرة، أحمر شفاه، ماسكارا، وآيلاينر. ألوان متنوعة مناسبة لجميع ألوان البشرة.",
     currency: "$",
+    minOrder: 30,
   },
   {
     id: "w4",
@@ -86,6 +89,7 @@ export const wholesaleProductsData: Product[] = [
     lastUpdated: "2036/2/22",
     description: "سيروم فيتامين C بتركيز 20% لتفتيح البشرة ومحاربة التجاعيد. تركيبة خفيفة سريعة الامتصاص مناسبة لجميع أنواع البشرة.",
     currency: "$",
+    minOrder: 80,
   },
   {
     id: "w5",
@@ -107,6 +111,7 @@ export const wholesaleProductsData: Product[] = [
     lastUpdated: "2036/2/15",
     description: "بخور عود كمبودي فاخر معتق. رائحة غنية ودافئة تملأ المكان بأجواء شرقية أصيلة. عبوة 50 جرام.",
     currency: "$",
+    minOrder: 40,
   },
   {
     id: "w6",
@@ -128,5 +133,6 @@ export const wholesaleProductsData: Product[] = [
     lastUpdated: "2036/2/01",
     description: "زيت أركان مغربي نقي 100% للشعر والبشرة. يغذي ويرطب ويعالج التقصف. عبوة 100 مل.",
     currency: "$",
+    minOrder: 60,
   },
 ];
