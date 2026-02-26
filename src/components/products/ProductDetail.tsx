@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Product } from "@/data/productsData";
 import { AddToMyProductsDialog } from "@/components/products/AddToMyProductsDialog";
+import { ProductCalculator } from "@/components/products/ProductCalculator";
 import {
   ArrowRight,
   Star,
@@ -207,6 +208,11 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
               </Badge>
               <span className="text-sm text-muted-foreground">الحالة:</span>
             </div>
+          </div>
+
+          {/* Calculator */}
+          <div className="border-t border-border pt-3">
+            <ProductCalculator product={product} />
           </div>
 
           {/* Action Buttons */}
