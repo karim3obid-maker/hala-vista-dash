@@ -18,11 +18,18 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { Plus, Trash2 } from "lucide-react";
 
 interface AddToMyProductsDialogProps {
   product: Product;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+}
+
+interface Offer {
+  id: number;
+  quantity: string;
+  price: string;
 }
 
 const countries = [
@@ -34,23 +41,37 @@ const countries = [
   { code: "QA", name: "قطر", currency: "ر.ق" },
 ];
 
+let nextId = 1;
+
 export function AddToMyProductsDialog({ product, open, onOpenChange }: AddToMyProductsDialogProps) {
   const [selectedCountry, setSelectedCountry] = useState("");
-  const [price1, setPrice1] = useState("");
-  const [price2, setPrice2] = useState("");
-  const [price3, setPrice3] = useState("");
   const [description, setDescription] = useState(product.description);
+  const [offers, setOffers] = useState<Offer[]>([{ id: 0, quantity: "1", price: "" }]);
 
   const country = countries.find((c) => c.code === selectedCountry);
   const costInCurrency = product.costPrice.toFixed(2);
+
+  const addOffer = () => {
+    setOffers([...offers, { id: nextId++, quantity: "", price: "" }]);
+  };
+
+  const removeOffer = (id: number) => {
+    if (offers.length <= 1) return;
+    setOffers(offers.filter((o) => o.id !== id));
+  };
+
+  const updateOffer = (id: number, field: "quantity" | "price", value: string) => {
+    setOffers(offers.map((o) => (o.id === id ? { ...o, [field]: value } : o)));
+  };
 
   const handleSubmit = () => {
     if (!selectedCountry) {
       toast.error("اختر الدولة أولاً");
       return;
     }
-    if (!price1) {
-      toast.error("أدخل سعر القطعة");
+    const firstOffer = offers[0];
+    if (!firstOffer.quantity || !firstOffer.price) {
+      toast.error("أدخل عدد القطع والسعر للعرض الأول على الأقل");
       return;
     }
     toast.success("تمت إضافة المنتج إلى منتجاتي بنجاح");
@@ -60,7 +81,6 @@ export function AddToMyProductsDialog({ product, open, onOpenChange }: AddToMyPr
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[580px] max-h-[90vh] overflow-y-auto p-0">
-        {/* Header */}
         <DialogHeader className="p-6 pb-4 border-b border-border">
           <DialogTitle className="text-xl font-bold text-foreground">تسعير المنتج</DialogTitle>
           <p className="text-sm text-muted-foreground">{product.nameEn}</p>
@@ -84,14 +104,14 @@ export function AddToMyProductsDialog({ product, open, onOpenChange }: AddToMyPr
             </Select>
           </div>
 
-          {/* Description / Content */}
+          {/* Description */}
           <div className="space-y-2">
             <Label className="text-sm font-medium text-foreground">المحتوى (اختياري)</Label>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="أضف وصف أو تفاصيل إضافية للمنتج..."
-              className="rounded-xl min-h-[120px] resize-none"
+              className="rounded-xl min-h-[100px] resize-none"
             />
           </div>
 
@@ -109,43 +129,57 @@ export function AddToMyProductsDialog({ product, open, onOpenChange }: AddToMyPr
             )}
           </div>
 
-          {/* Pricing Tiers */}
-          <div className="grid grid-cols-3 gap-3">
-            <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">سعر ال 3 قطع</Label>
-              <Input
-                type="number"
-                value={price3}
-                onChange={(e) => setPrice3(e.target.value)}
-                placeholder="0.00"
-                className="rounded-xl h-11 text-center"
-                min={product.costPrice}
-                step="0.01"
-              />
+          {/* Dynamic Offers */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={addOffer}
+                className="rounded-xl gap-1 text-xs border-primary text-primary hover:bg-primary/10"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                إضافة عرض
+              </Button>
+              <Label className="text-sm font-medium text-foreground">العروض</Label>
             </div>
+
             <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">سعر القطعتين</Label>
-              <Input
-                type="number"
-                value={price2}
-                onChange={(e) => setPrice2(e.target.value)}
-                placeholder="0.00"
-                className="rounded-xl h-11 text-center"
-                min={product.costPrice}
-                step="0.01"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">سعر القطعة</Label>
-              <Input
-                type="number"
-                value={price1}
-                onChange={(e) => setPrice1(e.target.value)}
-                placeholder="0.00"
-                className="rounded-xl h-11 text-center"
-                min={product.costPrice}
-                step="0.01"
-              />
+              {offers.map((offer, index) => (
+                <div key={offer.id} className="flex items-center gap-2">
+                  {offers.length > 1 && (
+                    <button
+                      onClick={() => removeOffer(offer.id)}
+                      className="w-8 h-8 shrink-0 rounded-lg flex items-center justify-center text-destructive hover:bg-destructive/10 transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
+                  <div className="flex-1 flex items-center gap-2">
+                    <Input
+                      type="number"
+                      value={offer.price}
+                      onChange={(e) => updateOffer(offer.id, "price", e.target.value)}
+                      placeholder="السعر"
+                      className="rounded-xl h-10 text-center flex-1"
+                      min={product.costPrice}
+                      step="0.01"
+                    />
+                    <Input
+                      type="number"
+                      value={offer.quantity}
+                      onChange={(e) => updateOffer(offer.id, "quantity", e.target.value)}
+                      placeholder="العدد"
+                      className="rounded-xl h-10 text-center w-24"
+                      min="1"
+                    />
+                  </div>
+                  <span className="text-xs text-muted-foreground shrink-0 w-16 text-right">
+                    {offer.quantity ? `${offer.quantity} قطعة` : `عرض ${index + 1}`}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
 
