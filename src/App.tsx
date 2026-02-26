@@ -9,6 +9,7 @@ import Calculator from "./pages/Calculator";
 import Wholesale from "./pages/Wholesale";
 import Pricing from "./pages/Pricing";
 import Orders from "./pages/Orders";
+import Products from "./pages/Products";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/wholesale" element={<Wholesale />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/orders" element={<Orders />} />
+            <Route path="/products" element={<Products />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
