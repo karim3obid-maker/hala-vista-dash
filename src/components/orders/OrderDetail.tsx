@@ -77,73 +77,72 @@ export default function OrderDetail({ order, onBack, onNext, onPrev, hasNext, ha
   const orderSt = orderStatusLabel[order.status];
 
   return (
-    <div className="container max-w-[1280px] mx-auto px-6 py-8">
+    <div className="container max-w-[1280px] mx-auto px-6 py-8" dir="rtl">
       {/* Top Bar */}
       <div className="flex items-center justify-between mb-6">
-        {/* Navigation buttons */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onBack}
+            className="w-9 h-9 rounded-xl bg-muted/50 flex items-center justify-center hover:bg-muted transition-colors"
+          >
+            <ArrowRight className="w-5 h-5 text-foreground rotate-180" />
+          </button>
+          <h1 className="text-xl font-bold text-foreground font-mono">{order.orderNumber}</h1>
+          <span className={`px-3 py-1 rounded-lg text-xs font-medium ${orderSt.color}`}>
+            {orderSt.label}
+          </span>
+          <span className={`px-3 py-1 rounded-lg text-xs font-medium ${payment.color}`}>
+            {payment.label}
+          </span>
+        </div>
+
         <div className="flex items-center gap-2">
           <button
             onClick={onPrev}
             disabled={!hasPrev}
             className="w-9 h-9 rounded-xl bg-muted/50 flex items-center justify-center hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >
-            <ChevronLeft className="w-5 h-5 text-foreground" />
+            <ChevronRight className="w-5 h-5 text-foreground" />
           </button>
           <button
             onClick={onNext}
             disabled={!hasNext}
             className="w-9 h-9 rounded-xl bg-muted/50 flex items-center justify-center hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >
-            <ChevronRight className="w-5 h-5 text-foreground" />
-          </button>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <span className={`px-3 py-1 rounded-lg text-xs font-medium ${payment.color}`}>
-            {payment.label}
-          </span>
-          <span className={`px-3 py-1 rounded-lg text-xs font-medium ${orderSt.color}`}>
-            {orderSt.label}
-          </span>
-          <h1 className="text-xl font-bold text-foreground font-mono">{order.orderNumber}</h1>
-          <button
-            onClick={onBack}
-            className="w-9 h-9 rounded-xl bg-muted/50 flex items-center justify-center hover:bg-muted transition-colors"
-          >
-            <ArrowRight className="w-5 h-5 text-foreground" />
+            <ChevronLeft className="w-5 h-5 text-foreground" />
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6" dir="rtl">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Right Column - Sidebar Info */}
         <div className="lg:col-span-1 space-y-4">
           {/* Customer */}
           <Card title="العميل" icon={User}>
-            <div className="flex items-center gap-3 justify-end">
-              <div className="text-right">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <User className="w-5 h-5 text-primary" />
+              </div>
+              <div>
                 <p className="font-semibold text-foreground">{order.customer.name}</p>
                 <p className="text-xs text-muted-foreground">
                   {order.customer.ordersCount === 1 ? "طلب واحد" : `${order.customer.ordersCount} طلبات`}
                 </p>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <User className="w-5 h-5 text-primary" />
               </div>
             </div>
           </Card>
 
           {/* Contact */}
           <Card title="معلومات التواصل" icon={Phone}>
-            <div className="flex items-center gap-2 justify-end">
-              <span className="text-foreground font-medium">{order.customer.phone}</span>
+            <div className="flex items-center gap-2">
               <Phone className="w-4 h-4 text-muted-foreground" />
+              <span className="text-foreground font-medium">{order.customer.phone}</span>
             </div>
           </Card>
 
           {/* Address */}
           <Card title="عنوان الشحن" icon={MapPin}>
-            <div className="text-right">
+            <div>
               <p className="font-semibold text-foreground">{order.customer.name}</p>
               <p className="text-sm text-muted-foreground">
                 {order.customer.address.city}، {order.customer.address.district}، {order.customer.address.street}
@@ -190,21 +189,21 @@ export default function OrderDetail({ order, onBack, onNext, onPrev, hasNext, ha
           {/* Products */}
           {order.products.map((product, i) => (
             <div key={i} className="bg-card rounded-2xl border border-border p-5" style={{ boxShadow: "var(--shadow-card)" }}>
-              <div className="flex items-center gap-4 justify-end">
-                <div className="text-right flex-1">
-                  <p className="text-sm text-muted-foreground">
-                    {product.price} ر.س × {product.quantity}
-                  </p>
-                  <p className="font-semibold text-foreground">{product.price * product.quantity} ر.س</p>
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-xl bg-muted/30 flex items-center justify-center shrink-0">
+                  <PackageCheck className="w-6 h-6 text-muted-foreground" />
                 </div>
-                <div className="text-right">
+                <div>
                   <p className="font-semibold text-primary">{product.name}</p>
                   {product.variant && (
                     <p className="text-xs text-muted-foreground">{product.variant}</p>
                   )}
                 </div>
-                <div className="w-14 h-14 rounded-xl bg-muted/30 flex items-center justify-center shrink-0">
-                  <PackageCheck className="w-6 h-6 text-muted-foreground" />
+                <div className="mr-auto text-left">
+                  <p className="text-sm text-muted-foreground">
+                    {product.price} ر.س × {product.quantity}
+                  </p>
+                  <p className="font-semibold text-foreground">{product.price * product.quantity} ر.س</p>
                 </div>
               </div>
             </div>
@@ -273,12 +272,12 @@ export default function OrderDetail({ order, onBack, onNext, onPrev, hasNext, ha
           {/* Cancellation */}
           {isCancelled && order.cancellationReason && (
             <div className="bg-destructive/5 border border-destructive/20 rounded-2xl p-5">
-              <div className="flex items-start gap-3 justify-end">
-                <div className="text-right">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
+                <div>
                   <p className="font-semibold text-destructive mb-1">سبب الإلغاء</p>
                   <p className="text-sm text-destructive">{order.cancellationReason}</p>
                 </div>
-                <AlertTriangle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
               </div>
             </div>
           )}
@@ -287,68 +286,68 @@ export default function OrderDetail({ order, onBack, onNext, onPrev, hasNext, ha
           <Card title="ملخص الدفع" icon={CreditCard}>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-foreground">{order.subtotal} ر.س</span>
                 <span className="text-muted-foreground">المجموع الفرعي</span>
+                <span className="text-foreground">{order.subtotal} ر.س</span>
               </div>
               {order.discount && (
                 <div className="flex justify-between">
-                  <span className="text-emerald-600">-{order.discount.amount} ر.س</span>
                   <span className="text-emerald-600">خصم ({order.discount.code})</span>
+                  <span className="text-emerald-600">-{order.discount.amount} ر.س</span>
                 </div>
               )}
               <div className="flex justify-between">
+                <span className="text-muted-foreground">الشحن</span>
                 <span className="text-emerald-600">
                   {order.shipping === "free" ? "مجاني" : `${order.shipping} ر.س`}
                 </span>
-                <span className="text-muted-foreground">الشحن</span>
               </div>
               <Separator />
               <div className="flex justify-between items-center">
-                <span className="text-lg font-bold text-foreground">{order.total} ر.س</span>
                 <span className="font-semibold text-foreground">الإجمالي</span>
+                <span className="text-lg font-bold text-foreground">{order.total} ر.س</span>
               </div>
               <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                  <CreditCard className="w-4 h-4" />
+                  <span>{order.paymentMethod}</span>
+                </div>
                 <span className={`px-2.5 py-1 rounded-lg text-xs font-medium ${payment.color}`}>
                   {payment.label}
                 </span>
-                <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                  <span>{order.paymentMethod}</span>
-                  <CreditCard className="w-4 h-4" />
-                </div>
               </div>
             </div>
           </Card>
 
           {/* Activity Log */}
           <div className="bg-card rounded-2xl border border-border p-5" style={{ boxShadow: "var(--shadow-card)" }}>
-            <div className="flex items-center gap-2 justify-end mb-4">
+            <div className="flex items-center gap-2 mb-4">
+              <Activity className="w-5 h-5 text-muted-foreground" />
+              <h3 className="font-semibold text-foreground">سجل الأنشطة</h3>
               <span className="px-2.5 py-1 rounded-lg bg-muted text-xs font-medium text-muted-foreground">
                 {order.activityLog.length} نشاط
               </span>
-              <h3 className="font-semibold text-foreground">سجل الأنشطة</h3>
-              <Activity className="w-5 h-5 text-muted-foreground" />
             </div>
 
             <div className="relative">
               {/* Timeline line */}
-              <div className="absolute right-[19px] top-0 bottom-0 w-0.5 bg-border" />
+              <div className="absolute right-[19px] top-0 bottom-0 w-px bg-border" />
 
               <div className="space-y-6">
                 {order.activityLog.map((log) => {
                   const iconData = activityIcons[log.icon] || activityIcons.create;
                   const Icon = iconData.icon;
                   return (
-                    <div key={log.id} className="flex items-start gap-4 justify-end relative">
-                      <div className="text-right flex-1">
-                        <p className="text-sm font-medium text-foreground">{log.action}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {log.date} {log.time} · {log.by}
-                        </p>
-                      </div>
+                    <div key={log.id} className="flex items-start gap-4 relative">
                       <div
                         className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 z-10 ${iconData.color}`}
                       >
                         <Icon className="w-4 h-4" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-foreground">{log.action}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {log.date} {log.time} · {log.by}
+                        </p>
                       </div>
                     </div>
                   );
@@ -375,9 +374,9 @@ function Card({
 }) {
   return (
     <div className="bg-card rounded-2xl border border-border p-5" style={{ boxShadow: "var(--shadow-card)" }}>
-      <div className="flex items-center gap-2 justify-end mb-4">
-        <h3 className="font-semibold text-foreground text-sm">{title}</h3>
+      <div className="flex items-center gap-2 mb-4">
         <Icon className="w-4 h-4 text-muted-foreground" />
+        <h3 className="font-semibold text-foreground text-sm">{title}</h3>
       </div>
       {children}
     </div>
@@ -399,6 +398,7 @@ function Row({
 }) {
   return (
     <div className="flex justify-between items-center">
+      <span className="text-sm text-muted-foreground">{label}</span>
       {tag ? (
         <span className="px-2 py-0.5 rounded bg-muted text-xs text-muted-foreground">{value}</span>
       ) : (
@@ -408,7 +408,6 @@ function Row({
           {value}
         </span>
       )}
-      <span className="text-sm text-muted-foreground">{label}</span>
     </div>
   );
 }
