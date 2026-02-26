@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
-import { RefreshCw, Copy, Lock, Edit3, Globe } from "lucide-react";
+import { RefreshCw, Copy, Lock, Globe, ShoppingCart, TrendingUp, Megaphone, DollarSign, Truck, Phone, Receipt, PiggyBank, Target, BarChart3, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
 
 type Lang = "ar" | "en";
@@ -11,50 +11,25 @@ const labels: Record<string, Record<Lang, string>> = {
   title: { ar: "حاسبة التسعير والأرباح (COD)", en: "Pricing & Profit Calculator (COD)" },
   reset: { ar: "إعادة تعيين", en: "Reset" },
   copy: { ar: "نسخ السيناريو", en: "Copy Scenario" },
-  inputs: { ar: "المدخلات", en: "Inputs" },
-  results: { ar: "النتائج", en: "Results" },
-  editableNote: { ar: "الحقول الخضراء قابلة للتعديل", en: "Green fields are editable" },
-  fixedConstants: { ar: "الثوابت (غير قابلة للتعديل)", en: "Fixed Constants (Locked)" },
+  editableNote: { ar: "عدّل القيم لحساب أرباحك فوراً", en: "Edit values to calculate profits instantly" },
+  fixedConstants: { ar: "الثوابت الثابتة", en: "Fixed Constants" },
   section1: { ar: "المنتج والتسعير", en: "Product & Pricing" },
   section2: { ar: "نسب التأكيد والتوصيل", en: "Confirmation & Delivery" },
   section3: { ar: "الإعلانات", en: "Ads" },
-  all_orders: { ar: "عدد الطلبات / Leads", en: "Total Orders / Leads" },
-  product_cost_sar: { ar: "تكلفة المنتج (ريال)", en: "Product Cost (SAR)" },
-  selling_price_sar: { ar: "سعر البيع (ريال)", en: "Selling Price (SAR)" },
-  confirma_rate: { ar: "نسبة التأكيدات (%)", en: "Confirmation Rate (%)" },
-  delivered_rate: { ar: "نسبة التوصيل (%)", en: "Delivery Rate (%)" },
-  cpp_usd: { ar: "تكلفة الشراء الإعلاني ($)", en: "Cost per Purchase ($)" },
-  fx: { ar: "سعر الصرف ريال/دولار", en: "FX SAR/USD" },
-  cc_lead: { ar: "كول سنتر - ليد ($)", en: "Call Center - Lead ($)" },
-  cc_confirm: { ar: "كول سنتر - تأكيد ($)", en: "Call Center - Confirm ($)" },
-  cc_delivered: { ar: "كول سنتر - توصيل ($)", en: "Call Center - Delivered ($)" },
-  ship_delivered: { ar: "شحن التوصيل ($)", en: "Shipping Delivered ($)" },
-  ship_return: { ar: "شحن المرتجع ($)", en: "Shipping Return ($)" },
-  cod_fee: { ar: "رسوم COD (%)", en: "COD Fee (%)" },
-  fixed_costs: { ar: "تكاليف ثابتة ($)", en: "Fixed Costs ($)" },
-  // Results labels
-  r_lead: { ar: "الطلبات (Leads)", en: "Leads" },
-  r_product: { ar: "تكلفة المنتج ($)", en: "Product Cost ($)" },
-  r_confirma_rate: { ar: "نسبة التأكيد", en: "Confirma Rate" },
-  r_confirmed: { ar: "المؤكدة", en: "Confirmed" },
-  r_delivered_rate: { ar: "نسبة التوصيل", en: "Delivery Rate" },
-  r_delivered: { ar: "الموصّلة", en: "Delivered" },
-  r_failed: { ar: "فشل التوصيل", en: "Failed Delivered" },
-  r_aov: { ar: "متوسط قيمة الطلب ($)", en: "AOV ($)" },
-  r_sales: { ar: "المبيعات ($)", en: "Sales ($)" },
-  r_shipping: { ar: "الشحن ($)", en: "Shipping ($)" },
-  r_callcenter: { ar: "كول سنتر ($)", en: "Call Center ($)" },
-  r_cod_fees: { ar: "رسوم COD ($)", en: "COD Fees ($)" },
-  r_ads: { ar: "الإعلانات ($)", en: "Ads ($)" },
-  r_product_sold: { ar: "تكلفة المنتج المباع ($)", en: "Product Sold ($)" },
-  r_profits: { ar: "الأرباح ($)", en: "Profits ($)" },
-  r_ep_delivered: { ar: "ربح لكل طلب موصّل ($)", en: "EP / Delivered ($)" },
-  r_invest: { ar: "إجمالي الاستثمار ($)", en: "Total Investment ($)" },
-  r_roi: { ar: "العائد على الاستثمار", en: "ROI" },
-  r_net_profit_sales: { ar: "صافي الربح / المبيعات", en: "Net Profit / Sales" },
-  r_fixed_costs: { ar: "تكاليف ثابتة ($)", en: "Fixed Costs ($)" },
-  r_sales_dashboard: { ar: "مبيعات الداشبورد ($)", en: "Sales Dashboard ($)" },
-  r_roi_dashboard: { ar: "ROI الداشبورد", en: "ROI Dashboard" },
+  all_orders: { ar: "عدد الطلبات", en: "Total Orders" },
+  product_cost_sar: { ar: "تكلفة المنتج", en: "Product Cost" },
+  selling_price_sar: { ar: "سعر البيع", en: "Selling Price" },
+  confirma_rate: { ar: "نسبة التأكيدات", en: "Confirmation Rate" },
+  delivered_rate: { ar: "نسبة التوصيل", en: "Delivery Rate" },
+  cpp_usd: { ar: "تكلفة الشراء الإعلاني", en: "Cost per Purchase" },
+  fx: { ar: "سعر الصرف", en: "FX Rate" },
+  cc_lead: { ar: "كول سنتر - ليد", en: "CC Lead" },
+  cc_confirm: { ar: "كول سنتر - تأكيد", en: "CC Confirm" },
+  cc_delivered: { ar: "كول سنتر - توصيل", en: "CC Delivered" },
+  ship_delivered: { ar: "شحن توصيل", en: "Ship Delivered" },
+  ship_return: { ar: "شحن مرتجع", en: "Ship Return" },
+  cod_fee: { ar: "رسوم COD", en: "COD Fee" },
+  fixed_costs: { ar: "تكاليف ثابتة", en: "Fixed Costs" },
 };
 
 const t = (key: string, lang: Lang) => labels[key]?.[lang] || key;
@@ -87,25 +62,7 @@ export function CODCalculator() {
   const [confirmaRate, setConfirmaRate] = useState(DEFAULTS.confirma_rate);
   const [deliveredRate, setDeliveredRate] = useState(DEFAULTS.delivered_rate);
   const [cppUsd, setCppUsd] = useState(DEFAULTS.cpp_usd);
-
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const validate = (field: string, val: number) => {
-    const e = { ...errors };
-    if (field === "confirma_rate" || field === "delivered_rate") {
-      if (val < 0 || val > 100) {
-        e[field] = lang === "ar" ? "يجب أن تكون بين 0 و 100" : "Must be 0–100";
-      } else {
-        delete e[field];
-      }
-    }
-    if (field === "all_orders" && val < 0) {
-      e[field] = lang === "ar" ? "يجب أن تكون 0 أو أكثر" : "Must be >= 0";
-    } else if (field === "all_orders" && val >= 0) {
-      delete e[field];
-    }
-    setErrors(e);
-  };
+  const [showConstants, setShowConstants] = useState(false);
 
   const calc = useMemo(() => {
     const C = CONSTANTS;
@@ -148,7 +105,6 @@ export function CODCalculator() {
     setConfirmaRate(DEFAULTS.confirma_rate);
     setDeliveredRate(DEFAULTS.delivered_rate);
     setCppUsd(DEFAULTS.cpp_usd);
-    setErrors({});
   };
 
   const copyScenario = () => {
@@ -161,76 +117,21 @@ export function CODCalculator() {
     toast.success(lang === "ar" ? "تم نسخ السيناريو" : "Scenario copied!");
   };
 
-  const fmtMoney = (v: number, currency: "$" | "SAR" = "$") =>
-    `${v.toFixed(2)} ${currency}`;
-  const fmtPct = (v: number) => `${(v * 100).toFixed(1)}%`;
-  const fmtPctInput = (v: number) => `${v.toFixed(1)}%`;
-  const fmtInt = (v: number) => v.toLocaleString();
-
   const FX = CONSTANTS.fx_sar_to_usd;
-  const toSar = (usd: number) => fmtMoney(usd * FX, "SAR");
+  const fmt = (v: number) => v.toFixed(2);
+  const fmtSar = (usd: number) => fmt(usd * FX);
 
-  type ResultRow = {
-    label: string;
-    value: string;
-    valueSar?: string;
-    style?: "default" | "highlight-yellow" | "highlight-purple" | "highlight-green" | "highlight-red";
-  };
-
-  const resultRows: ResultRow[] = [
-    { label: t("r_lead", lang), value: fmtInt(allOrders) },
-    { label: t("r_product", lang), value: fmtMoney(calc.productCostUsd), valueSar: fmtMoney(productCostSar, "SAR") },
-    { label: t("r_confirma_rate", lang), value: fmtPctInput(confirmaRate) },
-    { label: t("r_confirmed", lang), value: fmtInt(calc.confirmed) },
-    { label: t("r_delivered_rate", lang), value: fmtPctInput(deliveredRate) },
-    { label: t("r_delivered", lang), value: fmtInt(calc.delivered), style: "highlight-yellow" },
-    { label: t("r_failed", lang), value: fmtInt(calc.failedDelivered) },
-    { label: t("r_aov", lang), value: fmtMoney(calc.aovUsd), valueSar: fmtMoney(sellingPriceSar, "SAR"), style: "highlight-purple" },
-    { label: t("r_sales", lang), value: fmtMoney(calc.salesUsd), valueSar: toSar(calc.salesUsd) },
-    { label: t("r_shipping", lang), value: fmtMoney(calc.shippingUsd), valueSar: toSar(calc.shippingUsd) },
-    { label: t("r_callcenter", lang), value: fmtMoney(calc.callCenterUsd), valueSar: toSar(calc.callCenterUsd) },
-    { label: t("r_cod_fees", lang), value: fmtMoney(calc.codFeesUsd), valueSar: toSar(calc.codFeesUsd) },
-    { label: t("r_ads", lang), value: fmtMoney(calc.adsUsd), valueSar: toSar(calc.adsUsd) },
-    { label: t("r_product_sold", lang), value: fmtMoney(calc.productSoldUsd), valueSar: toSar(calc.productSoldUsd) },
-    { label: t("r_profits", lang), value: fmtMoney(calc.profitsUsd), valueSar: toSar(calc.profitsUsd), style: calc.profitsUsd >= 0 ? "highlight-green" : "highlight-red" },
-    { label: t("r_ep_delivered", lang), value: fmtMoney(calc.epDelivered), valueSar: toSar(calc.epDelivered), style: "highlight-yellow" },
-    { label: t("r_invest", lang), value: fmtMoney(calc.investUsd), valueSar: toSar(calc.investUsd) },
-    { label: t("r_roi", lang), value: fmtPct(calc.roi) },
-    { label: t("r_net_profit_sales", lang), value: fmtPct(calc.netProfitSales) },
-    { label: t("r_fixed_costs", lang), value: fmtMoney(CONSTANTS.fixed_costs_usd), valueSar: toSar(CONSTANTS.fixed_costs_usd) },
-    { label: t("r_sales_dashboard", lang), value: fmtMoney(calc.salesDashboard), valueSar: toSar(calc.salesDashboard) },
-    { label: t("r_roi_dashboard", lang), value: fmtPct(calc.roiDashboard) },
-  ];
-
-  const rowBg = (style?: ResultRow["style"]) => {
-    switch (style) {
-      case "highlight-yellow": return "bg-warning/10";
-      case "highlight-purple": return "bg-primary/10";
-      case "highlight-green": return "bg-success/10";
-      case "highlight-red": return "bg-destructive/10";
-      default: return "";
-    }
-  };
-
-  const rowText = (style?: ResultRow["style"]) => {
-    switch (style) {
-      case "highlight-green": return "text-success font-bold";
-      case "highlight-red": return "text-destructive font-bold";
-      case "highlight-yellow": return "text-warning font-bold";
-      case "highlight-purple": return "text-primary font-bold";
-      default: return "text-foreground";
-    }
-  };
+  const isProfitable = calc.profitsUsd >= 0;
 
   const constantsList = [
-    { label: t("fx", lang), value: CONSTANTS.fx_sar_to_usd.toString() },
-    { label: t("cc_lead", lang), value: `$ ${CONSTANTS.call_center_lead_price}` },
-    { label: t("cc_confirm", lang), value: `$ ${CONSTANTS.call_center_confirm_price}` },
-    { label: t("cc_delivered", lang), value: `$ ${CONSTANTS.call_center_delivered_price}` },
-    { label: t("ship_delivered", lang), value: `$ ${CONSTANTS.shipping_cost_delivered}` },
-    { label: t("ship_return", lang), value: `$ ${CONSTANTS.shipping_cost_return}` },
+    { label: t("fx", lang), value: `${CONSTANTS.fx_sar_to_usd}` },
+    { label: t("cc_lead", lang), value: `$${CONSTANTS.call_center_lead_price}` },
+    { label: t("cc_confirm", lang), value: `$${CONSTANTS.call_center_confirm_price}` },
+    { label: t("cc_delivered", lang), value: `$${CONSTANTS.call_center_delivered_price}` },
+    { label: t("ship_delivered", lang), value: `$${CONSTANTS.shipping_cost_delivered}` },
+    { label: t("ship_return", lang), value: `$${CONSTANTS.shipping_cost_return}` },
     { label: t("cod_fee", lang), value: `${CONSTANTS.cod_fee_pct}%` },
-    { label: t("fixed_costs", lang), value: `$ ${CONSTANTS.fixed_costs_usd}` },
+    { label: t("fixed_costs", lang), value: `$${CONSTANTS.fixed_costs_usd}` },
   ];
 
   return (
@@ -238,19 +139,18 @@ export function CODCalculator() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={reset} className="rounded-xl gap-1 text-xs">
+          <Button variant="outline" size="sm" onClick={reset} className="rounded-xl gap-1.5 text-xs h-8">
             <RefreshCw className="w-3.5 h-3.5" />
             {t("reset", lang)}
           </Button>
-          <Button variant="outline" size="sm" onClick={copyScenario} className="rounded-xl gap-1 text-xs">
+          <Button variant="outline" size="sm" onClick={copyScenario} className="rounded-xl gap-1.5 text-xs h-8">
             <Copy className="w-3.5 h-3.5" />
             {t("copy", lang)}
           </Button>
           <Button
-            variant="ghost"
-            size="sm"
+            variant="ghost" size="sm"
             onClick={() => setLang(lang === "ar" ? "en" : "ar")}
-            className="rounded-xl gap-1 text-xs"
+            className="rounded-xl gap-1 text-xs h-8"
           >
             <Globe className="w-3.5 h-3.5" />
             {lang === "ar" ? "EN" : "عربي"}
@@ -259,90 +159,192 @@ export function CODCalculator() {
         <h2 className="text-lg font-bold text-foreground">{t("title", lang)}</h2>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        {/* RIGHT COLUMN - Inputs */}
-        <div className="space-y-4 order-1 lg:order-2">
-          {/* Section 1 - Product & Pricing */}
-          <Card title={t("section1", lang)} icon={<Edit3 className="w-4 h-4 text-accent" />}>
-            <EditableField
-              label={t("all_orders", lang)} value={allOrders} type="int"
-              error={errors.all_orders}
-              onChange={(v) => { setAllOrders(v); validate("all_orders", v); }}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
+        {/* ===== RIGHT: INPUTS (2 cols) ===== */}
+        <div className="lg:col-span-2 space-y-4 order-1 lg:order-2">
+          {/* Product & Pricing */}
+          <InputCard
+            title={t("section1", lang)}
+            icon={<ShoppingCart className="w-4 h-4 text-accent" />}
+            color="accent"
+          >
+            <NumberInput
+              label={t("all_orders", lang)} value={allOrders}
+              onChange={setAllOrders} suffix={lang === "ar" ? "طلب" : "orders"} step={1}
             />
-            <EditableField
-              label={t("product_cost_sar", lang)} value={productCostSar} suffix="SAR"
-              onChange={setProductCostSar}
+            <NumberInput
+              label={t("product_cost_sar", lang)} value={productCostSar}
+              onChange={setProductCostSar} suffix="SAR" step={0.5}
             />
-            <EditableField
-              label={t("selling_price_sar", lang)} value={sellingPriceSar} suffix="SAR"
-              onChange={setSellingPriceSar}
+            <NumberInput
+              label={t("selling_price_sar", lang)} value={sellingPriceSar}
+              onChange={setSellingPriceSar} suffix="SAR" step={1}
             />
-          </Card>
+          </InputCard>
 
-          {/* Section 2 */}
-          <Card title={t("section2", lang)} icon={<Edit3 className="w-4 h-4 text-accent" />}>
-            <EditableField
-              label={t("confirma_rate", lang)} value={confirmaRate} suffix="%"
-              error={errors.confirma_rate}
-              onChange={(v) => { setConfirmaRate(v); validate("confirma_rate", v); }}
+          {/* Rates with sliders */}
+          <InputCard
+            title={t("section2", lang)}
+            icon={<Target className="w-4 h-4 text-primary" />}
+            color="primary"
+          >
+            <SliderInput
+              label={t("confirma_rate", lang)} value={confirmaRate}
+              onChange={setConfirmaRate} color="primary"
             />
-            <EditableField
-              label={t("delivered_rate", lang)} value={deliveredRate} suffix="%"
-              error={errors.delivered_rate}
-              onChange={(v) => { setDeliveredRate(v); validate("delivered_rate", v); }}
+            <SliderInput
+              label={t("delivered_rate", lang)} value={deliveredRate}
+              onChange={setDeliveredRate} color="success"
             />
-          </Card>
+          </InputCard>
 
-          {/* Section 3 */}
-          <Card title={t("section3", lang)} icon={<Edit3 className="w-4 h-4 text-accent" />}>
-            <EditableField
-              label={t("cpp_usd", lang)} value={cppUsd} suffix="$"
-              onChange={setCppUsd}
+          {/* Ads */}
+          <InputCard
+            title={t("section3", lang)}
+            icon={<Megaphone className="w-4 h-4 text-accent" />}
+            color="accent"
+          >
+            <NumberInput
+              label={t("cpp_usd", lang)} value={cppUsd}
+              onChange={setCppUsd} suffix="$" step={0.5}
             />
-          </Card>
+          </InputCard>
 
-          <p className="text-xs text-success flex items-center gap-1 justify-end">
-            <span className="w-3 h-3 rounded bg-success/20 border border-success/40 inline-block" />
+          <p className="text-[11px] text-muted-foreground text-center">
             {t("editableNote", lang)}
           </p>
 
-          {/* Constants */}
-          <div className="bg-card rounded-2xl border border-border p-4 space-y-3" style={{ boxShadow: "var(--shadow-card)" }}>
-            <h3 className="text-sm font-bold text-muted-foreground flex items-center gap-2 justify-end">
-              {t("fixedConstants", lang)}
-              <Lock className="w-4 h-4" />
-            </h3>
-            <div className="grid grid-cols-2 gap-2">
+          {/* Constants toggle */}
+          <button
+            onClick={() => setShowConstants(!showConstants)}
+            className="w-full flex items-center justify-between bg-muted/30 rounded-xl px-4 py-2.5 text-xs text-muted-foreground hover:bg-muted/50 transition-colors"
+          >
+            <Lock className="w-3.5 h-3.5" />
+            <span className="font-medium">{t("fixedConstants", lang)}</span>
+          </button>
+          {showConstants && (
+            <div className="grid grid-cols-2 gap-1.5 animate-in fade-in slide-in-from-top-2 duration-200">
               {constantsList.map((c, i) => (
-                <div key={i} className="flex items-center justify-between bg-muted/30 rounded-lg px-3 py-2">
-                  <span className="text-xs font-medium text-muted-foreground">{c.value}</span>
-                  <span className="text-[11px] text-muted-foreground">{c.label}</span>
+                <div key={i} className="flex items-center justify-between bg-muted/20 rounded-lg px-3 py-1.5">
+                  <span className="text-[11px] font-mono text-muted-foreground">{c.value}</span>
+                  <span className="text-[10px] text-muted-foreground">{c.label}</span>
                 </div>
               ))}
             </div>
-          </div>
+          )}
         </div>
 
-        {/* LEFT COLUMN - Results */}
-        <div className="order-2 lg:order-1">
-          <div className="bg-card rounded-2xl border border-border overflow-hidden sticky top-20" style={{ boxShadow: "var(--shadow-card)" }}>
-            {/* Purple header */}
-            <div className="bg-primary px-4 py-2.5 grid grid-cols-[1fr_auto_auto] gap-2 items-center">
-              <span className="text-[11px] font-bold text-primary-foreground/70 text-center">SAR</span>
-              <span className="text-[11px] font-bold text-primary-foreground/70 text-center w-[110px]">USD</span>
-              <span className="text-xs font-bold text-primary-foreground text-right">{t("results", lang)}</span>
+        {/* ===== LEFT: RESULTS (3 cols) ===== */}
+        <div className="lg:col-span-3 space-y-4 order-2 lg:order-1">
+          {/* === HERO PROFIT CARD === */}
+          <div
+            className={`relative overflow-hidden rounded-2xl p-6 border-2 transition-colors ${
+              isProfitable
+                ? "bg-gradient-to-bl from-success/10 via-success/5 to-card border-success/30"
+                : "bg-gradient-to-bl from-destructive/10 via-destructive/5 to-card border-destructive/30"
+            }`}
+            style={{ boxShadow: "var(--shadow-card)" }}
+          >
+            {/* Background decoration */}
+            <div className={`absolute top-0 left-0 w-32 h-32 rounded-full blur-3xl opacity-20 ${isProfitable ? "bg-success" : "bg-destructive"}`} />
+            
+            <div className="relative flex flex-col items-center text-center gap-3">
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${isProfitable ? "bg-success/15" : "bg-destructive/15"}`}>
+                {isProfitable
+                  ? <ArrowUpRight className="w-7 h-7 text-success" />
+                  : <ArrowDownRight className="w-7 h-7 text-destructive" />
+                }
+              </div>
+              <p className="text-sm text-muted-foreground font-medium">
+                {lang === "ar" ? "صافي الأرباح" : "Net Profit"}
+              </p>
+              <div className="flex items-baseline gap-3">
+                <span className={`text-4xl font-black tracking-tight ${isProfitable ? "text-success" : "text-destructive"}`}>
+                  ${fmt(calc.profitsUsd)}
+                </span>
+                <span className="text-lg text-muted-foreground font-medium">
+                  ({fmtSar(calc.profitsUsd)} SAR)
+                </span>
+              </div>
+              
+              {/* KPI row */}
+              <div className="flex items-center gap-4 mt-1">
+                <KPIBadge
+                  label={lang === "ar" ? "هامش الربح" : "Margin"}
+                  value={`${(calc.netProfitSales * 100).toFixed(1)}%`}
+                  positive={calc.netProfitSales >= 0}
+                />
+                <KPIBadge
+                  label="ROI"
+                  value={`${(calc.roi * 100).toFixed(1)}%`}
+                  positive={calc.roi >= 0}
+                />
+                <KPIBadge
+                  label={lang === "ar" ? "ربح/طلب" : "EP/Order"}
+                  value={`$${fmt(calc.epDelivered)}`}
+                  positive={calc.epDelivered >= 0}
+                />
+              </div>
             </div>
-            <div className="divide-y divide-border">
-              {resultRows.map((row, i) => (
-                <div key={i} className={`grid grid-cols-[1fr_auto_auto] gap-2 items-center px-4 py-2 ${rowBg(row.style)}`}>
-                  <span className="text-[11px] text-muted-foreground text-center">
-                    {row.valueSar || "—"}
-                  </span>
-                  <span className={`text-sm font-medium text-center w-[110px] ${rowText(row.style)}`}>{row.value}</span>
-                  <span className="text-xs text-muted-foreground text-right">{row.label}</span>
-                </div>
-              ))}
-            </div>
+          </div>
+
+          {/* === FUNNEL CARDS === */}
+          <div className="grid grid-cols-4 gap-3">
+            <MiniKPI
+              icon={<ShoppingCart className="w-4 h-4" />}
+              label={lang === "ar" ? "الطلبات" : "Leads"}
+              value={allOrders.toLocaleString()}
+              color="primary"
+            />
+            <MiniKPI
+              icon={<Phone className="w-4 h-4" />}
+              label={lang === "ar" ? "المؤكدة" : "Confirmed"}
+              value={calc.confirmed.toLocaleString()}
+              sub={`${confirmaRate}%`}
+              color="primary"
+            />
+            <MiniKPI
+              icon={<Truck className="w-4 h-4" />}
+              label={lang === "ar" ? "الموصّلة" : "Delivered"}
+              value={calc.delivered.toLocaleString()}
+              sub={`${deliveredRate}%`}
+              color="success"
+            />
+            <MiniKPI
+              icon={<ArrowDownRight className="w-4 h-4" />}
+              label={lang === "ar" ? "فشل التوصيل" : "Failed"}
+              value={calc.failedDelivered.toLocaleString()}
+              color="destructive"
+            />
+          </div>
+
+          {/* === REVENUE & COSTS === */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Revenue */}
+            <ResultCard
+              title={lang === "ar" ? "الإيرادات" : "Revenue"}
+              icon={<DollarSign className="w-4 h-4 text-success" />}
+            >
+              <ResultLine label={lang === "ar" ? "المبيعات" : "Sales"} usd={calc.salesUsd} sar={calc.salesUsd * FX} bold />
+              <ResultLine label={lang === "ar" ? "متوسط قيمة الطلب" : "AOV"} usd={calc.aovUsd} sar={sellingPriceSar} highlight="primary" />
+              <ResultLine label={lang === "ar" ? "مبيعات الداشبورد" : "Sales Dashboard"} usd={calc.salesDashboard} sar={calc.salesDashboard * FX} />
+              <ResultLine label={lang === "ar" ? "ROI الداشبورد" : "ROI Dashboard"} value={`${(calc.roiDashboard * 100).toFixed(1)}%`} />
+            </ResultCard>
+
+            {/* Costs */}
+            <ResultCard
+              title={lang === "ar" ? "التكاليف" : "Costs"}
+              icon={<Receipt className="w-4 h-4 text-destructive" />}
+            >
+              <ResultLine label={lang === "ar" ? "الإعلانات" : "Ads"} usd={calc.adsUsd} sar={calc.adsUsd * FX} />
+              <ResultLine label={lang === "ar" ? "المنتج المباع" : "Product Sold"} usd={calc.productSoldUsd} sar={calc.productSoldUsd * FX} />
+              <ResultLine label={lang === "ar" ? "الشحن" : "Shipping"} usd={calc.shippingUsd} sar={calc.shippingUsd * FX} />
+              <ResultLine label={lang === "ar" ? "كول سنتر" : "Call Center"} usd={calc.callCenterUsd} sar={calc.callCenterUsd * FX} />
+              <ResultLine label={lang === "ar" ? "رسوم COD" : "COD Fees"} usd={calc.codFeesUsd} sar={calc.codFeesUsd * FX} />
+              <div className="border-t border-border pt-2 mt-1">
+                <ResultLine label={lang === "ar" ? "إجمالي الاستثمار" : "Total Investment"} usd={calc.investUsd} sar={calc.investUsd * FX} bold highlight="destructive" />
+              </div>
+            </ResultCard>
           </div>
         </div>
       </div>
@@ -350,46 +352,144 @@ export function CODCalculator() {
   );
 }
 
-function Card({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
+/* ===== Sub Components ===== */
+
+function InputCard({ title, icon, color, children }: {
+  title: string; icon: React.ReactNode; color: string; children: React.ReactNode;
+}) {
   return (
-    <div className="bg-card rounded-2xl border border-border p-4 space-y-3" style={{ boxShadow: "var(--shadow-card)" }}>
-      <div className="flex items-center gap-2 justify-end border-b border-border pb-2">
+    <div className="bg-card rounded-2xl border border-border p-4 space-y-4" style={{ boxShadow: "var(--shadow-card)" }}>
+      <div className={`flex items-center gap-2 justify-end`}>
         <h3 className="text-sm font-bold text-foreground">{title}</h3>
-        {icon}
+        <div className={`w-7 h-7 rounded-lg bg-${color}/10 flex items-center justify-center`}>
+          {icon}
+        </div>
       </div>
       <div className="space-y-3">{children}</div>
     </div>
   );
 }
 
-function EditableField({
-  label, value, onChange, suffix, type = "float", error,
-}: {
-  label: string; value: number; onChange: (v: number) => void;
-  suffix?: string; type?: "int" | "float"; error?: string;
+function NumberInput({ label, value, onChange, suffix, step = 1 }: {
+  label: string; value: number; onChange: (v: number) => void; suffix: string; step?: number;
 }) {
   return (
-    <div className="space-y-1">
+    <div className="flex items-center gap-3">
+      <div className="relative w-[130px] flex-shrink-0">
+        <Input
+          type="number"
+          value={value}
+          onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
+          step={step}
+          min="0"
+          className="rounded-xl h-10 text-sm text-center bg-success/5 border-success/30 focus:border-success pr-3 pl-10 font-medium"
+        />
+        <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[10px] font-medium text-success/70">{suffix}</span>
+      </div>
+      <label className="text-xs text-muted-foreground flex-1 text-right">{label}</label>
+    </div>
+  );
+}
+
+function SliderInput({ label, value, onChange, color }: {
+  label: string; value: number; onChange: (v: number) => void; color: string;
+}) {
+  return (
+    <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <div className="relative flex-shrink-0 w-[140px]">
+        <div className="flex items-center gap-2">
           <Input
             type="number"
             value={value}
             onChange={(e) => {
-              const v = type === "int" ? parseInt(e.target.value) || 0 : parseFloat(e.target.value) || 0;
+              let v = parseFloat(e.target.value) || 0;
+              if (v > 100) v = 100;
+              if (v < 0) v = 0;
               onChange(v);
             }}
-            step={type === "int" ? "1" : "0.01"}
-            min="0"
-            className="rounded-lg h-9 text-sm text-center bg-success/5 border-success/30 focus:border-success"
+            min="0" max="100" step="1"
+            className="w-16 h-7 rounded-lg text-xs text-center font-bold border-border"
           />
-          {suffix && (
-            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground">{suffix}</span>
-          )}
+          <span className="text-xs text-muted-foreground">%</span>
         </div>
         <label className="text-xs text-muted-foreground">{label}</label>
       </div>
-      {error && <p className="text-[10px] text-destructive text-right">{error}</p>}
+      <Slider
+        value={[value]}
+        onValueChange={([v]) => onChange(v)}
+        min={0} max={100} step={1}
+        className="w-full"
+      />
+      <div className="flex justify-between text-[9px] text-muted-foreground/50">
+        <span>0%</span>
+        <span>50%</span>
+        <span>100%</span>
+      </div>
+    </div>
+  );
+}
+
+function KPIBadge({ label, value, positive }: { label: string; value: string; positive: boolean }) {
+  return (
+    <div className={`px-3 py-1.5 rounded-xl text-center ${positive ? "bg-success/10" : "bg-destructive/10"}`}>
+      <p className={`text-sm font-bold ${positive ? "text-success" : "text-destructive"}`}>{value}</p>
+      <p className="text-[9px] text-muted-foreground">{label}</p>
+    </div>
+  );
+}
+
+function MiniKPI({ icon, label, value, sub, color }: {
+  icon: React.ReactNode; label: string; value: string; sub?: string; color: string;
+}) {
+  return (
+    <div className="bg-card rounded-xl border border-border p-3 text-center space-y-1" style={{ boxShadow: "var(--shadow-card)" }}>
+      <div className={`w-8 h-8 rounded-lg bg-${color}/10 flex items-center justify-center mx-auto text-${color}`}>
+        {icon}
+      </div>
+      <p className="text-lg font-bold text-foreground">{value}</p>
+      {sub && <p className="text-[10px] text-muted-foreground">{sub}</p>}
+      <p className="text-[10px] text-muted-foreground">{label}</p>
+    </div>
+  );
+}
+
+function ResultCard({ title, icon, children }: {
+  title: string; icon: React.ReactNode; children: React.ReactNode;
+}) {
+  return (
+    <div className="bg-card rounded-2xl border border-border p-4 space-y-3" style={{ boxShadow: "var(--shadow-card)" }}>
+      <div className="flex items-center gap-2 justify-end border-b border-border pb-2">
+        <h3 className="text-sm font-bold text-foreground">{title}</h3>
+        {icon}
+      </div>
+      <div className="space-y-2">{children}</div>
+    </div>
+  );
+}
+
+function ResultLine({ label, usd, sar, value, bold, highlight }: {
+  label: string; usd?: number; sar?: number; value?: string; bold?: boolean; highlight?: string;
+}) {
+  const textClass = highlight === "primary" ? "text-primary" : highlight === "destructive" ? "text-destructive" : highlight === "success" ? "text-success" : "text-foreground";
+  return (
+    <div className={`flex items-center justify-between py-1 ${highlight ? `bg-${highlight}/5 -mx-2 px-2 rounded-lg` : ""}`}>
+      <div className="flex items-center gap-3">
+        {value ? (
+          <span className={`text-sm ${bold ? "font-bold" : "font-medium"} ${textClass}`}>{value}</span>
+        ) : (
+          <>
+            <span className={`text-sm ${bold ? "font-bold" : "font-medium"} ${textClass}`}>
+              ${usd?.toFixed(2)}
+            </span>
+            {sar !== undefined && (
+              <span className="text-[10px] text-muted-foreground">
+                ({sar.toFixed(0)} SAR)
+              </span>
+            )}
+          </>
+        )}
+      </div>
+      <span className={`text-xs ${bold ? "font-semibold text-foreground" : "text-muted-foreground"}`}>{label}</span>
     </div>
   );
 }
