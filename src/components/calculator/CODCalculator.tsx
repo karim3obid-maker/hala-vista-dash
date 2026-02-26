@@ -193,10 +193,12 @@ export function CODCalculator() {
               label={t("confirma_rate", lang)} value={confirmaRate}
               onChange={setConfirmaRate} color="primary"
             />
+            <QuickChips values={[50, 55, 60, 65, 70]} current={confirmaRate} onChange={setConfirmaRate} suffix="%" />
             <SliderInput
               label={t("delivered_rate", lang)} value={deliveredRate}
               onChange={setDeliveredRate} color="success"
             />
+            <QuickChips values={[20, 30, 40, 50, 60]} current={deliveredRate} onChange={setDeliveredRate} suffix="%" />
           </InputCard>
 
           {/* Ads */}
@@ -209,6 +211,7 @@ export function CODCalculator() {
               label={t("cpp_usd", lang)} value={cppUsd}
               onChange={setCppUsd} suffix="$" step={0.5}
             />
+            <QuickChips values={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} current={cppUsd} onChange={setCppUsd} suffix="$" />
           </InputCard>
 
           <p className="text-[11px] text-muted-foreground text-center">
@@ -470,6 +473,29 @@ export function CODCalculator() {
 }
 
 /* ===== Sub Components ===== */
+
+function QuickChips({ values, current, onChange, suffix }: {
+  values: number[]; current: number; onChange: (v: number) => void; suffix: string;
+}) {
+  return (
+    <div className="flex flex-wrap gap-1.5 justify-end">
+      {values.map((v) => (
+        <button
+          key={v}
+          onClick={() => onChange(v)}
+          className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition-all ${
+            current === v
+              ? "bg-primary/15 border-primary/40 text-primary ring-1 ring-primary/20"
+              : "bg-muted/30 border-border text-muted-foreground hover:bg-muted/50"
+          }`}
+        >
+          {v}{suffix}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 
 function InputCard({ title, icon, color, children }: {
   title: string; icon: React.ReactNode; color: string; children: React.ReactNode;
