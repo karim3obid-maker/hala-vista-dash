@@ -4,7 +4,7 @@ import { AddToMyProductsDialog } from "@/components/products/AddToMyProductsDial
 import { ProductCalculator } from "@/components/products/ProductCalculator";
 import {
   ArrowRight,
-  Star,
+
   Package,
   Ruler,
   Tag,
@@ -18,8 +18,8 @@ import {
   ChevronRight,
   Box,
   Copy,
-  CheckCircle2,
-} from "lucide-react";
+  CheckCircle2 } from
+"lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -80,7 +80,7 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
               </Badge>
               <div className="flex items-center gap-1">
                 <span className="text-xs text-muted-foreground">({product.stock} قطعة)</span>
-                <Star className="w-4 h-4 fill-accent text-accent" />
+                
                 <span className="text-sm font-semibold">4.8</span>
               </div>
             </div>
@@ -104,10 +104,10 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
 
           {/* Stock - highlighted */}
           <div className={`flex items-center justify-between rounded-xl px-4 py-3 ${
-            product.stock > 0 
-              ? "bg-success/10 border border-success/20" 
-              : "bg-destructive/10 border border-destructive/20"
-          }`}>
+          product.stock > 0 ?
+          "bg-success/10 border border-success/20" :
+          "bg-destructive/10 border border-destructive/20"}`
+          }>
             <span className={`text-lg font-extrabold ${product.stock > 0 ? "text-success" : "text-destructive"}`}>
               {product.stock} <span className="text-xs font-medium">قطعة</span>
             </span>
@@ -121,13 +121,13 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
           <div className="flex items-center justify-between border-b border-border pb-4">
             <button
               onClick={copySku}
-              className="flex items-center gap-2 font-mono text-xs bg-muted/50 hover:bg-muted rounded-lg px-3 py-2 border border-border transition-colors cursor-pointer group"
-            >
-              {skuCopied ? (
-                <CheckCircle2 className="w-3.5 h-3.5 text-success" />
-              ) : (
-                <Copy className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
-              )}
+              className="flex items-center gap-2 font-mono text-xs bg-muted/50 hover:bg-muted rounded-lg px-3 py-2 border border-border transition-colors cursor-pointer group">
+
+              {skuCopied ?
+              <CheckCircle2 className="w-3.5 h-3.5 text-success" /> :
+
+              <Copy className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+              }
               <span>{product.sku}</span>
             </button>
             <span className="text-sm text-muted-foreground">SKU</span>
@@ -146,9 +146,9 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
             </div>
             <div className="flex items-center justify-between py-2">
               <div className="flex flex-wrap gap-1">
-                {product.countries.map((c) => (
-                  <Badge key={c} variant="secondary" className="text-[10px]">{c}</Badge>
-                ))}
+                {product.countries.map((c) =>
+                <Badge key={c} variant="secondary" className="text-[10px]">{c}</Badge>
+                )}
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground shrink-0">
                 <span>الدول</span>
@@ -163,15 +163,15 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
               <div className="flex items-center gap-2 bg-muted/50 rounded-xl border border-border px-1">
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="w-9 h-9 flex items-center justify-center hover:bg-card rounded-lg transition-colors"
-                >
+                  className="w-9 h-9 flex items-center justify-center hover:bg-card rounded-lg transition-colors">
+
                   <Plus className="w-4 h-4" />
                 </button>
                 <span className="w-10 text-center font-bold text-foreground text-lg">{quantity}</span>
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-9 h-9 flex items-center justify-center hover:bg-card rounded-lg transition-colors"
-                >
+                  className="w-9 h-9 flex items-center justify-center hover:bg-card rounded-lg transition-colors">
+
                   <Minus className="w-4 h-4" />
                 </button>
               </div>
@@ -179,8 +179,8 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
 
             <Button
               onClick={() => setShowAddDialog(true)}
-              className="w-full rounded-xl h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-base gap-2"
-            >
+              className="w-full rounded-xl h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-base gap-2">
+
               <Plus className="w-5 h-5" />
               <span>إضافة الى منتجاتي</span>
             </Button>
@@ -188,8 +188,8 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
             <Button
               onClick={() => toast.success("تمت إضافة المنتج إلى هلا ستور")}
               variant="outline"
-              className="w-full rounded-xl h-11 border-accent text-accent hover:bg-accent/10 font-semibold gap-2"
-            >
+              className="w-full rounded-xl h-11 border-accent text-accent hover:bg-accent/10 font-semibold gap-2">
+
               <Store className="w-4 h-4" />
               <span>إضافة الى هلا ستور</span>
             </Button>
@@ -203,42 +203,42 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
             <img
               src={product.images[selectedImage]}
               alt={product.name}
-              className="w-full h-full object-contain p-6"
-            />
-            {product.images.length > 1 && (
-              <>
+              className="w-full h-full object-contain p-6" />
+
+            {product.images.length > 1 &&
+            <>
                 <button
-                  onClick={prevImage}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-card/90 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-card transition-colors shadow-md"
-                >
+                onClick={prevImage}
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-card/90 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-card transition-colors shadow-md">
+
                   <ChevronLeft className="w-5 h-5" />
                 </button>
                 <button
-                  onClick={nextImage}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-card/90 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-card transition-colors shadow-md"
-                >
+                onClick={nextImage}
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-card/90 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-card transition-colors shadow-md">
+
                   <ChevronRight className="w-5 h-5" />
                 </button>
               </>
-            )}
+            }
           </div>
 
           {/* Thumbnails */}
-          {product.images.length > 1 && (
-            <div className="flex items-center justify-center gap-3">
-              {product.images.map((img, i) => (
-                <button
-                  key={i}
-                  onClick={() => setSelectedImage(i)}
-                  className={`w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
-                    i === selectedImage ? "border-primary shadow-md scale-105" : "border-border opacity-60 hover:opacity-100"
-                  }`}
-                >
+          {product.images.length > 1 &&
+          <div className="flex items-center justify-center gap-3">
+              {product.images.map((img, i) =>
+            <button
+              key={i}
+              onClick={() => setSelectedImage(i)}
+              className={`w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
+              i === selectedImage ? "border-primary shadow-md scale-105" : "border-border opacity-60 hover:opacity-100"}`
+              }>
+
                   <img src={img} alt="" className="w-full h-full object-cover" />
                 </button>
-              ))}
+            )}
             </div>
-          )}
+          }
         </div>
       </div>
 
@@ -247,20 +247,20 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
         <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-end gap-4 h-auto p-0">
           <TabsTrigger
             value="calculator"
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 text-sm font-semibold"
-          >
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 text-sm font-semibold">
+
             حاسبة الأرباح
           </TabsTrigger>
           <TabsTrigger
             value="info"
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 text-sm font-semibold"
-          >
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 text-sm font-semibold">
+
             معلومات إضافية
           </TabsTrigger>
           <TabsTrigger
             value="description"
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 text-sm font-semibold"
-          >
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 text-sm font-semibold">
+
             الوصف
           </TabsTrigger>
         </TabsList>
@@ -276,9 +276,9 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
             <DetailRow icon={RefreshCw} label="آخر تحديث" value={product.lastUpdated} />
             <div className="flex items-center justify-between py-2">
               <div className="flex flex-wrap gap-1">
-                {product.countries.map((c) => (
-                  <Badge key={c} variant="secondary" className="text-[10px]">{c}</Badge>
-                ))}
+                {product.countries.map((c) =>
+                <Badge key={c} variant="secondary" className="text-[10px]">{c}</Badge>
+                )}
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <span>الدول المتاحة</span>
@@ -296,11 +296,11 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
       </Tabs>
 
       <AddToMyProductsDialog product={product} open={showAddDialog} onOpenChange={setShowAddDialog} />
-    </div>
-  );
+    </div>);
+
 }
 
-function DetailRow({ icon: Icon, label, value }: { icon: any; label: string; value: string }) {
+function DetailRow({ icon: Icon, label, value }: {icon: any;label: string;value: string;}) {
   return (
     <div className="flex items-center justify-between py-2">
       <span className="text-sm font-medium text-foreground">{value}</span>
@@ -308,6 +308,6 @@ function DetailRow({ icon: Icon, label, value }: { icon: any; label: string; val
         <span>{label}</span>
         <Icon className="w-4 h-4" />
       </div>
-    </div>
-  );
+    </div>);
+
 }
