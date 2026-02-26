@@ -40,7 +40,7 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
   const prevImage = () => setSelectedImage((i) => (i - 1 + product.images.length) % product.images.length);
 
   return (
-    <div className="h-[calc(100vh-3.5rem)] overflow-hidden flex flex-col">
+    <div className="h-[calc(100vh-3.5rem)] overflow-hidden flex flex-col max-w-6xl mx-auto">
       {/* Top Bar - Quantity & Price */}
       <div className="bg-gradient-to-l from-primary/10 via-accent/5 to-transparent border-b border-border px-6 py-3 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-4">
