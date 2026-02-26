@@ -13,6 +13,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   ArrowRight,
   Package,
   Weight,
@@ -23,6 +30,7 @@ import {
   AlertCircle,
   Copy,
   Check,
+  FileText,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
@@ -37,6 +45,7 @@ export function WholesaleProductDetail({ product, onBack }: Props) {
   const [quantity, setQuantity] = useState("");
   const [notes, setNotes] = useState("");
   const [copiedSku, setCopiedSku] = useState(false);
+  const [orderOpen, setOrderOpen] = useState(false);
 
   const minOrder = product.minOrder || 10;
 
@@ -65,6 +74,7 @@ export function WholesaleProductDetail({ product, onBack }: Props) {
     setSelectedCountry("");
     setQuantity("");
     setNotes("");
+    setOrderOpen(false);
   };
 
   return (
@@ -167,11 +177,76 @@ export function WholesaleProductDetail({ product, onBack }: Props) {
             </div>
           </div>
 
-          {/* Description */}
-          <div className="bg-card border border-border rounded-xl p-4">
-            <p className="text-xs font-semibold text-foreground mb-2">الوصف</p>
-            <p className="text-sm text-muted-foreground leading-relaxed">{product.description}</p>
-          </div>
+          {/* Order Button */}
+          <Dialog open={orderOpen} onOpenChange={setOrderOpen}>
+            <DialogTrigger asChild>
+              <Button
+                disabled={product.stock === 0}
+                className="w-full bg-accent hover:bg-accent/90 text-white rounded-xl py-3 text-sm font-bold"
+              >
+                <ShoppingCart className="w-4 h-4 ml-2" />
+                اطلب المنتج
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md" dir="rtl">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 text-accent">
+                  <ShoppingCart className="w-5 h-5" />
+                  طلب {product.name}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 pt-2">
+                <div className="space-y-2">
+                  <Label className="text-sm">الدولة</Label>
+                  <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                    <SelectTrigger className="rounded-xl">
+                      <SelectValue placeholder="اختر الدولة" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {product.countries.map((c) => (
+                        <SelectItem key={c} value={c}>{c}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm">الكمية</Label>
+                  <Input
+                    type="number"
+                    placeholder={`الحد الأدنى ${minOrder}`}
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    min={minOrder}
+                    className="rounded-xl"
+                  />
+                  {quantity && parseInt(quantity) < minOrder && (
+                    <p className="text-xs text-destructive flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      الحد الأدنى {minOrder} قطعة
+                    </p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm">ملاحظات (اختياري)</Label>
+                  <Textarea
+                    placeholder="أضف أي ملاحظات على الطلب..."
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    className="rounded-xl min-h-[80px]"
+                    maxLength={500}
+                  />
+                </div>
+                <Button
+                  onClick={handleSubmit}
+                  disabled={product.stock === 0}
+                  className="w-full bg-accent hover:bg-accent/90 text-white rounded-xl py-2.5 text-sm font-bold"
+                >
+                  <ShoppingCart className="w-4 h-4 ml-2" />
+                  إرسال الطلب
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -201,69 +276,13 @@ export function WholesaleProductDetail({ product, onBack }: Props) {
         )}
       </div>
 
-      {/* Order Form */}
-      <div className="bg-card border border-accent/20 rounded-2xl p-6 space-y-5">
+      {/* Description */}
+      <div className="bg-card border border-border rounded-2xl p-6 space-y-3">
         <div className="flex items-center gap-2">
-          <ShoppingCart className="w-5 h-5 text-accent" />
-          <h2 className="text-lg font-bold text-foreground">طلب المنتج</h2>
+          <FileText className="w-5 h-5 text-accent" />
+          <h2 className="text-lg font-bold text-foreground">وصف المنتج</h2>
         </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* Country Select */}
-          <div className="space-y-2">
-            <Label className="text-sm">الدولة</Label>
-            <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-              <SelectTrigger className="rounded-xl">
-                <SelectValue placeholder="اختر الدولة" />
-              </SelectTrigger>
-              <SelectContent>
-                {product.countries.map((c) => (
-                  <SelectItem key={c} value={c}>{c}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Quantity */}
-          <div className="space-y-2">
-            <Label className="text-sm">الكمية</Label>
-            <Input
-              type="number"
-              placeholder={`الحد الأدنى ${minOrder}`}
-              value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
-              min={minOrder}
-              className="rounded-xl"
-            />
-            {quantity && parseInt(quantity) < minOrder && (
-              <p className="text-xs text-destructive flex items-center gap-1">
-                <AlertCircle className="w-3 h-3" />
-                الحد الأدنى {minOrder} قطعة
-              </p>
-            )}
-          </div>
-        </div>
-
-        {/* Notes */}
-        <div className="space-y-2">
-          <Label className="text-sm">ملاحظات (اختياري)</Label>
-          <Textarea
-            placeholder="أضف أي ملاحظات على الطلب..."
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            className="rounded-xl min-h-[80px]"
-            maxLength={500}
-          />
-        </div>
-
-        <Button
-          onClick={handleSubmit}
-          disabled={product.stock === 0}
-          className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-white rounded-xl px-8 py-2.5 text-sm font-bold"
-        >
-          <ShoppingCart className="w-4 h-4 ml-2" />
-          إرسال الطلب
-        </Button>
+        <p className="text-sm text-muted-foreground leading-relaxed">{product.description}</p>
       </div>
     </div>
   );
