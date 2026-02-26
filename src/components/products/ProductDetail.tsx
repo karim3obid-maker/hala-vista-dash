@@ -130,6 +130,11 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
           </div>
         </div>
 
+        {/* Middle - Calculator */}
+        <div className="w-[280px] shrink-0 border-r border-border overflow-y-auto p-4">
+          <ProductCalculator product={product} />
+        </div>
+
         {/* Left Side - Product Info */}
         <div className="w-[420px] shrink-0 border-r border-border overflow-y-auto p-5 space-y-4">
           {/* Stock Badge */}
@@ -210,10 +215,6 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
             </div>
           </div>
 
-          {/* Calculator */}
-          <div className="border-t border-border pt-3">
-            <ProductCalculator product={product} />
-          </div>
 
           {/* Action Buttons */}
           <div className="space-y-2 pt-2">
