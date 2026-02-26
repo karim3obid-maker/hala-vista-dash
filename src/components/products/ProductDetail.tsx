@@ -244,24 +244,21 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
 
       {/* Tabs Section */}
       <Tabs defaultValue="description" dir="rtl" className="border-t border-border pt-6">
-        <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-end gap-4 h-auto p-0">
+        <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-start gap-6 h-auto p-0">
           <TabsTrigger
-            value="calculator"
+            value="description"
             className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 text-sm font-semibold">
-
-            حاسبة الأرباح
+            الوصف
           </TabsTrigger>
           <TabsTrigger
             value="info"
             className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 text-sm font-semibold">
-
             معلومات إضافية
           </TabsTrigger>
           <TabsTrigger
-            value="description"
+            value="calculator"
             className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 text-sm font-semibold">
-
-            الوصف
+            حاسبة الأرباح
           </TabsTrigger>
         </TabsList>
 
@@ -271,9 +268,11 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
         </TabsContent>
 
         <TabsContent value="info" className="pt-6">
-          <div className="space-y-3 max-w-md ms-auto">
+          <div className="space-y-3 text-right">
             <DetailRow icon={Calendar} label="تاريخ الإضافة" value={product.dateAdded} />
             <DetailRow icon={RefreshCw} label="آخر تحديث" value={product.lastUpdated} />
+            <DetailRow icon={Package} label="الوزن" value={product.weight} />
+            <DetailRow icon={Ruler} label="الأبعاد" value={product.dimensions} />
             <div className="flex items-center justify-between py-2">
               <div className="flex flex-wrap gap-1">
                 {product.countries.map((c) =>
@@ -289,9 +288,7 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
         </TabsContent>
 
         <TabsContent value="calculator" className="pt-6">
-          <div className="max-w-sm ms-auto">
-            <ProductCalculator product={product} />
-          </div>
+          <ProductCalculator product={product} />
         </TabsContent>
       </Tabs>
 
