@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CODCalculator } from "@/components/calculator/CODCalculator";
+import { SuggestedPriceCalculator } from "@/components/calculator/SuggestedPriceCalculator";
 
 interface CalcResult {
   revenue: number;
@@ -86,6 +87,9 @@ const CalculatorPage = () => {
           <TabsTrigger value="simple" className="rounded-lg text-xs py-2 px-4 data-[state=active]:bg-card data-[state=active]:shadow-sm">
             حاسبة بسيطة
           </TabsTrigger>
+          <TabsTrigger value="suggested" className="rounded-lg text-xs py-2 px-4 data-[state=active]:bg-card data-[state=active]:shadow-sm">
+            سعر البيع المقترح
+          </TabsTrigger>
           <TabsTrigger value="cod" className="rounded-lg text-xs py-2 px-4 data-[state=active]:bg-card data-[state=active]:shadow-sm">
             حاسبة التسعير COD
           </TabsTrigger>
@@ -94,6 +98,11 @@ const CalculatorPage = () => {
         {/* COD Calculator Tab */}
         <TabsContent value="cod" className="mt-5">
           <CODCalculator />
+        </TabsContent>
+
+        {/* Suggested Price Calculator Tab */}
+        <TabsContent value="suggested" className="mt-5">
+          <SuggestedPriceCalculator />
         </TabsContent>
 
         {/* Simple Calculator Tab */}
