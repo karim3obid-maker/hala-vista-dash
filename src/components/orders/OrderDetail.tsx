@@ -115,9 +115,9 @@ export default function OrderDetail({ order, onBack, onNext, onPrev, hasNext, ha
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6" dir="rtl">
         {/* Right Column - Sidebar Info */}
-        <div className="lg:col-span-1 space-y-4 order-2 lg:order-1">
+        <div className="lg:col-span-1 space-y-4">
           {/* Customer */}
           <Card title="العميل" icon={User}>
             <div className="flex items-center gap-3 justify-end">
@@ -186,7 +186,7 @@ export default function OrderDetail({ order, onBack, onNext, onPrev, hasNext, ha
         </div>
 
         {/* Left Column - Main Content */}
-        <div className="lg:col-span-2 space-y-4 order-1 lg:order-2">
+        <div className="lg:col-span-2 space-y-4">
           {/* Products */}
           {order.products.map((product, i) => (
             <div key={i} className="bg-card rounded-2xl border border-border p-5" style={{ boxShadow: "var(--shadow-card)" }}>
