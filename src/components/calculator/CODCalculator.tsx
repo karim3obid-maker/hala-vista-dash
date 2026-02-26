@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 type Lang = "ar" | "en";
 
@@ -345,6 +346,122 @@ export function CODCalculator() {
                 <ResultLine label={lang === "ar" ? "إجمالي الاستثمار" : "Total Investment"} usd={calc.investUsd} sar={calc.investUsd * FX} bold highlight="destructive" />
               </div>
             </ResultCard>
+          </div>
+
+          {/* === CHARTS === */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Cost Distribution Pie */}
+            <div className="bg-card rounded-2xl border border-border p-4 space-y-3" style={{ boxShadow: "var(--shadow-card)" }}>
+              <div className="flex items-center gap-2 justify-end border-b border-border pb-2">
+                <h3 className="text-sm font-bold text-foreground">
+                  {lang === "ar" ? "توزيع التكاليف" : "Cost Breakdown"}
+                </h3>
+                <BarChart3 className="w-4 h-4 text-primary" />
+              </div>
+              <div className="h-[220px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={[
+                        { name: lang === "ar" ? "الإعلانات" : "Ads", value: Math.round(calc.adsUsd * 100) / 100 },
+                        { name: lang === "ar" ? "المنتج" : "Product", value: Math.round(calc.productSoldUsd * 100) / 100 },
+                        { name: lang === "ar" ? "الشحن" : "Shipping", value: Math.round(calc.shippingUsd * 100) / 100 },
+                        { name: lang === "ar" ? "كول سنتر" : "Call Center", value: Math.round(calc.callCenterUsd * 100) / 100 },
+                        { name: lang === "ar" ? "رسوم COD" : "COD Fees", value: Math.round(calc.codFeesUsd * 100) / 100 },
+                      ].filter(d => d.value > 0)}
+                      cx="50%" cy="50%"
+                      innerRadius={45} outerRadius={80}
+                      paddingAngle={3}
+                      dataKey="value"
+                      stroke="none"
+                    >
+                      {["hsl(var(--primary))", "hsl(var(--accent))", "hsl(142, 71%, 45%)", "hsl(38, 92%, 50%)", "hsl(var(--destructive))"].map((color, i) => (
+                        <Cell key={i} fill={color} />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (!active || !payload?.length) return null;
+                        const d = payload[0];
+                        return (
+                          <div className="bg-popover border border-border rounded-lg px-3 py-2 shadow-lg text-xs">
+                            <p className="font-bold text-foreground">{d.name}</p>
+                            <p className="text-muted-foreground">${Number(d.value).toFixed(2)}</p>
+                          </div>
+                        );
+                      }}
+                    />
+                    <Legend
+                      verticalAlign="bottom"
+                      iconType="circle"
+                      iconSize={8}
+                      formatter={(value) => <span className="text-[10px] text-muted-foreground mr-1">{value}</span>}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Performance Bar Chart */}
+            <div className="bg-card rounded-2xl border border-border p-4 space-y-3" style={{ boxShadow: "var(--shadow-card)" }}>
+              <div className="flex items-center gap-2 justify-end border-b border-border pb-2">
+                <h3 className="text-sm font-bold text-foreground">
+                  {lang === "ar" ? "مؤشرات الأداء" : "Performance"}
+                </h3>
+                <TrendingUp className="w-4 h-4 text-success" />
+              </div>
+              <div className="h-[220px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={[
+                      {
+                        name: lang === "ar" ? "تأكيد" : "Confirm",
+                        value: confirmaRate,
+                      },
+                      {
+                        name: lang === "ar" ? "توصيل" : "Deliver",
+                        value: deliveredRate,
+                      },
+                      {
+                        name: lang === "ar" ? "هامش" : "Margin",
+                        value: Math.round(calc.netProfitSales * 1000) / 10,
+                      },
+                      {
+                        name: "ROI",
+                        value: Math.round(calc.roi * 1000) / 10,
+                      },
+                    ]}
+                    layout="vertical"
+                    margin={{ top: 5, right: 20, left: 5, bottom: 5 }}
+                  >
+                    <XAxis type="number" domain={[0, 'auto']} tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} />
+                    <YAxis type="category" dataKey="name" width={50} tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (!active || !payload?.length) return null;
+                        const d = payload[0];
+                        return (
+                          <div className="bg-popover border border-border rounded-lg px-3 py-2 shadow-lg text-xs">
+                            <p className="font-bold text-foreground">{d.payload?.name}</p>
+                            <p className="text-muted-foreground">{Number(d.value).toFixed(1)}%</p>
+                          </div>
+                        );
+                      }}
+                    />
+                    <Bar dataKey="value" radius={[0, 6, 6, 0]} barSize={20}>
+                      {[
+                        "hsl(var(--primary))",
+                        "hsl(142, 71%, 45%)",
+                        calc.netProfitSales >= 0 ? "hsl(142, 71%, 45%)" : "hsl(var(--destructive))",
+                        calc.roi >= 0 ? "hsl(var(--accent))" : "hsl(var(--destructive))",
+                      ].map((color, i) => (
+                        <Cell key={i} fill={color} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </div>
         </div>
       </div>
