@@ -85,7 +85,7 @@ export default function OrderDetail({ order, onBack, onNext, onPrev, hasNext, ha
             onClick={onBack}
             className="w-9 h-9 rounded-xl bg-muted/50 flex items-center justify-center hover:bg-muted transition-colors"
           >
-            <ArrowRight className="w-5 h-5 text-foreground rotate-180" />
+            <ArrowRight className="w-5 h-5 text-foreground" />
           </button>
           <h1 className="text-xl font-bold text-foreground font-mono">{order.orderNumber}</h1>
           <span className={`px-3 py-1 rounded-lg text-xs font-medium ${orderSt.color}`}>
