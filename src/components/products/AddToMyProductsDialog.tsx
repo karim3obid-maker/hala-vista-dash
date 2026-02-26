@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Image, X } from "lucide-react";
 
 interface AddToMyProductsDialogProps {
   product: Product;
@@ -47,6 +47,8 @@ export function AddToMyProductsDialog({ product, open, onOpenChange }: AddToMyPr
   const [selectedCountry, setSelectedCountry] = useState("");
   const [description, setDescription] = useState(product.description);
   const [offers, setOffers] = useState<Offer[]>([{ id: 0, quantity: "1", price: "" }]);
+  const [selectedImages, setSelectedImages] = useState<string[]>([...product.images]);
+  const [customImages, setCustomImages] = useState<string[]>([]);
 
   const country = countries.find((c) => c.code === selectedCountry);
   const costInCurrency = product.costPrice.toFixed(2);
@@ -122,14 +124,50 @@ export function AddToMyProductsDialog({ product, open, onOpenChange }: AddToMyPr
             </Select>
           </div>
 
+          {/* Product Images */}
+          <div className="space-y-3">
+            <Label className="text-sm font-medium text-foreground">صور المنتج</Label>
+            <div className="flex flex-wrap gap-2">
+              {product.images.map((img, i) => {
+                const isSelected = selectedImages.includes(img);
+                return (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() =>
+                      setSelectedImages(
+                        isSelected
+                          ? selectedImages.filter((s) => s !== img)
+                          : [...selectedImages, img]
+                      )
+                    }
+                    className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
+                      isSelected
+                        ? "border-primary shadow-md ring-2 ring-primary/20"
+                        : "border-border opacity-50 hover:opacity-80"
+                    }`}
+                  >
+                    <img src={img} alt="" className="w-full h-full object-cover" />
+                    {isSelected && (
+                      <div className="absolute top-1 left-1 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                        <span className="text-primary-foreground text-[10px] font-bold">✓</span>
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-[10px] text-muted-foreground">اضغط على الصورة لتحديدها أو إلغاء تحديدها</p>
+          </div>
+
           {/* Description */}
           <div className="space-y-2">
-            <Label className="text-sm font-medium text-foreground">المحتوى (اختياري)</Label>
+            <Label className="text-sm font-medium text-foreground">وصف المنتج</Label>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="أضف وصف أو تفاصيل إضافية للمنتج..."
-              className="rounded-xl min-h-[100px] resize-none"
+              placeholder="أضف وصف تفصيلي للمنتج يشمل المميزات والمواصفات..."
+              className="rounded-xl min-h-[140px] resize-y leading-7"
             />
           </div>
 
