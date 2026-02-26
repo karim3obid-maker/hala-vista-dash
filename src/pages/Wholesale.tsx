@@ -25,22 +25,22 @@ export default function WholesalePage() {
   }
 
   return (
-    <div className="p-6 space-y-6 max-w-6xl mx-auto">
+    <div className="p-6 space-y-6 max-w-6xl mx-auto" dir="rtl">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <Badge className="bg-accent/15 text-accent border-0 text-xs gap-1">
-          <Flame className="w-3 h-3" />
-          منتجات بالجملة
-        </Badge>
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-accent/15 flex items-center justify-center">
             <ShoppingBag className="w-5 h-5 text-accent" />
           </div>
-          <div className="text-right">
+          <div>
             <h1 className="text-2xl font-bold text-accent">هلا جملة</h1>
             <p className="text-xs text-muted-foreground">أفضل المنتجات بأسعار الجملة</p>
           </div>
         </div>
+        <Badge className="bg-accent/15 text-accent border-0 text-xs gap-1">
+          <Flame className="w-3 h-3" />
+          منتجات بالجملة
+        </Badge>
       </div>
 
       {/* Search & Filters */}
@@ -60,7 +60,7 @@ export default function WholesalePage() {
             </button>
           ))}
         </div>
-        <div className="relative flex-1 min-w-[200px] max-w-xs mr-auto">
+        <div className="relative flex-1 min-w-[200px] max-w-xs ml-auto">
           <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             placeholder="بحث بالاسم أو SKU..."
@@ -116,16 +116,16 @@ export default function WholesalePage() {
 
               {/* Price & Stock */}
               <div className="flex items-center justify-between pt-1">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-lg font-bold text-accent">{product.costPrice.toFixed(2)}</span>
+                  <span className="text-xs text-muted-foreground">{product.currency}</span>
+                </div>
                 <Badge
                   variant="outline"
                   className={`text-[10px] ${product.stock > 0 ? "border-success/30 text-success" : "border-destructive/30 text-destructive"}`}
                 >
                   {product.stock > 0 ? `${product.stock} قطعة` : "نفذ"}
                 </Badge>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-lg font-bold text-accent">{product.costPrice.toFixed(2)}</span>
-                  <span className="text-xs text-muted-foreground">{product.currency}</span>
-                </div>
               </div>
 
               {/* Countries */}
