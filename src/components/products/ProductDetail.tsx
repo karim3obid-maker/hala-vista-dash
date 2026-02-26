@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Product } from "@/data/productsData";
 import { AddToMyProductsDialog } from "@/components/products/AddToMyProductsDialog";
-import { ProductCalculator } from "@/components/products/ProductCalculator";
 import { ProductPricingCalculator } from "@/components/products/ProductPricingCalculator";
 import {
   ArrowRight,
@@ -257,11 +256,6 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
             معلومات إضافية
           </TabsTrigger>
           <TabsTrigger
-            value="calculator"
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 text-sm font-semibold">
-            حاسبة الأرباح
-          </TabsTrigger>
-          <TabsTrigger
             value="pricing"
             className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 text-sm font-semibold">
             سعر البيع المقترح
@@ -291,10 +285,6 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
               </div>
             </div>
           </div>
-        </TabsContent>
-
-        <TabsContent value="calculator" className="pt-6">
-          <ProductCalculator product={product} />
         </TabsContent>
 
         <TabsContent value="pricing" className="pt-6">
