@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Product } from "@/data/productsData";
+import { AddToMyProductsDialog } from "@/components/products/AddToMyProductsDialog";
 import {
   ArrowRight,
   Star,
@@ -30,6 +31,7 @@ interface ProductDetailProps {
 export function ProductDetail({ product, onBack }: ProductDetailProps) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [showAddDialog, setShowAddDialog] = useState(false);
 
   const totalPrice = (product.costPrice * quantity).toFixed(2);
 
@@ -210,7 +212,7 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
           {/* Action Buttons */}
           <div className="space-y-2 pt-2">
             <Button
-              onClick={() => toast.success("تمت إضافة المنتج إلى منتجاتي")}
+              onClick={() => setShowAddDialog(true)}
               className="w-full rounded-xl h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold gap-2"
             >
               <span>إضافة الى منتجاتي</span>
@@ -227,6 +229,8 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
           </div>
         </div>
       </div>
+
+      <AddToMyProductsDialog product={product} open={showAddDialog} onOpenChange={setShowAddDialog} />
     </div>
   );
 }
