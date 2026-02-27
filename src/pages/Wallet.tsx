@@ -34,7 +34,7 @@ import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import { StatCard, SectionHeader } from "@/components/wallet/WalletShared";
-import { invoices, transactions, reportData, typeConfig, statusConfig, transactionTypes, products, stores } from "@/components/wallet/walletData";
+import { invoices, transactions, reportData, typeConfig, statusConfig, transactionTypes, filterGroups, products, stores } from "@/components/wallet/walletData";
 import WalletDialogs from "@/components/wallet/WalletDialogs";
 import { FinancialTrendChart, ExpenseBreakdownChart, MonthlyProfitChart } from "@/components/wallet/WalletReportsCharts";
 import type { Invoice } from "@/components/wallet/WalletTypes";
@@ -70,15 +70,27 @@ export default function WalletPage() {
 
   const filteredTransactions = txFilter === 'all'
     ? dateFilteredTransactions
-    : dateFilteredTransactions.filter(t => t.type === txFilter);
+    : filterGroups[txFilter]
+      ? dateFilteredTransactions.filter(t => filterGroups[txFilter].includes(t.type))
+      : dateFilteredTransactions.filter(t => t.type === txFilter);
 
+  // Group txSummary with merged categories
   const txSummary = dateFilteredTransactions.reduce((acc, t) => {
-    const key = t.type;
+    let key: string = t.type;
+    if (filterGroups.ads.includes(t.type)) key = 'ads';
+    else if (filterGroups.products.includes(t.type)) key = 'products';
     if (!acc[key]) acc[key] = { count: 0, total: 0 };
     acc[key].count++;
     acc[key].total += t.amount;
     return acc;
   }, {} as Record<string, { count: number; total: number }>);
+
+  // Config for grouped types
+  const groupedTypeConfig: Record<string, { label: string; icon: any; color: string; bg: string }> = {
+    ...typeConfig,
+    ads: { label: 'إعلانات', icon: Megaphone, color: 'text-pink-500', bg: 'bg-pink-500/10' },
+    products: { label: 'رصيد منتجات', icon: Package, color: 'text-violet-500', bg: 'bg-violet-500/10' },
+  };
 
   const handleResetDates = () => {
     setDateFrom(undefined);
@@ -346,7 +358,7 @@ export default function WalletPage() {
               <SectionHeader title="إجمالي المعاملات حسب النوع" icon={BarChart3} accentColor="bg-primary" />
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {Object.entries(txSummary).map(([type, data]) => {
-                  const cfg = typeConfig[type];
+                  const cfg = groupedTypeConfig[type];
                   if (!cfg) return null;
                   return <StatCard key={type} item={{ label: `${cfg.label} (${data.count})`, value: Math.abs(data.total).toLocaleString(), suffix: "ر.س", icon: cfg.icon, color: cfg.color, bgColor: cfg.bg }} />;
                 })}
