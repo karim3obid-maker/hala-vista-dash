@@ -92,8 +92,8 @@ export default function WalletPage() {
       <main className="container max-w-[1280px] mx-auto px-6 py-8" dir="rtl">
         {/* Header */}
         <div className="mb-6">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between flex-wrap gap-4 flex-row-reverse">
+            <div className="flex items-center gap-3 flex-row-reverse">
               <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20">
                 <Wallet className="w-5 h-5 text-primary-foreground" />
               </div>
@@ -102,7 +102,7 @@ export default function WalletPage() {
                 <p className="text-sm text-muted-foreground">إدارة الفواتير والمعاملات والتقارير المالية</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-3 flex-wrap flex-row-reverse">
               <Button onClick={() => setShowDeposit(true)} variant="outline" className="rounded-xl h-10 gap-2 border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/10 w-full sm:w-auto">
                 <Plus className="w-4 h-4" /> إيداع رصيد
               </Button>
@@ -117,8 +117,8 @@ export default function WalletPage() {
         </div>
 
         {/* Date Filter */}
-        <div className="flex items-center gap-3 flex-wrap bg-card rounded-2xl border border-border p-4 mb-6">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 flex-wrap bg-card rounded-2xl border border-border p-4 mb-6 flex-row-reverse">
+          <div className="flex items-center gap-2 flex-row-reverse">
             <span className="text-sm font-medium text-foreground">الفترة</span>
             <CalendarIcon className="w-4 h-4 text-muted-foreground" />
           </div>
@@ -160,7 +160,7 @@ export default function WalletPage() {
         {/* Balance & Financial Summary Banner */}
         <div className="bg-card rounded-2xl border border-border p-5 mb-6 space-y-5">
           <div>
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-4 flex-row-reverse">
               <DollarSign className="w-4 h-4 text-primary" />
               <h3 className="text-sm font-bold text-foreground">الملخص المالي</h3>
             </div>
@@ -173,7 +173,7 @@ export default function WalletPage() {
               ].map((item, i) => {
                 const Icon = item.icon;
                 return (
-                  <div key={i} className={`flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-l ${item.from} ${item.to} border ${item.border}`}>
+                  <div key={i} className={`flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-l ${item.from} ${item.to} border ${item.border} flex-row-reverse`}>
                     <div className={`p-2.5 rounded-xl ${item.iconBg} shrink-0`}><Icon className={`w-5 h-5 ${item.iconColor}`} /></div>
                     <div className="text-right flex-1">
                       <p className="text-xl font-bold text-foreground">{item.value.toLocaleString()}<span className="text-xs font-medium text-muted-foreground mr-1">ر.س</span></p>
@@ -188,12 +188,12 @@ export default function WalletPage() {
           <div className="h-px bg-gradient-to-l from-transparent via-border to-transparent" />
 
           <div>
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-4 flex-row-reverse">
               <BarChart3 className="w-4 h-4 text-primary" />
               <h3 className="text-sm font-bold text-foreground">ملخص الأرصدة</h3>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-bl from-primary/10 to-accent/10 border border-primary/20">
+              <div className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-bl from-primary/10 to-accent/10 border border-primary/20 flex-row-reverse">
                 <div className="p-2.5 rounded-lg bg-primary shrink-0"><Wallet className="w-5 h-5 text-white" /></div>
                 <div className="text-right">
                   <p className="text-2xl font-bold text-foreground">{balance.toLocaleString()}</p>
@@ -227,20 +227,20 @@ export default function WalletPage() {
               const st = statusConfig[inv.status];
               return (
                 <div key={inv.id} onClick={() => setSelectedInvoice(inv)} className="bg-card rounded-2xl border border-border p-4 hover:shadow-md hover:border-primary/20 transition-all cursor-pointer group">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-between flex-row-reverse">
+                    <div className="flex items-center gap-3 flex-row-reverse">
                       <div className="p-2.5 rounded-xl bg-primary/10 group-hover:bg-primary/15 transition-colors"><Receipt className="w-5 h-5 text-primary" /></div>
                       <div className="text-right">
                         <p className="text-sm font-bold text-foreground">{inv.invoiceNumber}</p>
                         <p className="text-[11px] text-muted-foreground">{inv.period} • {inv.periodType === 'weekly' ? 'أسبوعية' : 'شهرية'}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="text-left">
+                    <div className="flex items-center gap-3 flex-row-reverse">
+                      <ChevronLeft className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors rotate-180" />
+                      <div className="text-right">
                         <p className="text-sm font-bold text-foreground">{inv.totalAmount.toLocaleString()} ر.س</p>
                         <Badge variant={st.variant} className="text-[10px] px-2 py-0">{st.label}</Badge>
                       </div>
-                      <ChevronLeft className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
                     </div>
                   </div>
                 </div>
@@ -353,7 +353,7 @@ export default function WalletPage() {
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 flex-row-reverse">
               {transactionTypes.map(t => (
                 <Button key={t.value} variant={txFilter === t.value ? "default" : "outline"} size="sm" onClick={() => setTxFilter(t.value)}
                   className={cn("rounded-xl text-xs px-4 h-9", txFilter === t.value && "bg-primary text-primary-foreground")}>
@@ -452,7 +452,7 @@ export default function WalletPage() {
                     </div>
                   ))}
                 </div>
-                <div className="flex items-center justify-between pt-3 border-t border-primary/10">
+                <div className="flex items-center justify-between pt-3 border-t border-primary/10 flex-row-reverse">
                   <span className="text-sm font-bold text-foreground">إجمالي بضاعة هلا</span>
                   <span className="text-lg font-bold text-primary">{reportData.halaGoods.reduce((s, i) => s + i.total, 0).toLocaleString()} ر.س</span>
                 </div>
@@ -471,8 +471,10 @@ export default function WalletPage() {
                     </div>
                   ))}
                 </div>
-                <div className="flex items-center justify-between pt-3 border-t border-violet-500/10">
-                  <span className="text-sm font-bold text-foreground">إجمالي استيراد البضاعة</span>
+                <div className="flex items-center justify-between pt-3 border-t border-violet-500/10 flex-row-reverse">
+                  <div className="text-right">
+                    <span className="text-sm font-bold text-foreground">إجمالي استيراد البضاعة</span>
+                  </div>
                   <span className="text-lg font-bold text-violet-500">{reportData.marketerGoods.reduce((s, i) => s + i.total, 0).toLocaleString()} ر.س</span>
                 </div>
               </div>
@@ -485,8 +487,10 @@ export default function WalletPage() {
                 <div className="grid grid-cols-1 gap-3">
                   <StatCard item={{ label: "إعلانات تيك توك", value: reportData.adBalance.tiktok.toLocaleString(), suffix: "ر.س", icon: Megaphone, color: "text-pink-500", bgColor: "bg-pink-500/10" }} />
                   <StatCard item={{ label: "إعلانات سناب شات", value: reportData.adBalance.snapchat.toLocaleString(), suffix: "ر.س", icon: Camera, color: "text-yellow-500", bgColor: "bg-yellow-500/10" }} />
-                  <div className="flex items-center justify-between pt-3 border-t border-orange-500/10">
-                    <span className="text-sm font-bold text-foreground">إجمالي السحب الإعلاني</span>
+                  <div className="flex items-center justify-between pt-3 border-t border-orange-500/10 flex-row-reverse">
+                    <div className="text-right">
+                      <span className="text-sm font-bold text-foreground">إجمالي السحب الإعلاني</span>
+                    </div>
                     <span className="text-lg font-bold text-orange-500">{reportData.adBalance.total.toLocaleString()} ر.س</span>
                   </div>
                 </div>
@@ -496,8 +500,10 @@ export default function WalletPage() {
                 <div className="grid grid-cols-1 gap-3">
                   <StatCard item={{ label: "تكاليف بضاعة هلا", value: Math.abs(reportData.goodsBalance.halaBalance).toLocaleString(), suffix: "ر.س", icon: ShoppingCart, color: "text-primary", bgColor: "bg-primary/10" }} />
                   <StatCard item={{ label: "فاند استيراد بضاعة", value: Math.abs(reportData.goodsBalance.importBalance).toLocaleString(), suffix: "ر.س", icon: Package, color: "text-violet-500", bgColor: "bg-violet-500/10" }} />
-                  <div className="flex items-center justify-between pt-3 border-t border-violet-500/10">
-                    <span className="text-sm font-bold text-foreground">إجمالي تكاليف البضاعة</span>
+                  <div className="flex items-center justify-between pt-3 border-t border-violet-500/10 flex-row-reverse">
+                    <div className="text-right">
+                      <span className="text-sm font-bold text-foreground">إجمالي تكاليف البضاعة</span>
+                    </div>
                     <span className="text-lg font-bold text-violet-500">{Math.abs(reportData.goodsBalance.total).toLocaleString()} ر.س</span>
                   </div>
                 </div>
