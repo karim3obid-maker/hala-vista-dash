@@ -457,22 +457,22 @@ export default function WalletPage() {
               </div>
             </div>
 
-            {/* Filter */}
-            <div className="flex items-center gap-3 justify-start flex-row-reverse">
-              <Select value={txFilter} onValueChange={setTxFilter}>
-                <SelectTrigger className="w-[200px] h-11 bg-card border-border rounded-xl">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {transactionTypes.map(t => (
-                    <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm font-medium text-foreground">تصفية حسب</span>
-              </div>
+            {/* Filter Buttons */}
+            <div className="flex flex-row-reverse flex-wrap gap-2">
+              {transactionTypes.map(t => (
+                <Button
+                  key={t.value}
+                  variant={txFilter === t.value ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setTxFilter(t.value)}
+                  className={cn(
+                    "rounded-xl text-xs px-4 h-9",
+                    txFilter === t.value && "bg-primary text-primary-foreground"
+                  )}
+                >
+                  {t.label}
+                </Button>
+              ))}
             </div>
 
             {/* Transaction List */}
