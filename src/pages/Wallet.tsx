@@ -192,7 +192,7 @@ const statusConfig: Record<string, { label: string; variant: 'default' | 'second
 function StatCard({ item }: { item: { label: string; value: string | number; icon: any; color: string; bgColor: string; suffix?: string; highlight?: boolean } }) {
   const Icon = item.icon;
   return (
-    <div className={`flex items-center gap-3 p-3.5 rounded-xl border transition-all hover:shadow-sm ${
+    <div className={`flex flex-row-reverse items-center gap-3 p-3.5 rounded-xl border transition-all hover:shadow-sm ${
       item.highlight
         ? "bg-primary/5 border-primary/20 hover:border-primary/40"
         : "bg-card border-border hover:border-primary/20"
@@ -200,7 +200,7 @@ function StatCard({ item }: { item: { label: string; value: string | number; ico
       <div className={`p-2 rounded-lg ${item.bgColor} shrink-0`}>
         <Icon className={`w-4 h-4 ${item.color}`} />
       </div>
-      <div className="min-w-0">
+      <div className="min-w-0 text-right flex-1">
         <p className={`text-lg font-bold text-foreground leading-tight ${item.highlight ? "text-xl" : ""}`}>
           {typeof item.value === "number" ? item.value.toLocaleString("ar-SA") : item.value}
           {item.suffix && <span className="text-xs font-medium text-muted-foreground mr-1">{item.suffix}</span>}
@@ -214,7 +214,7 @@ function StatCard({ item }: { item: { label: string; value: string | number; ico
 /* ── Section Header (matches analytics) ── */
 function SectionHeader({ title, icon: Icon, accentColor, badge }: { title: string; icon: any; accentColor: string; badge?: string }) {
   return (
-    <div className="flex items-center gap-2 mb-4">
+    <div className="flex flex-row-reverse items-center gap-2 mb-4">
       <div className={`p-1.5 rounded-lg ${accentColor}`}>
         <Icon className="w-4 h-4 text-white" />
       </div>
@@ -265,11 +265,11 @@ export default function WalletPage() {
       <main className="container max-w-[1280px] mx-auto px-6 py-8" dir="rtl">
         {/* Header */}
         <div className="mb-6">
-          <div className="flex items-center gap-3 mb-1">
+          <div className="flex flex-row-reverse items-center gap-3 mb-1">
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20">
               <Wallet className="w-5 h-5 text-primary-foreground" />
             </div>
-            <div>
+            <div className="text-right">
               <h1 className="text-2xl font-bold text-foreground">المحفظة</h1>
               <p className="text-sm text-muted-foreground">إدارة الفواتير والمعاملات والتقارير المالية</p>
             </div>
@@ -278,16 +278,16 @@ export default function WalletPage() {
 
         {/* Balance Banner (matches Flow Banner style) */}
         <div className="bg-card rounded-2xl border border-border p-5 mb-6">
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex flex-row-reverse items-center gap-2 mb-4">
             <BarChart3 className="w-4 h-4 text-primary" />
             <h3 className="text-sm font-bold text-foreground">ملخص الأرصدة</h3>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 border border-primary/20">
+            <div className="flex flex-row-reverse items-center gap-3 p-4 rounded-xl bg-gradient-to-bl from-primary/10 to-accent/10 border border-primary/20">
               <div className="p-2.5 rounded-lg bg-primary shrink-0">
                 <Wallet className="w-5 h-5 text-white" />
               </div>
-              <div>
+              <div className="text-right">
                 <p className="text-2xl font-bold text-foreground">{balance.toLocaleString()}</p>
                 <p className="text-[11px] text-muted-foreground">الرصيد الحالي (ر.س)</p>
               </div>
@@ -330,33 +330,33 @@ export default function WalletPage() {
               const st = statusConfig[inv.status];
               return (
                 <div key={inv.id} className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-md transition-all">
-                  <div className="flex items-center justify-between p-5 border-b border-border">
-                    <Badge variant={st.variant} className="text-xs px-3 py-1">{st.label}</Badge>
-                    <div className="flex items-center gap-4 text-right">
+                  <div className="flex flex-row-reverse items-center justify-between p-5 border-b border-border">
+                    <div className="flex flex-row-reverse items-center gap-4 text-right">
+                      <div className="p-2.5 rounded-xl bg-primary/10">
+                        <Receipt className="w-5 h-5 text-primary" />
+                      </div>
                       <div>
                         <p className="text-base font-bold text-foreground">{inv.invoiceNumber}</p>
                         <p className="text-xs text-muted-foreground">{inv.period}</p>
                       </div>
-                      <div className="p-2.5 rounded-xl bg-primary/10">
-                        <Receipt className="w-5 h-5 text-primary" />
-                      </div>
                     </div>
+                    <Badge variant={st.variant} className="text-xs px-3 py-1">{st.label}</Badge>
                   </div>
                   <div className="p-5">
                     <div className="space-y-2">
                       {inv.services.map((svc, i) => (
-                        <div key={i} className="flex items-center justify-between py-2 px-3 rounded-lg bg-muted/30">
-                          <span className="text-sm font-bold text-foreground">{svc.amount.toLocaleString()} ر.س</span>
+                        <div key={i} className="flex flex-row-reverse items-center justify-between py-2 px-3 rounded-lg bg-muted/30">
                           <div className="text-right">
                             <span className="text-sm font-medium text-foreground">{svc.name}</span>
                             <span className="text-xs text-muted-foreground mr-2">({svc.details})</span>
                           </div>
+                          <span className="text-sm font-bold text-foreground">{svc.amount.toLocaleString()} ر.س</span>
                         </div>
                       ))}
                     </div>
-                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
-                      <span className="text-lg font-bold text-primary">{inv.totalAmount.toLocaleString()} ر.س</span>
+                    <div className="flex flex-row-reverse items-center justify-between mt-4 pt-4 border-t border-border">
                       <span className="text-sm font-bold text-foreground">الإجمالي</span>
+                      <span className="text-lg font-bold text-primary">{inv.totalAmount.toLocaleString()} ر.س</span>
                     </div>
                   </div>
                 </div>
@@ -470,11 +470,11 @@ export default function WalletPage() {
 
                     <div className="space-y-2 mb-4">
                       {svc.items.map((item, i) => (
-                        <div key={i} className="flex items-center justify-between bg-card rounded-xl border border-border p-3.5">
-                          <div className="flex items-center gap-3">
-                            <span className="text-sm font-bold text-foreground">{item.total.toLocaleString()} ر.س</span>
-                          </div>
-                          <div className="flex items-center gap-3 text-right">
+                        <div key={i} className="flex flex-row-reverse items-center justify-between bg-card rounded-xl border border-border p-3.5">
+                          <div className="flex flex-row-reverse items-center gap-3 text-right">
+                            <div className={`p-2 rounded-lg ${svc.bgColor}`}>
+                              <Icon className={`w-4 h-4 ${svc.color}`} />
+                            </div>
                             <div>
                               <p className="text-sm font-medium text-foreground">{item.label}</p>
                               <p className="text-[11px] text-muted-foreground">
@@ -484,17 +484,15 @@ export default function WalletPage() {
                                 }
                               </p>
                             </div>
-                            <div className={`p-2 rounded-lg ${svc.bgColor}`}>
-                              <Icon className={`w-4 h-4 ${svc.color}`} />
-                            </div>
                           </div>
+                          <span className="text-sm font-bold text-foreground">{item.total.toLocaleString()} ر.س</span>
                         </div>
                       ))}
                     </div>
 
-                    <div className="flex items-center justify-between pt-3 border-t border-border">
-                      <span className={`text-lg font-bold ${svc.color}`}>{svcTotal.toLocaleString()} ر.س</span>
+                    <div className="flex flex-row-reverse items-center justify-between pt-3 border-t border-border">
                       <span className="text-sm font-bold text-foreground">إجمالي {svc.name}</span>
+                      <span className={`text-lg font-bold ${svc.color}`}>{svcTotal.toLocaleString()} ر.س</span>
                     </div>
                   </div>
                 );
@@ -509,9 +507,9 @@ export default function WalletPage() {
                 <div className="grid grid-cols-1 gap-3">
                   <StatCard item={{ label: "إعلانات تيك توك", value: reportData.adBalance.tiktok.toLocaleString(), suffix: "ر.س", icon: Megaphone, color: "text-pink-500", bgColor: "bg-pink-500/10" }} />
                   <StatCard item={{ label: "إعلانات سناب شات", value: reportData.adBalance.snapchat.toLocaleString(), suffix: "ر.س", icon: Camera, color: "text-yellow-500", bgColor: "bg-yellow-500/10" }} />
-                  <div className="flex items-center justify-between pt-3 border-t border-orange-500/10">
-                    <span className="text-lg font-bold text-orange-500">{reportData.adBalance.total.toLocaleString()} ر.س</span>
+                  <div className="flex flex-row-reverse items-center justify-between pt-3 border-t border-orange-500/10">
                     <span className="text-sm font-bold text-foreground">إجمالي السحب الإعلاني</span>
+                    <span className="text-lg font-bold text-orange-500">{reportData.adBalance.total.toLocaleString()} ر.س</span>
                   </div>
                 </div>
               </div>
@@ -522,9 +520,9 @@ export default function WalletPage() {
                 <div className="grid grid-cols-1 gap-3">
                   <StatCard item={{ label: "تكاليف بضاعة هلا", value: Math.abs(reportData.goodsBalance.halaBalance).toLocaleString(), suffix: "ر.س", icon: ShoppingCart, color: "text-primary", bgColor: "bg-primary/10" }} />
                   <StatCard item={{ label: "فاند استيراد بضاعة", value: Math.abs(reportData.goodsBalance.importBalance).toLocaleString(), suffix: "ر.س", icon: Package, color: "text-violet-500", bgColor: "bg-violet-500/10" }} />
-                  <div className="flex items-center justify-between pt-3 border-t border-violet-500/10">
-                    <span className="text-lg font-bold text-violet-500">{Math.abs(reportData.goodsBalance.total).toLocaleString()} ر.س</span>
+                  <div className="flex flex-row-reverse items-center justify-between pt-3 border-t border-violet-500/10">
                     <span className="text-sm font-bold text-foreground">إجمالي تكاليف البضاعة</span>
+                    <span className="text-lg font-bold text-violet-500">{Math.abs(reportData.goodsBalance.total).toLocaleString()} ر.س</span>
                   </div>
                 </div>
               </div>
