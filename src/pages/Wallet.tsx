@@ -429,48 +429,6 @@ export default function WalletPage() {
               })}
             </div>
 
-            {/* Goods sections */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-primary/[0.02] rounded-2xl p-5 border border-primary/10">
-                <SectionHeader title="بضاعة هلا شري" icon={ShoppingCart} accentColor="bg-primary" badge={`${reportData.halaGoods.length} منتجات`} />
-                <div className="space-y-2 mb-4">
-                  {reportData.halaGoods.map((item, i) => (
-                    <div key={i} className="flex items-center justify-between bg-card rounded-xl border border-border p-3.5 flex-row-reverse">
-                      <div className="flex items-center gap-3 text-right flex-row-reverse">
-                        <div className="p-2 rounded-lg bg-primary/10"><ShoppingCart className="w-4 h-4 text-primary" /></div>
-                        <div><p className="text-sm font-medium text-foreground">{item.label}</p><p className="text-[11px] text-muted-foreground">{item.count.toLocaleString()} قطعة × {item.unitCost} ر.س</p></div>
-                      </div>
-                      <span className="text-sm font-bold text-foreground">{item.total.toLocaleString()} ر.س</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex items-center justify-between pt-3 border-t border-primary/10 flex-row-reverse">
-                  <span className="text-sm font-bold text-foreground">إجمالي بضاعة هلا</span>
-                  <span className="text-lg font-bold text-primary">{reportData.halaGoods.reduce((s, i) => s + i.total, 0).toLocaleString()} ر.س</span>
-                </div>
-              </div>
-
-              <div className="bg-violet-500/[0.02] rounded-2xl p-5 border border-violet-500/10">
-                <SectionHeader title="استيراد بضاعة للمسوق" icon={Package} accentColor="bg-violet-500" badge={`${reportData.marketerGoods.length} شحنات`} />
-                <div className="space-y-2 mb-4">
-                  {reportData.marketerGoods.map((item, i) => (
-                    <div key={i} className="flex items-center justify-between bg-card rounded-xl border border-border p-3.5 flex-row-reverse">
-                      <div className="flex items-center gap-3 text-right flex-row-reverse">
-                        <div className="p-2 rounded-lg bg-violet-500/10"><Package className="w-4 h-4 text-violet-500" /></div>
-                        <div><p className="text-sm font-medium text-foreground">{item.label}</p><p className="text-[11px] text-muted-foreground">{item.count.toLocaleString()} قطعة × {item.unitCost} ر.س</p></div>
-                      </div>
-                      <span className="text-sm font-bold text-foreground">{item.total.toLocaleString()} ر.س</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex items-center justify-between pt-3 border-t border-violet-500/10 flex-row-reverse">
-                  <div className="text-right">
-                    <span className="text-sm font-bold text-foreground">إجمالي استيراد البضاعة</span>
-                  </div>
-                  <span className="text-lg font-bold text-violet-500">{reportData.marketerGoods.reduce((s, i) => s + i.total, 0).toLocaleString()} ر.س</span>
-                </div>
-              </div>
-            </div>
 
             {/* Ad & Goods Balance */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
