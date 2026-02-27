@@ -300,7 +300,7 @@ export default function WalletPage() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
-          <TabsList className="flex w-full justify-end bg-card border border-border p-1 h-14 mb-6 rounded-2xl">
+          <TabsList className="flex w-full justify-start bg-card border border-border p-1 h-14 mb-6 rounded-2xl">
             <TabsTrigger
               value="invoices"
               className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6 rounded-xl"
@@ -391,7 +391,7 @@ export default function WalletPage() {
             </div>
 
             {/* Filter */}
-            <div className="flex items-center gap-3 justify-end">
+            <div className="flex items-center gap-3 justify-start flex-row-reverse">
               <Select value={txFilter} onValueChange={setTxFilter}>
                 <SelectTrigger className="w-[200px] h-11 bg-card border-border rounded-xl">
                   <SelectValue />
@@ -417,7 +417,7 @@ export default function WalletPage() {
                     const status = statusConfig[tx.status];
                     const Icon = config.icon;
                     return (
-                      <div key={tx.id} className="flex items-center gap-3 px-5 py-4 hover:bg-muted/30 transition-colors">
+                      <div key={tx.id} className="flex flex-row-reverse items-center gap-3 px-5 py-4 hover:bg-muted/30 transition-colors">
                         <div className={`w-10 h-10 rounded-xl ${config.bg} flex items-center justify-center shrink-0`}>
                           <Icon className={`w-5 h-5 ${config.color}`} />
                         </div>
@@ -430,7 +430,7 @@ export default function WalletPage() {
                             )}
                           </div>
                         </div>
-                        <div className="text-left flex flex-col items-end gap-1 shrink-0">
+                        <div className="flex flex-col items-start gap-1 shrink-0">
                           <span className={`text-sm font-bold ${tx.amount > 0 ? 'text-emerald-500' : 'text-foreground'}`}>
                             {tx.amount > 0 ? '+' : ''}{tx.amount.toLocaleString()} ر.س
                           </span>
