@@ -153,11 +153,11 @@ export const goodsAccountSummary = {
 };
 
 export const goodsTransactions = [
-  { id: 'g1', date: '2026/02/27', type: 'خصم بضاعة هلا', source: 'مخزون هلا شير', amount: -1500, percentage: 100, reference: 'GD-H-001', details: 'سحب 100 قطعة × 15 ر.س' },
-  { id: 'g2', date: '2026/02/25', type: 'خصم بضاعة هلا', source: 'مخزون هلا شير', amount: -750, percentage: 100, reference: 'GD-H-002', details: 'سحب 50 قطعة × 15 ر.س' },
-  { id: 'g3', date: '2026/02/24', type: 'خصم بضاعة هلا', source: 'مخزون هلا شير', amount: -1950, percentage: 100, reference: 'GD-H-003', details: 'سحب 78 قطعة × 25 ر.س' },
-  { id: 'g4', date: '2026/02/22', type: 'فاند استيراد الصين', source: 'فاند الصين', amount: -2500, percentage: 50, reference: 'GD-CN-001', details: 'دفعة مقدمة 50% من 5,000 ر.س' },
-  { id: 'g5', date: '2026/02/20', type: 'فاند استيراد مصر', source: 'فاند مصر', amount: -1000, percentage: 30, reference: 'GD-EG-001', details: 'دفعة أولى 30% من 3,333 ر.س' },
+  { id: 'g1', date: '2026/02/27', type: 'خصم بضاعة هلا', source: 'مخزون هلا شير', amount: -1500, percentage: 100, reference: 'GD-H-001', details: 'سحب 100 قطعة × 15 ر.س', totalCost: 1500, amountPaid: 1500, remaining: 0 },
+  { id: 'g2', date: '2026/02/25', type: 'خصم بضاعة هلا', source: 'مخزون هلا شير', amount: -750, percentage: 100, reference: 'GD-H-002', details: 'سحب 50 قطعة × 15 ر.س', totalCost: 750, amountPaid: 750, remaining: 0 },
+  { id: 'g3', date: '2026/02/24', type: 'خصم بضاعة هلا', source: 'مخزون هلا شير', amount: -1950, percentage: 100, reference: 'GD-H-003', details: 'سحب 78 قطعة × 25 ر.س', totalCost: 1950, amountPaid: 1950, remaining: 0 },
+  { id: 'g4', date: '2026/02/22', type: 'فاند استيراد الصين', source: 'فاند الصين', amount: -2500, percentage: 50, reference: 'GD-CN-001', details: 'دفعة مقدمة 50% من 5,000 ر.س', totalCost: 5000, amountPaid: 2500, remaining: 2500 },
+  { id: 'g5', date: '2026/02/20', type: 'فاند استيراد مصر', source: 'فاند مصر', amount: -1000, percentage: 30, reference: 'GD-EG-001', details: 'دفعة أولى 30% من 3,333 ر.س', totalCost: 3333, amountPaid: 1000, remaining: 2333 },
 ];
 
 export const halaWithdrawalReport = [

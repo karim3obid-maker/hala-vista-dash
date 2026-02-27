@@ -371,7 +371,9 @@ export default function WalletPage() {
                         <th className="text-right py-3 px-4 font-medium text-muted-foreground text-xs">المصدر</th>
                         <th className="text-right py-3 px-4 font-medium text-muted-foreground text-xs">التفاصيل</th>
                         <th className="text-right py-3 px-4 font-medium text-muted-foreground text-xs">النسبة</th>
-                        <th className="text-left py-3 px-4 font-medium text-muted-foreground text-xs">المبلغ</th>
+                        <th className="text-right py-3 px-4 font-medium text-muted-foreground text-xs">إجمالي التكلفة</th>
+                        <th className="text-right py-3 px-4 font-medium text-muted-foreground text-xs">المبلغ المدفوع</th>
+                        <th className="text-right py-3 px-4 font-medium text-muted-foreground text-xs">المتبقي</th>
                         <th className="text-left py-3 px-4 font-medium text-muted-foreground text-xs">المرجع</th>
                       </tr>
                     </thead>
@@ -385,7 +387,9 @@ export default function WalletPage() {
                           <td className="py-3 px-4 text-muted-foreground text-xs">{gt.source}</td>
                           <td className="py-3 px-4 text-muted-foreground text-xs">{gt.details}</td>
                           <td className="py-3 px-4 text-muted-foreground text-xs">{gt.percentage}%</td>
-                          <td className="py-3 px-4 text-left font-bold text-red-500 text-xs">{gt.amount.toLocaleString()} ر.س</td>
+                          <td className="py-3 px-4 text-foreground text-xs font-medium">{gt.totalCost.toLocaleString()} ر.س</td>
+                          <td className="py-3 px-4 font-bold text-red-500 text-xs">{gt.amountPaid.toLocaleString()}- ر.س</td>
+                          <td className="py-3 px-4 text-xs font-medium">{gt.remaining > 0 ? <span className="text-amber-500">{gt.remaining.toLocaleString()} ر.س</span> : <span className="text-emerald-500">0 ر.س</span>}</td>
                           <td className="py-3 px-4 text-left"><span className="text-[10px] text-muted-foreground/60 bg-muted px-1.5 py-0.5 rounded">{gt.reference}</span></td>
                         </tr>
                       ))}
