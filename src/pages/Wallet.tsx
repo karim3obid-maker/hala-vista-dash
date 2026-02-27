@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { format } from "date-fns";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 import { ar } from "date-fns/locale";
 import {
   Wallet,
@@ -293,6 +295,8 @@ export default function WalletPage() {
   const [selectedStore, setSelectedStore] = useState("all");
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
 
+  const invoiceRef = useRef<HTMLDivElement>(null);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
   const balance = 3500;
 
   const filterByDate = <T extends { date: string }>(items: T[]): T[] => {
@@ -543,82 +547,152 @@ export default function WalletPage() {
 
             {/* Invoice Detail Dialog */}
             <Dialog open={!!selectedInvoice} onOpenChange={() => setSelectedInvoice(null)}>
-              <DialogContent className="max-w-lg" dir="rtl">
+              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" dir="rtl">
                 {selectedInvoice && (() => {
                   const st = statusConfig[selectedInvoice.status];
+
+                  const handleDownloadPdf = async () => {
+                    if (!invoiceRef.current) return;
+                    setDownloadingPdf(true);
+                    try {
+                      const canvas = await html2canvas(invoiceRef.current, {
+                        scale: 2,
+                        useCORS: true,
+                        backgroundColor: '#ffffff',
+                      });
+                      const imgData = canvas.toDataURL('image/png');
+                      const pdf = new jsPDF('p', 'mm', 'a4');
+                      const pdfWidth = pdf.internal.pageSize.getWidth();
+                      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                      pdf.save(`${selectedInvoice.invoiceNumber}.pdf`);
+                    } catch (e) {
+                      console.error(e);
+                    } finally {
+                      setDownloadingPdf(false);
+                    }
+                  };
+
                   return (
                     <>
-                      <DialogHeader>
-                        <DialogTitle className="flex flex-row-reverse items-center gap-3">
-                          <div className="p-2 rounded-xl bg-primary/10">
-                            <Receipt className="w-5 h-5 text-primary" />
-                          </div>
-                          <div className="text-right">
-                            <p className="text-lg font-bold">فاتورة {selectedInvoice.invoiceNumber}</p>
-                            <p className="text-xs text-muted-foreground font-normal">{selectedInvoice.period}</p>
-                          </div>
-                        </DialogTitle>
+                      <DialogHeader className="sr-only">
+                        <DialogTitle>فاتورة {selectedInvoice.invoiceNumber}</DialogTitle>
                       </DialogHeader>
 
-                      <div className="space-y-4 mt-2">
-                        {/* Invoice meta */}
-                        <div className="flex flex-row-reverse items-center justify-between bg-muted/30 rounded-xl p-3">
-                          <div className="text-right">
-                            <p className="text-[11px] text-muted-foreground">تاريخ الإصدار</p>
-                            <p className="text-sm font-medium">{selectedInvoice.issueDate}</p>
+                      {/* Printable Invoice */}
+                      <div ref={invoiceRef} className="bg-white text-black p-8 rounded-lg" style={{ direction: 'rtl' }}>
+                        {/* Invoice Header */}
+                        <div className="flex justify-between items-start border-b-2 border-gray-800 pb-5 mb-6">
+                          <div>
+                            <h1 className="text-2xl font-black text-gray-900 tracking-tight">فاتورة ضريبية</h1>
+                            <p className="text-sm text-gray-500 mt-1">Tax Invoice</p>
                           </div>
-                          <Badge variant={st.variant} className="text-xs px-3 py-1">{st.label}</Badge>
-                        </div>
-
-                        {/* Services */}
-                        <div className="space-y-2">
-                          <p className="text-sm font-bold text-foreground text-right">تفاصيل الخدمات</p>
-                          {selectedInvoice.services.map((svc, i) => (
-                            <div key={i} className="flex flex-row-reverse items-center justify-between py-2.5 px-3 rounded-lg bg-muted/20 border border-border">
-                              <div className="text-right">
-                                <span className="text-sm font-medium text-foreground">{svc.name}</span>
-                                <p className="text-[11px] text-muted-foreground">{svc.details}</p>
-                              </div>
-                              <span className="text-sm font-bold text-foreground">{svc.amount.toLocaleString()} ر.س</span>
+                          <div className="text-left">
+                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center mb-2 mr-auto">
+                              <span className="text-white font-black text-lg">H</span>
                             </div>
-                          ))}
+                            <p className="text-xs text-gray-500">هلا شري</p>
+                            <p className="text-xs text-gray-500">Hala Shari</p>
+                          </div>
                         </div>
 
-                        {/* Total */}
-                        <div className="flex flex-row-reverse items-center justify-between pt-3 border-t border-border">
-                          <span className="text-base font-bold text-foreground">الإجمالي</span>
-                          <span className="text-xl font-bold text-primary">{selectedInvoice.totalAmount.toLocaleString()} ر.س</span>
+                        {/* Invoice Info Grid */}
+                        <div className="grid grid-cols-2 gap-6 mb-6">
+                          <div className="space-y-3">
+                            <div>
+                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">رقم الفاتورة</p>
+                              <p className="text-sm font-bold text-gray-900">{selectedInvoice.invoiceNumber}</p>
+                            </div>
+                            <div>
+                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">تاريخ الإصدار</p>
+                              <p className="text-sm font-medium text-gray-700">{selectedInvoice.issueDate}</p>
+                            </div>
+                            <div>
+                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">الفترة</p>
+                              <p className="text-sm font-medium text-gray-700">{selectedInvoice.period}</p>
+                            </div>
+                          </div>
+                          <div className="space-y-3">
+                            <div>
+                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">العميل</p>
+                              <p className="text-sm font-bold text-gray-900">متجر المسوّق</p>
+                              <p className="text-xs text-gray-500">الرياض، المملكة العربية السعودية</p>
+                            </div>
+                            <div>
+                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">الحالة</p>
+                              <span className={`inline-block text-xs font-bold px-3 py-1 rounded-full ${
+                                selectedInvoice.status === 'paid' 
+                                  ? 'bg-green-100 text-green-700' 
+                                  : selectedInvoice.status === 'unpaid' 
+                                  ? 'bg-red-100 text-red-700' 
+                                  : 'bg-yellow-100 text-yellow-700'
+                              }`}>
+                                {st.label}
+                              </span>
+                            </div>
+                            <div>
+                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">نوع الفاتورة</p>
+                              <p className="text-sm font-medium text-gray-700">{selectedInvoice.periodType === 'weekly' ? 'أسبوعية' : 'شهرية'}</p>
+                            </div>
+                          </div>
                         </div>
 
-                        {/* Download Button */}
-                        <Button
-                          className="w-full rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground"
-                          onClick={() => {
-                            // Generate simple text invoice for download
-                            const content = [
-                              `فاتورة: ${selectedInvoice.invoiceNumber}`,
-                              `الفترة: ${selectedInvoice.period}`,
-                              `تاريخ الإصدار: ${selectedInvoice.issueDate}`,
-                              `الحالة: ${st.label}`,
-                              ``,
-                              `--- تفاصيل الخدمات ---`,
-                              ...selectedInvoice.services.map(s => `${s.name}: ${s.amount.toLocaleString()} ر.س (${s.details})`),
-                              ``,
-                              `الإجمالي: ${selectedInvoice.totalAmount.toLocaleString()} ر.س`,
-                            ].join('\n');
-                            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-                            const url = URL.createObjectURL(blob);
-                            const a = document.createElement('a');
-                            a.href = url;
-                            a.download = `${selectedInvoice.invoiceNumber}.txt`;
-                            a.click();
-                            URL.revokeObjectURL(url);
-                          }}
-                        >
-                          <Download className="w-4 h-4 ml-2" />
-                          تحميل الفاتورة
-                        </Button>
+                        {/* Services Table */}
+                        <div className="mb-6">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="border-b-2 border-gray-800">
+                                <th className="text-right py-3 font-bold text-gray-900">#</th>
+                                <th className="text-right py-3 font-bold text-gray-900">الخدمة</th>
+                                <th className="text-right py-3 font-bold text-gray-900">التفاصيل</th>
+                                <th className="text-left py-3 font-bold text-gray-900">المبلغ</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {selectedInvoice.services.map((svc, i) => (
+                                <tr key={i} className="border-b border-gray-200">
+                                  <td className="py-3 text-gray-500">{i + 1}</td>
+                                  <td className="py-3 font-medium text-gray-800">{svc.name}</td>
+                                  <td className="py-3 text-gray-500 text-xs">{svc.details}</td>
+                                  <td className="py-3 text-left font-semibold text-gray-800">{svc.amount.toLocaleString()} ر.س</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+
+                        {/* Totals */}
+                        <div className="border-t-2 border-gray-800 pt-4 space-y-2">
+                          <div className="flex justify-between text-sm text-gray-600">
+                            <span>المجموع الفرعي</span>
+                            <span>{selectedInvoice.totalAmount.toLocaleString()} ر.س</span>
+                          </div>
+                          <div className="flex justify-between text-sm text-gray-600">
+                            <span>ضريبة القيمة المضافة (15%)</span>
+                            <span>{(selectedInvoice.totalAmount * 0.15).toLocaleString()} ر.س</span>
+                          </div>
+                          <div className="flex justify-between text-lg font-black text-gray-900 pt-2 border-t border-gray-300">
+                            <span>الإجمالي المستحق</span>
+                            <span>{(selectedInvoice.totalAmount * 1.15).toLocaleString()} ر.س</span>
+                          </div>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="mt-8 pt-4 border-t border-gray-200 text-center">
+                          <p className="text-[10px] text-gray-400">هذه الفاتورة صادرة إلكترونياً من منصة هلا شري • الرقم الضريبي: 300012345600003</p>
+                          <p className="text-[10px] text-gray-400 mt-1">شكراً لتعاملكم معنا</p>
+                        </div>
                       </div>
+
+                      {/* Download PDF Button */}
+                      <Button
+                        className="w-full rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground mt-2"
+                        onClick={handleDownloadPdf}
+                        disabled={downloadingPdf}
+                      >
+                        <Download className="w-4 h-4 ml-2" />
+                        {downloadingPdf ? 'جاري التحميل...' : 'تحميل الفاتورة PDF'}
+                      </Button>
                     </>
                   );
                 })()}
