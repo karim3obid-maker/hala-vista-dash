@@ -344,16 +344,6 @@ export default function WalletPage() {
 
           {/* ════════ TRANSACTIONS TAB ════════ */}
           <TabsContent value="transactions" className="animate-fade-in space-y-6">
-            <div className="bg-primary/[0.02] rounded-2xl p-5 border border-primary/10">
-              <SectionHeader title="إجمالي المعاملات حسب النوع" icon={BarChart3} accentColor="bg-primary" />
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {Object.entries(txSummary).map(([type, data]) => {
-                  const cfg = typeConfig[type];
-                  if (!cfg) return null;
-                  return <StatCard key={type} item={{ label: `${cfg.label} (${data.count})`, value: Math.abs(data.total).toLocaleString(), suffix: "ر.س", icon: cfg.icon, color: cfg.color, bgColor: cfg.bg }} />;
-                })}
-              </div>
-            </div>
 
             <div className="flex flex-wrap gap-2 flex-row-reverse">
               {transactionTypes.map(t => (
