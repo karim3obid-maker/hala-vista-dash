@@ -329,7 +329,7 @@ export default function WalletPage() {
   };
 
   const DateFilter = () => (
-    <div className="flex flex-row-reverse items-center gap-3 flex-wrap bg-card rounded-2xl border border-border p-4">
+    <div className="flex flex-row-reverse items-center gap-3 flex-wrap bg-card rounded-2xl border border-border p-4 mb-6">
       <div className="flex flex-row-reverse items-center gap-2">
         <CalendarIcon className="w-4 h-4 text-muted-foreground" />
         <span className="text-sm font-medium text-foreground">الفترة</span>
@@ -479,6 +479,9 @@ export default function WalletPage() {
           </div>
         </div>
 
+        {/* Global Filters */}
+        <DateFilter />
+
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
           <TabsList className="flex w-full justify-end bg-card border border-border p-1 h-14 mb-6 rounded-2xl">
@@ -625,8 +628,6 @@ export default function WalletPage() {
 
           {/* ════════ TRANSACTIONS TAB ════════ */}
           <TabsContent value="transactions" className="animate-fade-in space-y-6">
-            {/* Date Filter */}
-            <DateFilter />
             {/* Transaction type summary */}
             <div className="bg-primary/[0.02] rounded-2xl p-5 border border-primary/10">
               <SectionHeader title="إجمالي المعاملات حسب النوع" icon={BarChart3} accentColor="bg-primary" />
@@ -707,8 +708,6 @@ export default function WalletPage() {
 
           {/* ════════ REPORTS TAB ════════ */}
           <TabsContent value="reports" className="animate-fade-in space-y-6">
-            {/* Date Filter */}
-            <DateFilter />
             {/* Services Cost Breakdown */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {reportData.services.map((svc, idx) => {
