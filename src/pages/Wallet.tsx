@@ -2,299 +2,43 @@ import { useState, useRef } from "react";
 import { format } from "date-fns";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { ar } from "date-fns/locale";
 import {
   Wallet,
   FileText,
-  ArrowUpCircle,
-  ArrowDownCircle,
-  ShoppingCart,
-  TrendingUp,
-  TrendingDown,
-  DollarSign,
-  CheckCircle2,
-  Truck,
-  PackageCheck,
-  BarChart3,
-  Package,
-  Megaphone,
-  Camera,
-  Receipt,
-  CreditCard,
   ArrowLeftRight,
   Download,
   Upload,
-  Clock,
-  Filter,
   CalendarIcon,
-  Eye,
   ChevronLeft,
-  Store,
-  Box,
   Plus,
   Landmark,
-  Smartphone,
-  AlertCircle,
-  Info,
-  Copy,
+  BarChart3,
+  DollarSign,
+  PackageCheck,
+  TrendingDown,
+  TrendingUp,
+  Receipt,
+  ShoppingCart,
+  Package,
+  Megaphone,
+  Camera,
 } from "lucide-react";
-import { toast } from "sonner";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-/* ── Types ── */
-interface Transaction {
-  id: string;
-  type: 'deposit' | 'withdrawal' | 'purchase' | 'transfer' | 'ads_tiktok' | 'ads_snapchat' | 'import_goods';
-  description: string;
-  amount: number;
-  date: string;
-  time: string;
-  status: 'completed' | 'pending' | 'failed';
-  reference?: string;
-}
+import { StatCard, SectionHeader } from "@/components/wallet/WalletShared";
+import { invoices, transactions, reportData, typeConfig, statusConfig, transactionTypes, products, stores } from "@/components/wallet/walletData";
+import WalletDialogs from "@/components/wallet/WalletDialogs";
+import { FinancialTrendChart, ExpenseBreakdownChart, MonthlyProfitChart } from "@/components/wallet/WalletReportsCharts";
+import type { Invoice } from "@/components/wallet/WalletTypes";
 
-interface Invoice {
-  id: string;
-  invoiceNumber: string;
-  period: string;
-  periodType: 'weekly' | 'monthly';
-  issueDate: string;
-  totalAmount: number;
-  status: 'paid' | 'unpaid' | 'partial';
-  services: {
-    name: string;
-    details: string;
-    amount: number;
-  }[];
-}
-
-/* ── Data ── */
-const invoices: Invoice[] = [
-  {
-    id: '1',
-    invoiceNumber: 'INV-2026-008',
-    period: '20 - 27 فبراير 2026',
-    periodType: 'weekly',
-    issueDate: '2026/02/27',
-    totalAmount: 4850,
-    status: 'unpaid',
-    services: [
-      { name: 'تأكيد الطلبات', details: '320 طلب × 5 ر.س', amount: 1600 },
-      { name: 'خدمات الشحن', details: '285 شحنة × 8 ر.س', amount: 2280 },
-      { name: 'رسوم COD', details: '5% من 12,400 ر.س', amount: 620 },
-      { name: 'رسوم المنصة', details: 'اشتراك أسبوعي', amount: 350 },
-    ],
-  },
-  {
-    id: '2',
-    invoiceNumber: 'INV-2026-007',
-    period: '13 - 19 فبراير 2026',
-    periodType: 'weekly',
-    issueDate: '2026/02/19',
-    totalAmount: 5230,
-    status: 'paid',
-    services: [
-      { name: 'تأكيد الطلبات', details: '380 طلب × 5 ر.س', amount: 1900 },
-      { name: 'خدمات الشحن', details: '310 شحنة × 8 ر.س', amount: 2480 },
-      { name: 'رسوم COD', details: '5% من 10,000 ر.س', amount: 500 },
-      { name: 'رسوم المنصة', details: 'اشتراك أسبوعي', amount: 350 },
-    ],
-  },
-  {
-    id: '3',
-    invoiceNumber: 'INV-2026-006',
-    period: 'يناير 2026',
-    periodType: 'monthly',
-    issueDate: '2026/02/01',
-    totalAmount: 18750,
-    status: 'paid',
-    services: [
-      { name: 'تأكيد الطلبات', details: '1,450 طلب × 5 ر.س', amount: 7250 },
-      { name: 'خدمات الشحن', details: '1,180 شحنة × 8 ر.س', amount: 9440 },
-      { name: 'رسوم COD', details: '5% من 22,200 ر.س', amount: 1110 },
-      { name: 'رسوم المنصة', details: 'اشتراك شهري', amount: 950 },
-    ],
-  },
-];
-
-const transactions: Transaction[] = [
-  { id: '1', type: 'deposit', description: 'شحن رصيد عبر تحويل بنكي', amount: 5000, date: '2026/02/27', time: '10:30 ص', status: 'completed', reference: 'DEP-8821' },
-  { id: '2', type: 'purchase', description: 'شراء بضاعة - سماعة بلوتوث ×50 من هلا', amount: -2400, date: '2026/02/26', time: '3:15 م', status: 'completed', reference: 'PUR-4412' },
-  { id: '3', type: 'ads_tiktok', description: 'سحب إعلانات تيك توك - حملة فبراير', amount: -1200, date: '2026/02/25', time: '9:00 ص', status: 'completed', reference: 'AD-TT-091' },
-  { id: '4', type: 'ads_snapchat', description: 'سحب إعلانات سناب شات - حملة الساعات', amount: -800, date: '2026/02/24', time: '2:00 م', status: 'completed', reference: 'AD-SN-055' },
-  { id: '5', type: 'withdrawal', description: 'سحب أرباح إلى الحساب البنكي', amount: -1500, date: '2026/02/23', time: '11:45 ص', status: 'completed', reference: 'WD-3301' },
-  { id: '6', type: 'import_goods', description: 'فاند استيراد بضاعة من الصين - دفعة مقدمة', amount: -3500, date: '2026/02/22', time: '5:30 م', status: 'completed', reference: 'IMP-CN-012' },
-  { id: '7', type: 'transfer', description: 'تحويل رصيد من محفظة أخرى', amount: 2000, date: '2026/02/21', time: '1:00 م', status: 'completed', reference: 'TRF-7744' },
-  { id: '8', type: 'deposit', description: 'شحن رصيد عبر Apple Pay', amount: 3000, date: '2026/02/20', time: '4:15 م', status: 'pending', reference: 'DEP-8820' },
-  { id: '9', type: 'purchase', description: 'شراء بضاعة - ساعة ذكية ×30 من هلا', amount: -1800, date: '2026/02/19', time: '10:00 ص', status: 'completed', reference: 'PUR-4411' },
-  { id: '10', type: 'withdrawal', description: 'سحب أرباح', amount: -800, date: '2026/02/18', time: '3:30 م', status: 'failed', reference: 'WD-3300' },
-];
-
-/* ── Reports Data ── */
-const reportData = {
-  totalSales: 245890,
-  deliveredSales: 189650,
-  totalExpenses: 197570,
-  netProfit: 48320,
-  services: [
-    {
-      name: 'تأكيد الطلبات',
-      items: [
-        { label: 'طلب جديد', count: 3456, unitCost: 2, total: 6912 },
-        { label: 'طلب مؤكد', count: 3024, unitCost: 3, total: 9072 },
-        { label: 'طلب مسلم', count: 2654, unitCost: 5, total: 13270 },
-      ],
-      icon: CheckCircle2,
-      color: 'text-emerald-500',
-      bgColor: 'bg-emerald-500/10',
-      accentBg: 'bg-emerald-500',
-    },
-    {
-      name: 'خدمات الشحن',
-      items: [
-        { label: 'تجهيز الطلب', count: 0, unitCost: 0, total: 0 },
-        { label: 'طلب موصل', count: 2654, unitCost: 8, total: 21232 },
-        { label: 'طلب مسترجع', count: 156, unitCost: 12, total: 1872 },
-        { label: 'نسبة COD 5%', count: null, unitCost: null, total: 9450 },
-      ],
-      icon: Truck,
-      color: 'text-blue-500',
-      bgColor: 'bg-blue-500/10',
-      accentBg: 'bg-blue-500',
-    },
-  ],
-  halaGoods: [
-    { label: 'سماعة بلوتوث', count: 200, unitCost: 15, total: 3000 },
-    { label: 'ساعة ذكية', count: 150, unitCost: 25, total: 3750 },
-    { label: 'شاحن متنقل', count: 100, unitCost: 12, total: 1200 },
-  ],
-  marketerGoods: [
-    { label: 'كفرات جوال - دفعة 1', count: 500, unitCost: 3, total: 1500 },
-    { label: 'إكسسوارات - دفعة 2', count: 300, unitCost: 5, total: 1500 },
-  ],
-  adBalance: {
-    tiktok: 12500,
-    snapchat: 8200,
-    total: 20700,
-  },
-  goodsBalance: {
-    halaBalance: -4200,
-    importBalance: -3500,
-    total: -7700,
-  },
-};
-
-/* ── Config ── */
-const typeConfig: Record<string, { label: string; icon: any; color: string; bg: string }> = {
-  deposit: { label: 'إيداع', icon: Download, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-  withdrawal: { label: 'سحب', icon: Upload, color: 'text-orange-500', bg: 'bg-orange-500/10' },
-  purchase: { label: 'شراء بضاعة', icon: ShoppingCart, color: 'text-primary', bg: 'bg-primary/10' },
-  transfer: { label: 'تحويل', icon: ArrowLeftRight, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-  ads_tiktok: { label: 'إعلانات تيك توك', icon: Megaphone, color: 'text-pink-500', bg: 'bg-pink-500/10' },
-  ads_snapchat: { label: 'إعلانات سناب شات', icon: Camera, color: 'text-yellow-500', bg: 'bg-yellow-500/10' },
-  import_goods: { label: 'استيراد بضاعة', icon: Package, color: 'text-violet-500', bg: 'bg-violet-500/10' },
-};
-
-const statusConfig: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' }> = {
-  completed: { label: 'مكتمل', variant: 'default' },
-  pending: { label: 'معلّق', variant: 'secondary' },
-  failed: { label: 'فشل', variant: 'destructive' },
-  paid: { label: 'مدفوعة', variant: 'default' },
-  unpaid: { label: 'غير مدفوعة', variant: 'destructive' },
-  partial: { label: 'مدفوعة جزئياً', variant: 'secondary' },
-};
-
-/* ── Stat Card (matches analytics) ── */
-function StatCard({ item }: { item: { label: string; value: string | number; icon: any; color: string; bgColor: string; suffix?: string; highlight?: boolean } }) {
-  const Icon = item.icon;
-  return (
-    <div className={`flex items-center gap-3 p-3.5 rounded-xl border transition-all hover:shadow-sm ${
-      item.highlight
-        ? "bg-primary/5 border-primary/20 hover:border-primary/40"
-        : "bg-card border-border hover:border-primary/20"
-    }`}>
-      <div className={`p-2 rounded-lg ${item.bgColor} shrink-0`}>
-        <Icon className={`w-4 h-4 ${item.color}`} />
-      </div>
-      <div className="min-w-0 text-right flex-1">
-        <p className={`text-lg font-bold text-foreground leading-tight ${item.highlight ? "text-xl" : ""}`}>
-          {typeof item.value === "number" ? item.value.toLocaleString("ar-SA") : item.value}
-          {item.suffix && <span className="text-xs font-medium text-muted-foreground mr-1">{item.suffix}</span>}
-        </p>
-        <p className="text-[11px] text-muted-foreground truncate leading-tight mt-0.5">{item.label}</p>
-      </div>
-    </div>
-  );
-}
-
-/* ── Section Header (matches analytics) ── */
-function SectionHeader({ title, icon: Icon, accentColor, badge }: { title: string; icon: any; accentColor: string; badge?: string }) {
-  return (
-    <div className="flex items-center gap-2 mb-4">
-      <div className={`p-1.5 rounded-lg ${accentColor}`}>
-        <Icon className="w-4 h-4 text-white" />
-      </div>
-      <h3 className="text-sm font-bold text-foreground">{title}</h3>
-      {badge && (
-        <span className="text-[10px] font-medium bg-muted text-muted-foreground px-2 py-0.5 rounded-full">{badge}</span>
-      )}
-    </div>
-  );
-}
-
-/* ── Transaction Filter ── */
-const transactionTypes = [
-  { value: 'all', label: 'الكل' },
-  { value: 'deposit', label: 'إيداع' },
-  { value: 'withdrawal', label: 'سحب' },
-  { value: 'purchase', label: 'شراء بضاعة' },
-  { value: 'transfer', label: 'تحويل' },
-  { value: 'ads_tiktok', label: 'تيك توك' },
-  { value: 'ads_snapchat', label: 'سناب شات' },
-  { value: 'import_goods', label: 'استيراد' },
-];
-
-const products = [
-  { value: 'all', label: 'كل المنتجات' },
-  { value: 'earbuds', label: 'سماعة بلوتوث' },
-  { value: 'smartwatch', label: 'ساعة ذكية' },
-  { value: 'powerbank', label: 'شاحن متنقل' },
-  { value: 'phone_case', label: 'كفر جوال' },
-];
-
-const stores = [
-  { value: 'all', label: 'كل المتاجر' },
-  { value: 'store_sa', label: 'متجر السعودية' },
-  { value: 'store_ae', label: 'متجر الإمارات' },
-  { value: 'store_kw', label: 'متجر الكويت' },
-];
-
-/* ── Main ── */
 export default function WalletPage() {
   const [activeTab, setActiveTab] = useState("invoices");
   const [txFilter, setTxFilter] = useState("all");
@@ -309,8 +53,6 @@ export default function WalletPage() {
   const [showDeposit, setShowDeposit] = useState(false);
   const [showWithdraw, setShowWithdraw] = useState(false);
   const [showBankAccounts, setShowBankAccounts] = useState(false);
-  const [depositAmount, setDepositAmount] = useState("");
-  const [withdrawAmount, setWithdrawAmount] = useState("");
   const balance = 3500;
 
   const filterByDate = <T extends { date: string }>(items: T[]): T[] => {
@@ -330,7 +72,6 @@ export default function WalletPage() {
     ? dateFilteredTransactions
     : dateFilteredTransactions.filter(t => t.type === txFilter);
 
-  // Group transactions by type for summary
   const txSummary = dateFilteredTransactions.reduce((acc, t) => {
     const key = t.type;
     if (!acc[key]) acc[key] = { count: 0, total: 0 };
@@ -346,103 +87,12 @@ export default function WalletPage() {
     setSelectedStore("all");
   };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text).then(() => {
-      toast.success("تم النسخ بنجاح");
-    });
-  };
-
-  const handleDeposit = () => {
-    const amount = parseFloat(depositAmount);
-    if (!amount || amount <= 0) {
-      toast.error("يرجى إدخال مبلغ صحيح أكبر من صفر");
-      return;
-    }
-    toast.success("تم إرسال طلب الإيداع بنجاح");
-    setDepositAmount("");
-    setShowDeposit(false);
-  };
-
-  const handleWithdraw = () => {
-    const amount = parseFloat(withdrawAmount);
-    if (!amount || amount <= 0) {
-      toast.error("يرجى إدخال مبلغ صحيح أكبر من صفر");
-      return;
-    }
-    if (amount > balance) {
-      toast.error(`المبلغ يتجاوز الرصيد المتاح (${balance.toLocaleString()} ر.س)`);
-      return;
-    }
-    toast.success("تم إرسال طلب السحب بنجاح");
-    setWithdrawAmount("");
-    setShowWithdraw(false);
-  };
-
-  const DateFilter = () => (
-    <div className="flex items-center gap-3 flex-wrap bg-card rounded-2xl border border-border p-4 mb-6">
-      <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-foreground">الفترة</span>
-        <CalendarIcon className="w-4 h-4 text-muted-foreground" />
-      </div>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline" className={cn("w-[150px] h-10 rounded-xl text-sm", !dateFrom && "text-muted-foreground")}>
-            {dateFrom ? format(dateFrom, "yyyy/MM/dd") : "من تاريخ"}
-            <CalendarIcon className="w-4 h-4 mr-2" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
-          <Calendar mode="single" selected={dateFrom} onSelect={setDateFrom} initialFocus className={cn("p-3 pointer-events-auto")} />
-        </PopoverContent>
-      </Popover>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline" className={cn("w-[150px] h-10 rounded-xl text-sm", !dateTo && "text-muted-foreground")}>
-            {dateTo ? format(dateTo, "yyyy/MM/dd") : "إلى تاريخ"}
-            <CalendarIcon className="w-4 h-4 mr-2" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
-          <Calendar mode="single" selected={dateTo} onSelect={setDateTo} initialFocus className={cn("p-3 pointer-events-auto")} />
-        </PopoverContent>
-      </Popover>
-
-      <Select value={selectedProduct} onValueChange={setSelectedProduct}>
-        <SelectTrigger className="w-[150px] h-10 rounded-xl text-sm">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {products.map(p => (
-            <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-
-      <Select value={selectedStore} onValueChange={setSelectedStore}>
-        <SelectTrigger className="w-[150px] h-10 rounded-xl text-sm">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {stores.map(s => (
-            <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-
-      {(dateFrom || dateTo || selectedProduct !== "all" || selectedStore !== "all") && (
-        <Button variant="ghost" size="sm" onClick={handleResetDates} className="text-xs text-muted-foreground hover:text-destructive rounded-lg mr-auto">
-          مسح الكل
-        </Button>
-      )}
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-background">
       <main className="container max-w-[1280px] mx-auto px-6 py-8" dir="rtl">
         {/* Header */}
         <div className="mb-6">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-3">
               <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20">
                 <Wallet className="w-5 h-5 text-primary-foreground" />
@@ -452,91 +102,91 @@ export default function WalletPage() {
                 <p className="text-sm text-muted-foreground">إدارة الفواتير والمعاملات والتقارير المالية</p>
               </div>
             </div>
-            {/* Action Buttons */}
             <div className="flex items-center gap-3 flex-wrap">
-              <Button
-                onClick={() => setShowDeposit(true)}
-                variant="outline"
-                className="rounded-xl h-10 gap-2 border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/10 w-full sm:w-auto"
-              >
-                <Plus className="w-4 h-4" />
-                إيداع رصيد
+              <Button onClick={() => setShowDeposit(true)} variant="outline" className="rounded-xl h-10 gap-2 border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/10 w-full sm:w-auto">
+                <Plus className="w-4 h-4" /> إيداع رصيد
               </Button>
-              <Button
-                onClick={() => setShowWithdraw(true)}
-                variant="outline"
-                className="rounded-xl h-10 gap-2 border-orange-500/30 text-orange-600 hover:bg-orange-500/10 w-full sm:w-auto"
-              >
-                <Upload className="w-4 h-4" />
-                طلب سحب
+              <Button onClick={() => setShowWithdraw(true)} variant="outline" className="rounded-xl h-10 gap-2 border-orange-500/30 text-orange-600 hover:bg-orange-500/10 w-full sm:w-auto">
+                <Upload className="w-4 h-4" /> طلب سحب
               </Button>
-              <Button
-                onClick={() => setShowBankAccounts(true)}
-                variant="outline"
-                className="rounded-xl h-10 gap-2 border-primary/30 text-primary hover:bg-primary/10 w-full sm:w-auto"
-              >
-                <Landmark className="w-4 h-4" />
-                الحسابات البنكية
+              <Button onClick={() => setShowBankAccounts(true)} variant="outline" className="rounded-xl h-10 gap-2 border-primary/30 text-primary hover:bg-primary/10 w-full sm:w-auto">
+                <Landmark className="w-4 h-4" /> الحسابات البنكية
               </Button>
             </div>
           </div>
         </div>
 
-        {/* Global Filters */}
-        <DateFilter />
+        {/* Date Filter */}
+        <div className="flex items-center gap-3 flex-wrap bg-card rounded-2xl border border-border p-4 mb-6">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-foreground">الفترة</span>
+            <CalendarIcon className="w-4 h-4 text-muted-foreground" />
+          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className={cn("w-[150px] h-10 rounded-xl text-sm", !dateFrom && "text-muted-foreground")}>
+                {dateFrom ? format(dateFrom, "yyyy/MM/dd") : "من تاريخ"}
+                <CalendarIcon className="w-4 h-4 mr-2" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar mode="single" selected={dateFrom} onSelect={setDateFrom} initialFocus className={cn("p-3 pointer-events-auto")} />
+            </PopoverContent>
+          </Popover>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className={cn("w-[150px] h-10 rounded-xl text-sm", !dateTo && "text-muted-foreground")}>
+                {dateTo ? format(dateTo, "yyyy/MM/dd") : "إلى تاريخ"}
+                <CalendarIcon className="w-4 h-4 mr-2" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar mode="single" selected={dateTo} onSelect={setDateTo} initialFocus className={cn("p-3 pointer-events-auto")} />
+            </PopoverContent>
+          </Popover>
+          <Select value={selectedProduct} onValueChange={setSelectedProduct}>
+            <SelectTrigger className="w-[150px] h-10 rounded-xl text-sm"><SelectValue /></SelectTrigger>
+            <SelectContent>{products.map(p => <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>)}</SelectContent>
+          </Select>
+          <Select value={selectedStore} onValueChange={setSelectedStore}>
+            <SelectTrigger className="w-[150px] h-10 rounded-xl text-sm"><SelectValue /></SelectTrigger>
+            <SelectContent>{stores.map(s => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}</SelectContent>
+          </Select>
+          {(dateFrom || dateTo || selectedProduct !== "all" || selectedStore !== "all") && (
+            <Button variant="ghost" size="sm" onClick={handleResetDates} className="text-xs text-muted-foreground hover:text-destructive rounded-lg mr-auto">مسح الكل</Button>
+          )}
+        </div>
 
         {/* Balance & Financial Summary Banner */}
         <div className="bg-card rounded-2xl border border-border p-5 mb-6 space-y-5">
-          {/* الملخص المالي */}
           <div>
             <div className="flex items-center gap-2 mb-4">
               <DollarSign className="w-4 h-4 text-primary" />
               <h3 className="text-sm font-bold text-foreground">الملخص المالي</h3>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-l from-primary/10 to-primary/5 border border-primary/20">
-                <div className="p-2.5 rounded-xl bg-primary/15 shrink-0">
-                  <DollarSign className="w-5 h-5 text-primary" />
-                </div>
-                <div className="text-right flex-1">
-                  <p className="text-xl font-bold text-foreground">{reportData.totalSales.toLocaleString()}<span className="text-xs font-medium text-muted-foreground mr-1">ر.س</span></p>
-                  <p className="text-[11px] text-muted-foreground">إجمالي المبيعات</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-l from-green-600/10 to-green-600/5 border border-green-600/20">
-                <div className="p-2.5 rounded-xl bg-green-600/15 shrink-0">
-                  <PackageCheck className="w-5 h-5 text-green-600" />
-                </div>
-                <div className="text-right flex-1">
-                  <p className="text-xl font-bold text-foreground">{reportData.deliveredSales.toLocaleString()}<span className="text-xs font-medium text-muted-foreground mr-1">ر.س</span></p>
-                  <p className="text-[11px] text-muted-foreground">إجمالي المبيعات المسلمة</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-l from-red-500/10 to-red-500/5 border border-red-500/20">
-                <div className="p-2.5 rounded-xl bg-red-500/15 shrink-0">
-                  <TrendingDown className="w-5 h-5 text-red-500" />
-                </div>
-                <div className="text-right flex-1">
-                  <p className="text-xl font-bold text-foreground">{reportData.totalExpenses.toLocaleString()}<span className="text-xs font-medium text-muted-foreground mr-1">ر.س</span></p>
-                  <p className="text-[11px] text-muted-foreground">إجمالي المصروفات</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-l from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20">
-                <div className="p-2.5 rounded-xl bg-emerald-500/15 shrink-0">
-                  <TrendingUp className="w-5 h-5 text-emerald-500" />
-                </div>
-                <div className="text-right flex-1">
-                  <p className="text-xl font-bold text-foreground">{reportData.netProfit.toLocaleString()}<span className="text-xs font-medium text-muted-foreground mr-1">ر.س</span></p>
-                  <p className="text-[11px] text-muted-foreground">صافي الربح</p>
-                </div>
-              </div>
+              {[
+                { value: reportData.totalSales, label: "إجمالي المبيعات", icon: DollarSign, from: "from-primary/10", to: "to-primary/5", border: "border-primary/20", iconBg: "bg-primary/15", iconColor: "text-primary" },
+                { value: reportData.deliveredSales, label: "إجمالي المبيعات المسلمة", icon: PackageCheck, from: "from-green-600/10", to: "to-green-600/5", border: "border-green-600/20", iconBg: "bg-green-600/15", iconColor: "text-green-600" },
+                { value: reportData.totalExpenses, label: "إجمالي المصروفات", icon: TrendingDown, from: "from-red-500/10", to: "to-red-500/5", border: "border-red-500/20", iconBg: "bg-red-500/15", iconColor: "text-red-500" },
+                { value: reportData.netProfit, label: "صافي الربح", icon: TrendingUp, from: "from-emerald-500/10", to: "to-emerald-500/5", border: "border-emerald-500/20", iconBg: "bg-emerald-500/15", iconColor: "text-emerald-500" },
+              ].map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <div key={i} className={`flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-l ${item.from} ${item.to} border ${item.border}`}>
+                    <div className={`p-2.5 rounded-xl ${item.iconBg} shrink-0`}><Icon className={`w-5 h-5 ${item.iconColor}`} /></div>
+                    <div className="text-right flex-1">
+                      <p className="text-xl font-bold text-foreground">{item.value.toLocaleString()}<span className="text-xs font-medium text-muted-foreground mr-1">ر.س</span></p>
+                      <p className="text-[11px] text-muted-foreground">{item.label}</p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
-          {/* الفاصل */}
           <div className="h-px bg-gradient-to-l from-transparent via-border to-transparent" />
 
-          {/* ملخص الأرصدة */}
           <div>
             <div className="flex items-center gap-2 mb-4">
               <BarChart3 className="w-4 h-4 text-primary" />
@@ -544,9 +194,7 @@ export default function WalletPage() {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-bl from-primary/10 to-accent/10 border border-primary/20">
-                <div className="p-2.5 rounded-lg bg-primary shrink-0">
-                  <Wallet className="w-5 h-5 text-white" />
-                </div>
+                <div className="p-2.5 rounded-lg bg-primary shrink-0"><Wallet className="w-5 h-5 text-white" /></div>
                 <div className="text-right">
                   <p className="text-2xl font-bold text-foreground">{balance.toLocaleString()}</p>
                   <p className="text-[11px] text-muted-foreground">الرصيد الحالي (ر.س)</p>
@@ -559,50 +207,29 @@ export default function WalletPage() {
           </div>
         </div>
 
-        {/* Filters moved above financial summary */}
-
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
           <TabsList className="flex w-full justify-end bg-card border border-border p-1 h-14 mb-6 rounded-2xl">
-            <TabsTrigger
-              value="invoices"
-              className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6 rounded-xl"
-            >
-              <FileText className="w-4 h-4" />
-              الفواتير
+            <TabsTrigger value="invoices" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6 rounded-xl">
+              <FileText className="w-4 h-4" /> الفواتير
             </TabsTrigger>
-            <TabsTrigger
-              value="transactions"
-              className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6 rounded-xl"
-            >
-              <ArrowLeftRight className="w-4 h-4" />
-              المعاملات
+            <TabsTrigger value="transactions" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6 rounded-xl">
+              <ArrowLeftRight className="w-4 h-4" /> المعاملات
             </TabsTrigger>
-            <TabsTrigger
-              value="reports"
-              className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6 rounded-xl"
-            >
-              <BarChart3 className="w-4 h-4" />
-              التقارير
+            <TabsTrigger value="reports" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6 rounded-xl">
+              <BarChart3 className="w-4 h-4" /> التقارير
             </TabsTrigger>
           </TabsList>
 
           {/* ════════ INVOICES TAB ════════ */}
           <TabsContent value="invoices" className="animate-fade-in space-y-3">
-            {/* Invoice List - compact cards */}
             {invoices.map((inv) => {
               const st = statusConfig[inv.status];
               return (
-                <div
-                  key={inv.id}
-                  onClick={() => setSelectedInvoice(inv)}
-                  className="bg-card rounded-2xl border border-border p-4 hover:shadow-md hover:border-primary/20 transition-all cursor-pointer group"
-                >
+                <div key={inv.id} onClick={() => setSelectedInvoice(inv)} className="bg-card rounded-2xl border border-border p-4 hover:shadow-md hover:border-primary/20 transition-all cursor-pointer group">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="p-2.5 rounded-xl bg-primary/10 group-hover:bg-primary/15 transition-colors">
-                        <Receipt className="w-5 h-5 text-primary" />
-                      </div>
+                      <div className="p-2.5 rounded-xl bg-primary/10 group-hover:bg-primary/15 transition-colors"><Receipt className="w-5 h-5 text-primary" /></div>
                       <div className="text-right">
                         <p className="text-sm font-bold text-foreground">{inv.invoiceNumber}</p>
                         <p className="text-[11px] text-muted-foreground">{inv.period} • {inv.periodType === 'weekly' ? 'أسبوعية' : 'شهرية'}</p>
@@ -625,38 +252,24 @@ export default function WalletPage() {
               <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" dir="rtl">
                 {selectedInvoice && (() => {
                   const st = statusConfig[selectedInvoice.status];
-
                   const handleDownloadPdf = async () => {
                     if (!invoiceRef.current) return;
                     setDownloadingPdf(true);
                     try {
-                      const canvas = await html2canvas(invoiceRef.current, {
-                        scale: 2,
-                        useCORS: true,
-                        backgroundColor: '#ffffff',
-                      });
+                      const canvas = await html2canvas(invoiceRef.current, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
                       const imgData = canvas.toDataURL('image/png');
                       const pdf = new jsPDF('p', 'mm', 'a4');
                       const pdfWidth = pdf.internal.pageSize.getWidth();
                       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
                       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
                       pdf.save(`${selectedInvoice.invoiceNumber}.pdf`);
-                    } catch (e) {
-                      console.error(e);
-                    } finally {
-                      setDownloadingPdf(false);
-                    }
+                    } catch (e) { console.error(e); } finally { setDownloadingPdf(false); }
                   };
 
                   return (
                     <>
-                      <DialogHeader className="sr-only">
-                        <DialogTitle>فاتورة {selectedInvoice.invoiceNumber}</DialogTitle>
-                      </DialogHeader>
-
-                      {/* Printable Invoice */}
+                      <DialogHeader className="sr-only"><DialogTitle>فاتورة {selectedInvoice.invoiceNumber}</DialogTitle></DialogHeader>
                       <div ref={invoiceRef} className="bg-white text-black p-8 rounded-lg" style={{ direction: 'rtl' }}>
-                        {/* Invoice Header */}
                         <div className="flex justify-between items-start border-b-2 border-gray-800 pb-5 mb-6">
                           <div>
                             <h1 className="text-2xl font-black text-gray-900 tracking-tight">فاتورة ضريبية</h1>
@@ -670,49 +283,21 @@ export default function WalletPage() {
                             <p className="text-xs text-gray-500">Hala Shari</p>
                           </div>
                         </div>
-
-                        {/* Invoice Info Grid */}
                         <div className="grid grid-cols-2 gap-6 mb-6">
                           <div className="space-y-3">
-                            <div>
-                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">رقم الفاتورة</p>
-                              <p className="text-sm font-bold text-gray-900">{selectedInvoice.invoiceNumber}</p>
-                            </div>
-                            <div>
-                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">تاريخ الإصدار</p>
-                              <p className="text-sm font-medium text-gray-700">{selectedInvoice.issueDate}</p>
-                            </div>
-                            <div>
-                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">الفترة</p>
-                              <p className="text-sm font-medium text-gray-700">{selectedInvoice.period}</p>
-                            </div>
+                            <div><p className="text-[10px] text-gray-400 uppercase tracking-wider">رقم الفاتورة</p><p className="text-sm font-bold text-gray-900">{selectedInvoice.invoiceNumber}</p></div>
+                            <div><p className="text-[10px] text-gray-400 uppercase tracking-wider">تاريخ الإصدار</p><p className="text-sm font-medium text-gray-700">{selectedInvoice.issueDate}</p></div>
+                            <div><p className="text-[10px] text-gray-400 uppercase tracking-wider">الفترة</p><p className="text-sm font-medium text-gray-700">{selectedInvoice.period}</p></div>
                           </div>
                           <div className="space-y-3">
-                            <div>
-                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">العميل</p>
-                              <p className="text-sm font-bold text-gray-900">متجر المسوّق</p>
-                              <p className="text-xs text-gray-500">الرياض، المملكة العربية السعودية</p>
-                            </div>
+                            <div><p className="text-[10px] text-gray-400 uppercase tracking-wider">العميل</p><p className="text-sm font-bold text-gray-900">متجر المسوّق</p><p className="text-xs text-gray-500">الرياض، المملكة العربية السعودية</p></div>
                             <div>
                               <p className="text-[10px] text-gray-400 uppercase tracking-wider">الحالة</p>
-                              <span className={`inline-block text-xs font-bold px-3 py-1 rounded-full ${
-                                selectedInvoice.status === 'paid' 
-                                  ? 'bg-green-100 text-green-700' 
-                                  : selectedInvoice.status === 'unpaid' 
-                                  ? 'bg-red-100 text-red-700' 
-                                  : 'bg-yellow-100 text-yellow-700'
-                              }`}>
-                                {st.label}
-                              </span>
+                              <span className={`inline-block text-xs font-bold px-3 py-1 rounded-full ${selectedInvoice.status === 'paid' ? 'bg-green-100 text-green-700' : selectedInvoice.status === 'unpaid' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}>{st.label}</span>
                             </div>
-                            <div>
-                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">نوع الفاتورة</p>
-                              <p className="text-sm font-medium text-gray-700">{selectedInvoice.periodType === 'weekly' ? 'أسبوعية' : 'شهرية'}</p>
-                            </div>
+                            <div><p className="text-[10px] text-gray-400 uppercase tracking-wider">نوع الفاتورة</p><p className="text-sm font-medium text-gray-700">{selectedInvoice.periodType === 'weekly' ? 'أسبوعية' : 'شهرية'}</p></div>
                           </div>
                         </div>
-
-                        {/* Services Table */}
                         <div className="mb-6">
                           <table className="w-full text-sm">
                             <thead>
@@ -735,38 +320,18 @@ export default function WalletPage() {
                             </tbody>
                           </table>
                         </div>
-
-                        {/* Totals */}
                         <div className="border-t-2 border-gray-800 pt-4 space-y-2">
-                          <div className="flex justify-between text-sm text-gray-600">
-                            <span>المجموع الفرعي</span>
-                            <span>{selectedInvoice.totalAmount.toLocaleString()} ر.س</span>
-                          </div>
-                          <div className="flex justify-between text-sm text-gray-600">
-                            <span>ضريبة القيمة المضافة (15%)</span>
-                            <span>{(selectedInvoice.totalAmount * 0.15).toLocaleString()} ر.س</span>
-                          </div>
-                          <div className="flex justify-between text-lg font-black text-gray-900 pt-2 border-t border-gray-300">
-                            <span>الإجمالي المستحق</span>
-                            <span>{(selectedInvoice.totalAmount * 1.15).toLocaleString()} ر.س</span>
-                          </div>
+                          <div className="flex justify-between text-sm text-gray-600"><span>المجموع الفرعي</span><span>{selectedInvoice.totalAmount.toLocaleString()} ر.س</span></div>
+                          <div className="flex justify-between text-sm text-gray-600"><span>ضريبة القيمة المضافة (15%)</span><span>{(selectedInvoice.totalAmount * 0.15).toLocaleString()} ر.س</span></div>
+                          <div className="flex justify-between text-lg font-black text-gray-900 pt-2 border-t border-gray-300"><span>الإجمالي المستحق</span><span>{(selectedInvoice.totalAmount * 1.15).toLocaleString()} ر.س</span></div>
                         </div>
-
-                        {/* Footer */}
                         <div className="mt-8 pt-4 border-t border-gray-200 text-center">
                           <p className="text-[10px] text-gray-400">هذه الفاتورة صادرة إلكترونياً من منصة هلا شري • الرقم الضريبي: 300012345600003</p>
                           <p className="text-[10px] text-gray-400 mt-1">شكراً لتعاملكم معنا</p>
                         </div>
                       </div>
-
-                      {/* Download PDF Button */}
-                      <Button
-                        className="w-full rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground mt-2"
-                        onClick={handleDownloadPdf}
-                        disabled={downloadingPdf}
-                      >
-                        <Download className="w-4 h-4 ml-2" />
-                        {downloadingPdf ? 'جاري التحميل...' : 'تحميل الفاتورة PDF'}
+                      <Button className="w-full rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground mt-2" onClick={handleDownloadPdf} disabled={downloadingPdf}>
+                        <Download className="w-4 h-4 ml-2" /> {downloadingPdf ? 'جاري التحميل...' : 'تحميل الفاتورة PDF'}
                       </Button>
                     </>
                   );
@@ -777,49 +342,26 @@ export default function WalletPage() {
 
           {/* ════════ TRANSACTIONS TAB ════════ */}
           <TabsContent value="transactions" className="animate-fade-in space-y-6">
-            {/* Transaction type summary */}
             <div className="bg-primary/[0.02] rounded-2xl p-5 border border-primary/10">
               <SectionHeader title="إجمالي المعاملات حسب النوع" icon={BarChart3} accentColor="bg-primary" />
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {Object.entries(txSummary).map(([type, data]) => {
                   const cfg = typeConfig[type];
                   if (!cfg) return null;
-                  return (
-                    <StatCard
-                      key={type}
-                      item={{
-                        label: `${cfg.label} (${data.count})`,
-                        value: Math.abs(data.total).toLocaleString(),
-                        suffix: "ر.س",
-                        icon: cfg.icon,
-                        color: cfg.color,
-                        bgColor: cfg.bg,
-                      }}
-                    />
-                  );
+                  return <StatCard key={type} item={{ label: `${cfg.label} (${data.count})`, value: Math.abs(data.total).toLocaleString(), suffix: "ر.س", icon: cfg.icon, color: cfg.color, bgColor: cfg.bg }} />;
                 })}
               </div>
             </div>
 
-            {/* Filter Buttons */}
             <div className="flex flex-wrap gap-2">
               {transactionTypes.map(t => (
-                <Button
-                  key={t.value}
-                  variant={txFilter === t.value ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setTxFilter(t.value)}
-                  className={cn(
-                    "rounded-xl text-xs px-4 h-9",
-                    txFilter === t.value && "bg-primary text-primary-foreground"
-                  )}
-                >
+                <Button key={t.value} variant={txFilter === t.value ? "default" : "outline"} size="sm" onClick={() => setTxFilter(t.value)}
+                  className={cn("rounded-xl text-xs px-4 h-9", txFilter === t.value && "bg-primary text-primary-foreground")}>
                   {t.label}
                 </Button>
               ))}
             </div>
 
-            {/* Transaction List */}
             <Card className="border-border rounded-2xl overflow-hidden">
               <CardContent className="p-0">
                 <div className="divide-y divide-border">
@@ -829,16 +371,12 @@ export default function WalletPage() {
                     const Icon = config.icon;
                     return (
                       <div key={tx.id} className="flex items-center gap-3 px-5 py-4 hover:bg-muted/30 transition-colors">
-                        <div className={`w-10 h-10 rounded-xl ${config.bg} flex items-center justify-center shrink-0`}>
-                          <Icon className={`w-5 h-5 ${config.color}`} />
-                        </div>
+                        <div className={`w-10 h-10 rounded-xl ${config.bg} flex items-center justify-center shrink-0`}><Icon className={`w-5 h-5 ${config.color}`} /></div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-foreground truncate">{tx.description}</p>
                           <div className="flex items-center gap-2 mt-0.5">
                             <span className="text-xs text-muted-foreground">{tx.date} • {tx.time}</span>
-                            {tx.reference && (
-                              <span className="text-[10px] text-muted-foreground/60 bg-muted px-1.5 py-0.5 rounded">{tx.reference}</span>
-                            )}
+                            {tx.reference && <span className="text-[10px] text-muted-foreground/60 bg-muted px-1.5 py-0.5 rounded">{tx.reference}</span>}
                           </div>
                         </div>
                         <div className="flex flex-col items-start gap-1 shrink-0">
@@ -857,42 +395,35 @@ export default function WalletPage() {
 
           {/* ════════ REPORTS TAB ════════ */}
           <TabsContent value="reports" className="animate-fade-in space-y-6">
+            {/* Charts Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <FinancialTrendChart />
+              <ExpenseBreakdownChart />
+            </div>
+            <MonthlyProfitChart />
+
             {/* Services Cost Breakdown */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {reportData.services.map((svc, idx) => {
                 const Icon = svc.icon;
                 const svcTotal = svc.items.reduce((s, i) => s + i.total, 0);
                 return (
-                  <div key={idx} className={`rounded-2xl p-5 border ${
-                    idx === 0 ? 'bg-emerald-500/[0.02] border-emerald-500/10' : 'bg-blue-500/[0.02] border-blue-500/10'
-                  }`}>
+                  <div key={idx} className={`rounded-2xl p-5 border ${idx === 0 ? 'bg-emerald-500/[0.02] border-emerald-500/10' : 'bg-blue-500/[0.02] border-blue-500/10'}`}>
                     <SectionHeader title={svc.name} icon={Icon} accentColor={svc.accentBg} badge={`${svc.items.length} عناصر`} />
-
                     <div className="space-y-2 mb-4">
                       {svc.items.map((item, i) => (
                         <div key={i} className="flex items-center justify-between bg-card rounded-xl border border-border p-3.5">
                           <div className="flex items-center gap-3">
-                            <div className={`p-2 rounded-lg ${svc.bgColor}`}>
-                              <Icon className={`w-4 h-4 ${svc.color}`} />
-                            </div>
+                            <div className={`p-2 rounded-lg ${svc.bgColor}`}><Icon className={`w-4 h-4 ${svc.color}`} /></div>
                             <div>
                               <p className="text-sm font-medium text-foreground">{item.label}</p>
-                              <p className="text-[11px] text-muted-foreground">
-                                {item.count !== null && item.unitCost !== null
-                                  ? `${item.count.toLocaleString()} طلب × ${item.unitCost} ر.س`
-                                  : 'رسوم نسبية'
-                                }
-                              </p>
+                              <p className="text-[11px] text-muted-foreground">{item.count !== null && item.unitCost !== null ? `${item.count.toLocaleString()} طلب × ${item.unitCost} ر.س` : 'رسوم نسبية'}</p>
                             </div>
                           </div>
-                          <div className="text-left">
-                            <span className="text-base font-bold text-foreground">{item.total.toLocaleString()}</span>
-                            <span className="text-xs text-muted-foreground mr-1">ر.س</span>
-                          </div>
+                          <div className="text-left"><span className="text-base font-bold text-foreground">{item.total.toLocaleString()}</span><span className="text-xs text-muted-foreground mr-1">ر.س</span></div>
                         </div>
                       ))}
                     </div>
-
                     <div className="flex items-center justify-between pt-3 border-t border-border">
                       <span className="text-sm font-bold text-foreground">إجمالي {svc.name}</span>
                       <span className={`text-lg font-bold ${svc.color}`}>{svcTotal.toLocaleString()} ر.س</span>
@@ -902,22 +433,16 @@ export default function WalletPage() {
               })}
             </div>
 
-            {/* بضاعة هلا شري & استيراد بضاعة للمسوق */}
+            {/* Goods sections */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* بضاعة هلا شري */}
               <div className="bg-primary/[0.02] rounded-2xl p-5 border border-primary/10">
                 <SectionHeader title="بضاعة هلا شري" icon={ShoppingCart} accentColor="bg-primary" badge={`${reportData.halaGoods.length} منتجات`} />
                 <div className="space-y-2 mb-4">
                   {reportData.halaGoods.map((item, i) => (
                     <div key={i} className="flex items-center justify-between bg-card rounded-xl border border-border p-3.5">
                       <div className="flex items-center gap-3 text-right">
-                        <div className="p-2 rounded-lg bg-primary/10">
-                          <ShoppingCart className="w-4 h-4 text-primary" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-foreground">{item.label}</p>
-                          <p className="text-[11px] text-muted-foreground">{item.count.toLocaleString()} قطعة × {item.unitCost} ر.س</p>
-                        </div>
+                        <div className="p-2 rounded-lg bg-primary/10"><ShoppingCart className="w-4 h-4 text-primary" /></div>
+                        <div><p className="text-sm font-medium text-foreground">{item.label}</p><p className="text-[11px] text-muted-foreground">{item.count.toLocaleString()} قطعة × {item.unitCost} ر.س</p></div>
                       </div>
                       <span className="text-sm font-bold text-foreground">{item.total.toLocaleString()} ر.س</span>
                     </div>
@@ -929,20 +454,14 @@ export default function WalletPage() {
                 </div>
               </div>
 
-              {/* استيراد بضاعة للمسوق */}
               <div className="bg-violet-500/[0.02] rounded-2xl p-5 border border-violet-500/10">
                 <SectionHeader title="استيراد بضاعة للمسوق" icon={Package} accentColor="bg-violet-500" badge={`${reportData.marketerGoods.length} شحنات`} />
                 <div className="space-y-2 mb-4">
                   {reportData.marketerGoods.map((item, i) => (
                     <div key={i} className="flex items-center justify-between bg-card rounded-xl border border-border p-3.5">
                       <div className="flex items-center gap-3 text-right">
-                        <div className="p-2 rounded-lg bg-violet-500/10">
-                          <Package className="w-4 h-4 text-violet-500" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-foreground">{item.label}</p>
-                          <p className="text-[11px] text-muted-foreground">{item.count.toLocaleString()} قطعة × {item.unitCost} ر.س</p>
-                        </div>
+                        <div className="p-2 rounded-lg bg-violet-500/10"><Package className="w-4 h-4 text-violet-500" /></div>
+                        <div><p className="text-sm font-medium text-foreground">{item.label}</p><p className="text-[11px] text-muted-foreground">{item.count.toLocaleString()} قطعة × {item.unitCost} ر.س</p></div>
                       </div>
                       <span className="text-sm font-bold text-foreground">{item.total.toLocaleString()} ر.س</span>
                     </div>
@@ -955,9 +474,8 @@ export default function WalletPage() {
               </div>
             </div>
 
-            {/* Ad Balance & Goods Balance */}
+            {/* Ad & Goods Balance */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Ad Spend */}
               <div className="bg-orange-500/[0.02] rounded-2xl p-5 border border-orange-500/10">
                 <SectionHeader title="رصيد السحب الإعلاني" icon={Megaphone} accentColor="bg-orange-500" />
                 <div className="grid grid-cols-1 gap-3">
@@ -969,8 +487,6 @@ export default function WalletPage() {
                   </div>
                 </div>
               </div>
-
-              {/* Goods Balance */}
               <div className="bg-violet-500/[0.02] rounded-2xl p-5 border border-violet-500/10">
                 <SectionHeader title="رصيد شراء البضاعة" icon={Package} accentColor="bg-violet-500" />
                 <div className="grid grid-cols-1 gap-3">
@@ -986,179 +502,13 @@ export default function WalletPage() {
           </TabsContent>
         </Tabs>
 
-        {/* ═══ Deposit Dialog ═══ */}
-        <Dialog open={showDeposit} onOpenChange={setShowDeposit}>
-          <DialogContent className="max-w-md" dir="rtl">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2 text-right">
-                <div className="p-2 rounded-xl bg-emerald-500/10">
-                  <Plus className="w-5 h-5 text-emerald-500" />
-                </div>
-                إيداع رصيد
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 mt-2">
-              <div className="text-right space-y-2">
-                <label className="text-sm font-medium text-foreground">المبلغ (ر.س)</label>
-                <Input
-                  type="number"
-                  min="0"
-                  placeholder="أدخل المبلغ"
-                  value={depositAmount}
-                  onChange={(e) => setDepositAmount(e.target.value)}
-                  className="rounded-xl text-right h-12 text-lg"
-                />
-              </div>
-              <div className="text-right space-y-2">
-                <label className="text-sm font-medium text-foreground">طريقة الإيداع</label>
-                <Select defaultValue="bank">
-                  <SelectTrigger className="rounded-xl h-12 text-sm">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="bank">تحويل بنكي</SelectItem>
-                    <SelectItem value="apple">Apple Pay</SelectItem>
-                    <SelectItem value="mada">مدى</SelectItem>
-                    <SelectItem value="stcpay">STC Pay</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3 text-right">
-                <div className="flex items-center gap-2 mb-1">
-                  <AlertCircle className="w-4 h-4 text-amber-500" />
-                  <span className="text-xs font-bold text-amber-600">ملاحظة</span>
-                </div>
-                <p className="text-xs text-muted-foreground">سيتم تفعيل الرصيد خلال 24 ساعة بعد مراجعة البيانات</p>
-              </div>
-              <Button onClick={handleDeposit} className="w-full rounded-xl h-12 bg-emerald-500 hover:bg-emerald-600 text-white">
-                <Plus className="w-4 h-4 ml-2" />
-                إرسال طلب الإيداع
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* ═══ Withdraw Dialog ═══ */}
-        <Dialog open={showWithdraw} onOpenChange={setShowWithdraw}>
-          <DialogContent className="max-w-md" dir="rtl">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2 text-right">
-                <div className="p-2 rounded-xl bg-orange-500/10">
-                  <Upload className="w-5 h-5 text-orange-500" />
-                </div>
-                طلب سحب
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 mt-2">
-              <div className="text-right space-y-2">
-                <label className="text-sm font-medium text-foreground">المبلغ (ر.س)</label>
-                <Input
-                  type="number"
-                  min="0"
-                  placeholder="أدخل المبلغ"
-                  value={withdrawAmount}
-                  onChange={(e) => setWithdrawAmount(e.target.value)}
-                  className="rounded-xl text-right h-12 text-lg"
-                />
-                <p className="text-xs text-muted-foreground">الرصيد المتاح: {balance.toLocaleString()} ر.س</p>
-              </div>
-              <div className="text-right space-y-2">
-                <label className="text-sm font-medium text-foreground">التحويل إلى</label>
-                <Select defaultValue="bank_sa">
-                  <SelectTrigger className="rounded-xl h-12 text-sm">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="bank_sa">حساب بنكي سعودي</SelectItem>
-                    <SelectItem value="bank_ae">حساب بنكي إماراتي</SelectItem>
-                    <SelectItem value="payoneer">بايونير</SelectItem>
-                    <SelectItem value="instapay">انستا باي</SelectItem>
-                    <SelectItem value="vodafone">فودافون كاش</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <Button onClick={handleWithdraw} className="w-full rounded-xl h-12 bg-orange-500 hover:bg-orange-600 text-white">
-                <Upload className="w-4 h-4 ml-2" />
-                إرسال طلب السحب
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* ═══ Bank Accounts Dialog ═══ */}
-        <Dialog open={showBankAccounts} onOpenChange={setShowBankAccounts}>
-          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto" dir="rtl">
-            <DialogHeader>
-              <DialogTitle className="text-right text-lg font-bold text-destructive">حسابات التحويل</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 mt-2">
-              {/* Accounts Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {[
-                  { name: "بايونير", sub1: "finance@halacommerce.ae", sub2: "HALA COMMERCE LLC", icon: CreditCard, bg: "bg-green-50 dark:bg-green-500/10", border: "border-green-200 dark:border-green-500/20", iconColor: "text-orange-500" },
-                  { name: "انستا باي", sub1: "+201012345678", sub2: "هلا كومرس للتجارة", icon: DollarSign, bg: "bg-yellow-50 dark:bg-yellow-500/10", border: "border-yellow-200 dark:border-yellow-500/20", iconColor: "text-yellow-600" },
-                  { name: "حساب بنكي مصري", sub1: "البنك الأهلي المصري", sub2: "EG12 0001 0042 0300 0000 1234", icon: Landmark, bg: "bg-emerald-50 dark:bg-emerald-500/10", border: "border-emerald-200 dark:border-emerald-500/20", iconColor: "text-emerald-600" },
-                  { name: "حساب بنكي سعودي", sub1: "البنك الأهلي السعودي", sub2: "SA12 3456 7890 1234 5678", icon: Landmark, bg: "bg-blue-50 dark:bg-blue-500/10", border: "border-blue-200 dark:border-blue-500/20", iconColor: "text-blue-600" },
-                  { name: "فودافون كاش", sub1: "+201098765432", sub2: "هلا كومرس", icon: Smartphone, bg: "bg-pink-50 dark:bg-pink-500/10", border: "border-pink-200 dark:border-pink-500/20", iconColor: "text-red-500" },
-                  { name: "حساب بنكي إماراتي", sub1: "Emirates NBD", sub2: "AE47 0260 0010 1589 2734 560", icon: Landmark, bg: "bg-indigo-50 dark:bg-indigo-500/10", border: "border-indigo-200 dark:border-indigo-500/20", iconColor: "text-indigo-600" },
-                ].map((acc, i) => (
-                  <div key={i} className={`${acc.bg} ${acc.border} border rounded-2xl p-5 text-right space-y-2 hover:shadow-md transition-shadow flex flex-col`}>
-                    <div className="flex items-center gap-2 justify-end">
-                      <span className="text-sm font-bold text-foreground">{acc.name}</span>
-                      <acc.icon className={`w-7 h-7 ${acc.iconColor}`} />
-                    </div>
-                    <div className="flex items-center gap-1 justify-end">
-                      <button onClick={() => copyToClipboard(acc.sub1)} className="p-1 rounded-md hover:bg-muted/50 transition-colors shrink-0">
-                        <Copy className="w-3 h-3 text-muted-foreground" />
-                      </button>
-                      <p className="text-[11px] text-muted-foreground break-all">{acc.sub1}</p>
-                    </div>
-                    <div className="flex items-center gap-1 justify-end">
-                      <button onClick={() => copyToClipboard(acc.sub2)} className="p-1 rounded-md hover:bg-muted/50 transition-colors shrink-0">
-                        <Copy className="w-3 h-3 text-muted-foreground" />
-                      </button>
-                      <p className="text-[11px] text-muted-foreground break-all font-mono">{acc.sub2}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Deposit Instructions */}
-              <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-2xl p-5">
-                <div className="flex items-center gap-2 mb-4">
-                  <Info className="w-5 h-5 text-destructive" />
-                  <h4 className="text-sm font-bold text-destructive">تعليمات مهمة للإيداع</h4>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-white/60 dark:bg-card/60 rounded-xl p-3 text-right">
-                    <p className="text-xs font-bold text-destructive mb-1">⚠️ ضروري جداً</p>
-                    <p className="text-xs text-muted-foreground">يجب التأكد من صحة جميع البيانات قبل إرسال الطلب</p>
-                  </div>
-                  <div className="bg-white/60 dark:bg-card/60 rounded-xl p-3 text-right">
-                    <p className="text-xs font-bold text-foreground mb-1">📋 خطوات الإيداع</p>
-                    <ol className="text-xs text-muted-foreground space-y-1 list-decimal list-inside">
-                      <li>املأ البيانات بدقة</li>
-                      <li>ارفق صورة الإيصال</li>
-                      <li>اضغط "إرسال الطلب"</li>
-                      <li>ستجد طلبك في "طلبات الإيداع"</li>
-                    </ol>
-                  </div>
-                  <div className="bg-white/60 dark:bg-card/60 rounded-xl p-3 text-right">
-                    <p className="text-xs font-bold text-emerald-600 mb-1">✅ موعد التفعيل</p>
-                    <p className="text-xs text-muted-foreground">خلال 24 ساعة سيتم تفعيل الرصيد في حسابك بعد مراجعة البيانات</p>
-                  </div>
-                </div>
-              </div>
-
-              <Button
-                onClick={() => setShowBankAccounts(false)}
-                className="w-full rounded-xl h-12 bg-primary hover:bg-primary/90 text-primary-foreground"
-              >
-                إغلاق
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+        {/* Dialogs */}
+        <WalletDialogs
+          showDeposit={showDeposit} setShowDeposit={setShowDeposit}
+          showWithdraw={showWithdraw} setShowWithdraw={setShowWithdraw}
+          showBankAccounts={showBankAccounts} setShowBankAccounts={setShowBankAccounts}
+          balance={balance}
+        />
       </main>
     </div>
   );
