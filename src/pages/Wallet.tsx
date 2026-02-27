@@ -177,6 +177,7 @@ const reportData = {
     {
       name: 'خدمات الشحن',
       items: [
+        { label: 'تجهيز الطلب', count: 0, unitCost: 0, total: 0 },
         { label: 'طلب موصل', count: 2654, unitCost: 8, total: 21232 },
         { label: 'طلب مسترجع', count: 156, unitCost: 12, total: 1872 },
         { label: 'نسبة COD 5%', count: null, unitCost: null, total: 9450 },
