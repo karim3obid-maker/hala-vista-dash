@@ -839,7 +839,7 @@ export default function WalletPage() {
                     <div className="space-y-2 mb-4">
                       {svc.items.map((item, i) => (
                         <div key={i} className="flex items-center justify-between bg-card rounded-xl border border-border p-3.5">
-                          <div className="flex items-center gap-3 text-right">
+                          <div className="flex items-center gap-3">
                             <div className={`p-2 rounded-lg ${svc.bgColor}`}>
                               <Icon className={`w-4 h-4 ${svc.color}`} />
                             </div>
@@ -853,7 +853,10 @@ export default function WalletPage() {
                               </p>
                             </div>
                           </div>
-                          <span className="text-sm font-bold text-foreground">{item.total.toLocaleString()} ر.س</span>
+                          <div className="text-left">
+                            <span className="text-base font-bold text-foreground">{item.total.toLocaleString()}</span>
+                            <span className="text-xs text-muted-foreground mr-1">ر.س</span>
+                          </div>
                         </div>
                       ))}
                     </div>
