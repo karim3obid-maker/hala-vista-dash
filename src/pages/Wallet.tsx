@@ -1059,31 +1059,19 @@ export default function WalletPage() {
             </DialogHeader>
             <div className="space-y-4 mt-2">
               {/* Accounts Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {[
                   { name: "بايونير", sub1: "finance@halacommerce.ae", sub2: "HALA COMMERCE LLC", icon: CreditCard, bg: "bg-green-50 dark:bg-green-500/10", border: "border-green-200 dark:border-green-500/20", iconColor: "text-orange-500" },
                   { name: "انستا باي", sub1: "+201012345678", sub2: "هلا كومرس للتجارة", icon: DollarSign, bg: "bg-yellow-50 dark:bg-yellow-500/10", border: "border-yellow-200 dark:border-yellow-500/20", iconColor: "text-yellow-600" },
-                  { name: "حساب بتكوين", sub1: "$1Lmv7DivfNa", sub2: "BTC, ETH, USDT", icon: Bitcoin, bg: "bg-amber-50 dark:bg-amber-500/10", border: "border-amber-200 dark:border-amber-500/20", iconColor: "text-amber-600" },
-                  { name: "باينانس", sub1: "HalaCommerce@", sub2: "284756193", icon: Building2, bg: "bg-purple-50 dark:bg-purple-500/10", border: "border-purple-200 dark:border-purple-500/20", iconColor: "text-purple-600" },
+                  { name: "حساب بنكي مصري", sub1: "البنك الأهلي المصري", sub2: "EG12 0001 0042 0300 0000 1234", icon: Landmark, bg: "bg-emerald-50 dark:bg-emerald-500/10", border: "border-emerald-200 dark:border-emerald-500/20", iconColor: "text-emerald-600" },
+                  { name: "حساب بنكي سعودي", sub1: "البنك الأهلي السعودي", sub2: "SA12 3456 7890 1234 5678", icon: Landmark, bg: "bg-blue-50 dark:bg-blue-500/10", border: "border-blue-200 dark:border-blue-500/20", iconColor: "text-blue-600" },
+                  { name: "فودافون كاش", sub1: "+201098765432", sub2: "هلا كومرس", icon: Smartphone, bg: "bg-pink-50 dark:bg-pink-500/10", border: "border-pink-200 dark:border-pink-500/20", iconColor: "text-red-500" },
+                  { name: "حساب بنكي إماراتي", sub1: "Emirates NBD", sub2: "AE47 0260 0010 1589 2734 560", icon: Landmark, bg: "bg-indigo-50 dark:bg-indigo-500/10", border: "border-indigo-200 dark:border-indigo-500/20", iconColor: "text-indigo-600" },
                 ].map((acc, i) => (
-                  <div key={i} className={`${acc.bg} ${acc.border} border rounded-2xl p-4 text-center space-y-2`}>
-                    <acc.icon className={`w-8 h-8 mx-auto ${acc.iconColor}`} />
+                  <div key={i} className={`${acc.bg} ${acc.border} border rounded-2xl p-5 text-center space-y-2 hover:shadow-md transition-shadow`}>
+                    <acc.icon className={`w-9 h-9 mx-auto ${acc.iconColor}`} />
                     <p className="text-sm font-bold text-foreground">{acc.name}</p>
                     <p className="text-[11px] text-muted-foreground break-all">{acc.sub1}</p>
-                    <p className="text-[11px] text-muted-foreground">{acc.sub2}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {[
-                  { name: "حساب بنكي سعودي", sub1: "البنك الأهلي السعودي", sub2: "SA12 3456 7890 1234 5678", icon: Landmark, bg: "bg-blue-50 dark:bg-blue-500/10", border: "border-blue-200 dark:border-blue-500/20", iconColor: "text-blue-600" },
-                  { name: "حساب بنكي إماراتي", sub1: "Emirates NBD", sub2: "AE47 0260 0010 1589 2734 560", icon: Landmark, bg: "bg-blue-50 dark:bg-blue-500/10", border: "border-blue-200 dark:border-blue-500/20", iconColor: "text-blue-600" },
-                  { name: "محفظة فودافون كاش", sub1: "+201098765432", sub2: "هلا كومرس", icon: Smartphone, bg: "bg-pink-50 dark:bg-pink-500/10", border: "border-pink-200 dark:border-pink-500/20", iconColor: "text-red-500" },
-                ].map((acc, i) => (
-                  <div key={i} className={`${acc.bg} ${acc.border} border rounded-2xl p-4 text-center space-y-2`}>
-                    <acc.icon className={`w-8 h-8 mx-auto ${acc.iconColor}`} />
-                    <p className="text-sm font-bold text-foreground">{acc.name}</p>
-                    <p className="text-[11px] text-muted-foreground">{acc.sub1}</p>
                     <p className="text-[11px] text-muted-foreground break-all font-mono">{acc.sub2}</p>
                   </div>
                 ))}
