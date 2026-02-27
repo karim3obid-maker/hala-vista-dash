@@ -1068,9 +1068,11 @@ export default function WalletPage() {
                   { name: "فودافون كاش", sub1: "+201098765432", sub2: "هلا كومرس", icon: Smartphone, bg: "bg-pink-50 dark:bg-pink-500/10", border: "border-pink-200 dark:border-pink-500/20", iconColor: "text-red-500" },
                   { name: "حساب بنكي إماراتي", sub1: "Emirates NBD", sub2: "AE47 0260 0010 1589 2734 560", icon: Landmark, bg: "bg-indigo-50 dark:bg-indigo-500/10", border: "border-indigo-200 dark:border-indigo-500/20", iconColor: "text-indigo-600" },
                 ].map((acc, i) => (
-                  <div key={i} className={`${acc.bg} ${acc.border} border rounded-2xl p-5 text-center space-y-2 hover:shadow-md transition-shadow`}>
-                    <acc.icon className={`w-9 h-9 mx-auto ${acc.iconColor}`} />
-                    <p className="text-sm font-bold text-foreground">{acc.name}</p>
+                  <div key={i} className={`${acc.bg} ${acc.border} border rounded-2xl p-5 text-right space-y-2 hover:shadow-md transition-shadow flex flex-col`}>
+                    <div className="flex items-center gap-2 justify-end">
+                      <span className="text-sm font-bold text-foreground">{acc.name}</span>
+                      <acc.icon className={`w-7 h-7 ${acc.iconColor}`} />
+                    </div>
                     <p className="text-[11px] text-muted-foreground break-all">{acc.sub1}</p>
                     <p className="text-[11px] text-muted-foreground break-all font-mono">{acc.sub2}</p>
                   </div>
