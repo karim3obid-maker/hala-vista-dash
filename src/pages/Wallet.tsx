@@ -34,7 +34,7 @@ import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import { StatCard, SectionHeader } from "@/components/wallet/WalletShared";
-import { invoices, transactions, reportData, typeConfig, statusConfig, transactionTypes, products, stores } from "@/components/wallet/walletData";
+import { invoices, transactions, reportData, typeConfig, statusConfig, transactionTypes, products, stores, goodsAccountSummary, goodsTransactions, halaWithdrawalReport } from "@/components/wallet/walletData";
 import WalletDialogs from "@/components/wallet/WalletDialogs";
 import { FinancialTrendChart, ExpenseBreakdownChart, MonthlyProfitChart } from "@/components/wallet/WalletReportsCharts";
 import type { Invoice } from "@/components/wallet/WalletTypes";
@@ -205,6 +205,87 @@ export default function WalletPage() {
               <StatCard item={{ label: "إجمالي الإيداعات", value: totalDeposits.toLocaleString(), suffix: "ر.س", icon: Download, color: "text-emerald-500", bgColor: "bg-emerald-500/10" }} />
               <StatCard item={{ label: "إجمالي المسحوبات", value: totalWithdrawals.toLocaleString(), suffix: "ر.س", icon: Upload, color: "text-orange-500", bgColor: "bg-orange-500/10" }} />
               <StatCard item={{ label: "إجمالي المعاملات", value: transactions.length.toString(), icon: ArrowLeftRight, color: "text-blue-500", bgColor: "bg-blue-500/10" }} />
+            </div>
+          </div>
+        </div>
+
+        {/* ════════ GOODS ACCOUNT SECTION ════════ */}
+        <div className="bg-card rounded-2xl border border-border p-5 mb-6 space-y-5">
+          <div className="flex items-center gap-2 mb-4 flex-row-reverse">
+            <Package className="w-4 h-4 text-violet-500" />
+            <h3 className="text-sm font-bold text-foreground">كشف حساب البضاعة</h3>
+          </div>
+
+          {/* 4 Summary Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {[
+              { value: goodsAccountSummary.debitBalance, label: "رصيد مدين", icon: TrendingDown, color: "text-red-500", bgColor: "bg-red-500/10" },
+              { value: goodsAccountSummary.halaCosts, label: "تكاليف بضاعة هلا شير", icon: ShoppingCart, color: "text-primary", bgColor: "bg-primary/10" },
+              { value: goodsAccountSummary.chinaCosts, label: "تكاليف استيراد من الصين", icon: Package, color: "text-violet-500", bgColor: "bg-violet-500/10" },
+              { value: goodsAccountSummary.egyptCosts, label: "تكاليف استيراد من مصر", icon: Package, color: "text-amber-500", bgColor: "bg-amber-500/10" },
+            ].map((item, i) => (
+              <StatCard key={i} item={{ ...item, value: item.value.toLocaleString(), suffix: "ر.س" }} />
+            ))}
+          </div>
+
+          {/* Goods Transactions Table */}
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-right py-3 px-3 font-medium text-muted-foreground text-xs">التاريخ</th>
+                  <th className="text-right py-3 px-3 font-medium text-muted-foreground text-xs">النوع</th>
+                  <th className="text-right py-3 px-3 font-medium text-muted-foreground text-xs">المصدر</th>
+                  <th className="text-right py-3 px-3 font-medium text-muted-foreground text-xs">التفاصيل</th>
+                  <th className="text-right py-3 px-3 font-medium text-muted-foreground text-xs">النسبة</th>
+                  <th className="text-left py-3 px-3 font-medium text-muted-foreground text-xs">المبلغ</th>
+                  <th className="text-left py-3 px-3 font-medium text-muted-foreground text-xs">المرجع</th>
+                </tr>
+              </thead>
+              <tbody>
+                {goodsTransactions.map((gt) => (
+                  <tr key={gt.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                    <td className="py-3 px-3 text-foreground text-xs">{gt.date}</td>
+                    <td className="py-3 px-3">
+                      <Badge variant="secondary" className="text-[10px] font-medium">{gt.type}</Badge>
+                    </td>
+                    <td className="py-3 px-3 text-muted-foreground text-xs">{gt.source}</td>
+                    <td className="py-3 px-3 text-muted-foreground text-xs">{gt.details}</td>
+                    <td className="py-3 px-3 text-muted-foreground text-xs">{gt.percentage}%</td>
+                    <td className="py-3 px-3 text-left font-bold text-red-500 text-xs">{gt.amount.toLocaleString()} ر.س</td>
+                    <td className="py-3 px-3 text-left"><span className="text-[10px] text-muted-foreground/60 bg-muted px-1.5 py-0.5 rounded">{gt.reference}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Hala Withdrawal Report */}
+          <div className="pt-4 border-t border-border">
+            <div className="flex items-center gap-2 mb-3 flex-row-reverse">
+              <ShoppingCart className="w-4 h-4 text-primary" />
+              <h4 className="text-xs font-bold text-foreground">تقرير سحب منتجات هلا شير</h4>
+            </div>
+            <div className="space-y-2">
+              {halaWithdrawalReport.map((item, i) => (
+                <div key={i} className="flex items-center justify-between bg-muted/30 rounded-xl border border-border p-3 flex-row-reverse">
+                  <div className="flex items-center gap-3 flex-row-reverse">
+                    <div className="p-2 rounded-lg bg-primary/10"><ShoppingCart className="w-4 h-4 text-primary" /></div>
+                    <div className="text-right">
+                      <p className="text-sm font-medium text-foreground">{item.product}</p>
+                      <p className="text-[11px] text-muted-foreground">سحب {item.quantity} قطعة × {item.unitCost} ر.س</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-base font-bold text-foreground">{item.total.toLocaleString()}</span>
+                    <span className="text-xs text-muted-foreground mr-1">ر.س</span>
+                  </div>
+                </div>
+              ))}
+              <div className="flex items-center justify-between pt-3 border-t border-border flex-row-reverse">
+                <span className="text-sm font-bold text-foreground">إجمالي سحب منتجات هلا</span>
+                <span className="text-lg font-bold text-primary">{halaWithdrawalReport.reduce((s, i) => s + i.total, 0).toLocaleString()} ر.س</span>
+              </div>
             </div>
           </div>
         </div>

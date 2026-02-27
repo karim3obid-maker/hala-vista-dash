@@ -141,8 +141,29 @@ export const transactionTypes = [
   { value: 'all', label: 'الكل' },
   { value: 'deposit', label: 'إيداع' },
   { value: 'withdrawal', label: 'سحب' },
-  { value: 'purchase', label: 'شراء بضاعة' },
   { value: 'ads', label: 'إعلانات' },
+];
+
+// Goods Account Section Data
+export const goodsAccountSummary = {
+  debitBalance: 7700,
+  halaCosts: 4200,
+  chinaCosts: 2500,
+  egyptCosts: 1000,
+};
+
+export const goodsTransactions = [
+  { id: 'g1', date: '2026/02/27', type: 'خصم بضاعة هلا', source: 'مخزون هلا شير', amount: -1500, percentage: 100, reference: 'GD-H-001', details: 'سحب 100 قطعة × 15 ر.س' },
+  { id: 'g2', date: '2026/02/25', type: 'خصم بضاعة هلا', source: 'مخزون هلا شير', amount: -750, percentage: 100, reference: 'GD-H-002', details: 'سحب 50 قطعة × 15 ر.س' },
+  { id: 'g3', date: '2026/02/24', type: 'خصم بضاعة هلا', source: 'مخزون هلا شير', amount: -1950, percentage: 100, reference: 'GD-H-003', details: 'سحب 78 قطعة × 25 ر.س' },
+  { id: 'g4', date: '2026/02/22', type: 'فاند استيراد الصين', source: 'فاند الصين', amount: -2500, percentage: 50, reference: 'GD-CN-001', details: 'دفعة مقدمة 50% من 5,000 ر.س' },
+  { id: 'g5', date: '2026/02/20', type: 'فاند استيراد مصر', source: 'فاند مصر', amount: -1000, percentage: 30, reference: 'GD-EG-001', details: 'دفعة أولى 30% من 3,333 ر.س' },
+];
+
+export const halaWithdrawalReport = [
+  { product: 'سماعة بلوتوث', quantity: 100, unitCost: 15, total: 1500 },
+  { product: 'ساعة ذكية', quantity: 78, unitCost: 25, total: 1950 },
+  { product: 'شاحن متنقل', quantity: 50, unitCost: 15, total: 750 },
 ];
 
 export const products = [
