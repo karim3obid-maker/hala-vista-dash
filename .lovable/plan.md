@@ -1,35 +1,30 @@
 
 
-## تحسينات مقترحة لصفحة المحفظة
+## Plan: Add Goods Account Section to Wallet
 
-بعد مراجعة الملف بالكامل (1121 سطر)، هذه التحسينات المقترحة:
+### What will change
 
----
+1. **Remove "شراء بضاعة" from transaction filters** (`walletData.ts`) — remove the `purchase` option from `transactionTypes`
 
-### 1. إصلاحات تقنية (Code Cleanup)
-- إزالة imports غير مستخدمة: `Bitcoin`, `Building2` (سطر 34, 38)
-- نقل `DateFilter` خارج الـ component الرئيسي لتجنب إعادة إنشائه كل render
+2. **Add new "كشف حساب البضاعة" (Goods Account Statement) section** above the tabs in `Wallet.tsx`:
+   - **4 summary cards** at the top:
+     - رصيد مدين (Debit balance)
+     - تكاليف بضاعة هلا شير (Hala Share costs)
+     - تكاليف استيراد من الصين (China import costs)
+     - تكاليف استيراد من مصر (Egypt import costs)
+   - **Goods transactions table** below the cards with columns: التاريخ، النوع، المصدر، المبلغ، المرجع (matching the reference screenshot)
+   - Each entry shows: amount paid, percentage deducted, source (Hala Inventory / China Fund / Egypt Fund)
 
-### 2. زر نسخ الحساب البنكي
-- إضافة أيقونة "نسخ" (`Copy` من lucide) بجانب كل IBAN/رقم حساب في نافذة الحسابات البنكية
-- عند الضغط يتم نسخ النص باستخدام `navigator.clipboard.writeText`
-- إظهار toast "تم النسخ" كتأكيد
+3. **Add goods account data** (`walletData.ts`):
+   - `goodsAccountSummary` — balances for debit, Hala, China, Egypt
+   - `goodsTransactions` — sample entries for خصم بضاعة هلا, فاند استيراد الصين, فاند استيراد مصر
+   - Each transaction includes quantity withdrawn and per-unit cost breakdown
 
-### 3. Toast تأكيد الإيداع/السحب مع Validation
-- **زر الإيداع** (سطر 1000): إضافة onClick يتحقق أن المبلغ > 0، ثم يعرض toast "تم إرسال طلب الإيداع بنجاح" ويغلق الـ dialog ويفرغ الحقل
-- **زر السحب** (سطر 1046): نفس المنطق + التحقق أن المبلغ لا يتجاوز الرصيد المتاح (3500)
-- إظهار رسالة خطأ عند إدخال مبلغ غير صالح
+4. **Add Hala product withdrawal report** within the goods section:
+   - Shows product name, quantity withdrawn, unit cost, total deducted
+   - Example: سحب 100 قطعة × 15 ر.س = 1,500 ر.س
 
-### 4. تحسين Responsive للهيدر
-- تحويل أزرار الهيدر (إيداع، سحب، الحسابات البنكية) لتكون `flex-wrap` على الشاشات الصغيرة
-- جعل الأزرار `w-full` على الموبايل باستخدام `sm:w-auto`
-
-### 5. تحسينات إضافية
-- إضافة أيقونة "حساب بنكي مصري" بجانب الحساب البنكي المصري في نافذة السحب (غير موجود حالياً)
-- إضافة `min="0"` على حقول الأرقام لمنع الأرقام السالبة
-
----
-
-### الملفات المتأثرة
-- `src/pages/Wallet.tsx` - جميع التعديلات في ملف واحد
+### Files to modify
+- `src/components/wallet/walletData.ts` — add goods account data, remove purchase from transaction types
+- `src/pages/Wallet.tsx` — add goods account section with cards + table above tabs
 
