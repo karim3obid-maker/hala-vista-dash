@@ -300,7 +300,7 @@ export default function WalletPage() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
-          <TabsList className="flex w-full justify-start bg-card border border-border p-1 h-14 mb-6 rounded-2xl">
+          <TabsList className="flex w-full justify-end bg-card border border-border p-1 h-14 mb-6 rounded-2xl">
             <TabsTrigger
               value="invoices"
               className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 px-6 rounded-xl"
