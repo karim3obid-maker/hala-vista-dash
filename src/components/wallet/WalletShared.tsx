@@ -13,8 +13,8 @@ export function StatCard({ item }: { item: { label: string; value: string | numb
       </div>
       <div className="min-w-0 text-right flex-1">
         <p className={`text-lg font-bold text-foreground leading-tight ${item.highlight ? "text-xl" : ""}`}>
+          {item.suffix && <span className="text-xs font-medium text-muted-foreground ml-1">{item.suffix}</span>}
           {typeof item.value === "number" ? item.value.toLocaleString("ar-SA") : item.value}
-          {item.suffix && <span className="text-xs font-medium text-muted-foreground mr-1">{item.suffix}</span>}
         </p>
         <p className="text-[11px] text-muted-foreground truncate leading-tight mt-0.5">{item.label}</p>
       </div>
@@ -24,7 +24,7 @@ export function StatCard({ item }: { item: { label: string; value: string | numb
 
 export function SectionHeader({ title, icon: Icon, accentColor, badge }: { title: string; icon: any; accentColor: string; badge?: string }) {
   return (
-    <div className="flex items-center gap-2 mb-4 flex-row-reverse justify-end">
+    <div className="flex items-center gap-2 mb-4 flex-row-reverse">
       <h3 className="text-sm font-bold text-foreground">{title}</h3>
       <div className={`p-1.5 rounded-lg ${accentColor}`}>
         <Icon className="w-4 h-4 text-white" />
