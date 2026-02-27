@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { format } from "date-fns";
+import { ar } from "date-fns/locale";
 import {
   Wallet,
   FileText,
@@ -22,6 +24,7 @@ import {
   Upload,
   Clock,
   Filter,
+  CalendarIcon,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -34,6 +37,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 /* ── Types ── */
 interface Transaction {
@@ -242,23 +253,77 @@ const transactionTypes = [
 export default function WalletPage() {
   const [activeTab, setActiveTab] = useState("invoices");
   const [txFilter, setTxFilter] = useState("all");
+  const [dateFrom, setDateFrom] = useState<Date | undefined>();
+  const [dateTo, setDateTo] = useState<Date | undefined>();
 
   const balance = 3500;
-  const totalDeposits = transactions.filter(t => t.amount > 0).reduce((s, t) => s + t.amount, 0);
-  const totalWithdrawals = Math.abs(transactions.filter(t => t.amount < 0).reduce((s, t) => s + t.amount, 0));
+
+  const filterByDate = <T extends { date: string }>(items: T[]): T[] => {
+    return items.filter(item => {
+      const itemDate = new Date(item.date.replace(/\//g, '-'));
+      if (dateFrom && itemDate < dateFrom) return false;
+      if (dateTo && itemDate > dateTo) return false;
+      return true;
+    });
+  };
+
+  const dateFilteredTransactions = filterByDate(transactions);
+  const totalDeposits = dateFilteredTransactions.filter(t => t.amount > 0).reduce((s, t) => s + t.amount, 0);
+  const totalWithdrawals = Math.abs(dateFilteredTransactions.filter(t => t.amount < 0).reduce((s, t) => s + t.amount, 0));
 
   const filteredTransactions = txFilter === 'all'
-    ? transactions
-    : transactions.filter(t => t.type === txFilter);
+    ? dateFilteredTransactions
+    : dateFilteredTransactions.filter(t => t.type === txFilter);
 
   // Group transactions by type for summary
-  const txSummary = transactions.reduce((acc, t) => {
+  const txSummary = dateFilteredTransactions.reduce((acc, t) => {
     const key = t.type;
     if (!acc[key]) acc[key] = { count: 0, total: 0 };
     acc[key].count++;
     acc[key].total += t.amount;
     return acc;
   }, {} as Record<string, { count: number; total: number }>);
+
+  const handleResetDates = () => {
+    setDateFrom(undefined);
+    setDateTo(undefined);
+  };
+
+  const DateFilter = () => (
+    <div className="flex flex-row-reverse items-center gap-3 flex-wrap">
+      <div className="flex flex-row-reverse items-center gap-2">
+        <CalendarIcon className="w-4 h-4 text-muted-foreground" />
+        <span className="text-sm font-medium text-foreground">الفترة</span>
+      </div>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline" className={cn("w-[160px] h-10 rounded-xl text-right text-sm", !dateFrom && "text-muted-foreground")}>
+            <CalendarIcon className="w-4 h-4 ml-2" />
+            {dateFrom ? format(dateFrom, "yyyy/MM/dd") : "من تاريخ"}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="end">
+          <Calendar mode="single" selected={dateFrom} onSelect={setDateFrom} initialFocus className={cn("p-3 pointer-events-auto")} />
+        </PopoverContent>
+      </Popover>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline" className={cn("w-[160px] h-10 rounded-xl text-right text-sm", !dateTo && "text-muted-foreground")}>
+            <CalendarIcon className="w-4 h-4 ml-2" />
+            {dateTo ? format(dateTo, "yyyy/MM/dd") : "إلى تاريخ"}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="end">
+          <Calendar mode="single" selected={dateTo} onSelect={setDateTo} initialFocus className={cn("p-3 pointer-events-auto")} />
+        </PopoverContent>
+      </Popover>
+      {(dateFrom || dateTo) && (
+        <Button variant="ghost" size="sm" onClick={handleResetDates} className="text-xs text-muted-foreground hover:text-destructive rounded-lg">
+          مسح الفلتر
+        </Button>
+      )}
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -366,6 +431,8 @@ export default function WalletPage() {
 
           {/* ════════ TRANSACTIONS TAB ════════ */}
           <TabsContent value="transactions" className="animate-fade-in space-y-6">
+            {/* Date Filter */}
+            <DateFilter />
             {/* Transaction type summary */}
             <div className="bg-primary/[0.02] rounded-2xl p-5 border border-primary/10">
               <SectionHeader title="إجمالي المعاملات حسب النوع" icon={BarChart3} accentColor="bg-primary" />
@@ -446,6 +513,8 @@ export default function WalletPage() {
 
           {/* ════════ REPORTS TAB ════════ */}
           <TabsContent value="reports" className="animate-fade-in space-y-6">
+            {/* Date Filter */}
+            <DateFilter />
             {/* KPI Overview */}
             <div className="bg-card rounded-2xl border border-border p-5">
               <SectionHeader title="الملخص المالي" icon={DollarSign} accentColor="bg-primary" />
