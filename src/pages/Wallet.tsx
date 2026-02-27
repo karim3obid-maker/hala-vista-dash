@@ -25,6 +25,10 @@ import {
   Clock,
   Filter,
   CalendarIcon,
+  Eye,
+  ChevronLeft,
+  Store,
+  Box,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -45,6 +49,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 /* ── Types ── */
 interface Transaction {
@@ -167,6 +177,15 @@ const reportData = {
       accentBg: 'bg-blue-500',
     },
   ],
+  halaGoods: [
+    { label: 'سماعة بلوتوث', count: 200, unitCost: 15, total: 3000 },
+    { label: 'ساعة ذكية', count: 150, unitCost: 25, total: 3750 },
+    { label: 'شاحن متنقل', count: 100, unitCost: 12, total: 1200 },
+  ],
+  marketerGoods: [
+    { label: 'كفرات جوال - دفعة 1', count: 500, unitCost: 3, total: 1500 },
+    { label: 'إكسسوارات - دفعة 2', count: 300, unitCost: 5, total: 1500 },
+  ],
   adBalance: {
     tiktok: 12500,
     snapchat: 8200,
@@ -272,6 +291,7 @@ export default function WalletPage() {
   const [dateTo, setDateTo] = useState<Date | undefined>();
   const [selectedProduct, setSelectedProduct] = useState("all");
   const [selectedStore, setSelectedStore] = useState("all");
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
 
   const balance = 3500;
 
@@ -434,43 +454,121 @@ export default function WalletPage() {
           </TabsList>
 
           {/* ════════ INVOICES TAB ════════ */}
-          <TabsContent value="invoices" className="animate-fade-in space-y-4">
+          <TabsContent value="invoices" className="animate-fade-in space-y-3">
+            {/* Invoice List - compact cards */}
             {invoices.map((inv) => {
               const st = statusConfig[inv.status];
               return (
-                <div key={inv.id} className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-md transition-all">
-                  <div className="flex flex-row-reverse items-center justify-between p-5 border-b border-border">
-                    <div className="flex flex-row-reverse items-center gap-4 text-right">
-                      <div className="p-2.5 rounded-xl bg-primary/10">
+                <div
+                  key={inv.id}
+                  onClick={() => setSelectedInvoice(inv)}
+                  className="bg-card rounded-2xl border border-border p-4 hover:shadow-md hover:border-primary/20 transition-all cursor-pointer group"
+                >
+                  <div className="flex flex-row-reverse items-center justify-between">
+                    <div className="flex flex-row-reverse items-center gap-3">
+                      <div className="p-2.5 rounded-xl bg-primary/10 group-hover:bg-primary/15 transition-colors">
                         <Receipt className="w-5 h-5 text-primary" />
                       </div>
-                      <div>
-                        <p className="text-base font-bold text-foreground">{inv.invoiceNumber}</p>
-                        <p className="text-xs text-muted-foreground">{inv.period}</p>
+                      <div className="text-right">
+                        <p className="text-sm font-bold text-foreground">{inv.invoiceNumber}</p>
+                        <p className="text-[11px] text-muted-foreground">{inv.period} • {inv.periodType === 'weekly' ? 'أسبوعية' : 'شهرية'}</p>
                       </div>
                     </div>
-                    <Badge variant={st.variant} className="text-xs px-3 py-1">{st.label}</Badge>
-                  </div>
-                  <div className="p-5">
-                    <div className="space-y-2">
-                      {inv.services.map((svc, i) => (
-                        <div key={i} className="flex flex-row-reverse items-center justify-between py-2 px-3 rounded-lg bg-muted/30">
-                          <div className="text-right">
-                            <span className="text-sm font-medium text-foreground">{svc.name}</span>
-                            <span className="text-xs text-muted-foreground mr-2">({svc.details})</span>
-                          </div>
-                          <span className="text-sm font-bold text-foreground">{svc.amount.toLocaleString()} ر.س</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="flex flex-row-reverse items-center justify-between mt-4 pt-4 border-t border-border">
-                      <span className="text-sm font-bold text-foreground">الإجمالي</span>
-                      <span className="text-lg font-bold text-primary">{inv.totalAmount.toLocaleString()} ر.س</span>
+                    <div className="flex items-center gap-3">
+                      <div className="text-left">
+                        <p className="text-sm font-bold text-foreground">{inv.totalAmount.toLocaleString()} ر.س</p>
+                        <Badge variant={st.variant} className="text-[10px] px-2 py-0">{st.label}</Badge>
+                      </div>
+                      <ChevronLeft className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
                     </div>
                   </div>
                 </div>
               );
             })}
+
+            {/* Invoice Detail Dialog */}
+            <Dialog open={!!selectedInvoice} onOpenChange={() => setSelectedInvoice(null)}>
+              <DialogContent className="max-w-lg" dir="rtl">
+                {selectedInvoice && (() => {
+                  const st = statusConfig[selectedInvoice.status];
+                  return (
+                    <>
+                      <DialogHeader>
+                        <DialogTitle className="flex flex-row-reverse items-center gap-3">
+                          <div className="p-2 rounded-xl bg-primary/10">
+                            <Receipt className="w-5 h-5 text-primary" />
+                          </div>
+                          <div className="text-right">
+                            <p className="text-lg font-bold">فاتورة {selectedInvoice.invoiceNumber}</p>
+                            <p className="text-xs text-muted-foreground font-normal">{selectedInvoice.period}</p>
+                          </div>
+                        </DialogTitle>
+                      </DialogHeader>
+
+                      <div className="space-y-4 mt-2">
+                        {/* Invoice meta */}
+                        <div className="flex flex-row-reverse items-center justify-between bg-muted/30 rounded-xl p-3">
+                          <div className="text-right">
+                            <p className="text-[11px] text-muted-foreground">تاريخ الإصدار</p>
+                            <p className="text-sm font-medium">{selectedInvoice.issueDate}</p>
+                          </div>
+                          <Badge variant={st.variant} className="text-xs px-3 py-1">{st.label}</Badge>
+                        </div>
+
+                        {/* Services */}
+                        <div className="space-y-2">
+                          <p className="text-sm font-bold text-foreground text-right">تفاصيل الخدمات</p>
+                          {selectedInvoice.services.map((svc, i) => (
+                            <div key={i} className="flex flex-row-reverse items-center justify-between py-2.5 px-3 rounded-lg bg-muted/20 border border-border">
+                              <div className="text-right">
+                                <span className="text-sm font-medium text-foreground">{svc.name}</span>
+                                <p className="text-[11px] text-muted-foreground">{svc.details}</p>
+                              </div>
+                              <span className="text-sm font-bold text-foreground">{svc.amount.toLocaleString()} ر.س</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Total */}
+                        <div className="flex flex-row-reverse items-center justify-between pt-3 border-t border-border">
+                          <span className="text-base font-bold text-foreground">الإجمالي</span>
+                          <span className="text-xl font-bold text-primary">{selectedInvoice.totalAmount.toLocaleString()} ر.س</span>
+                        </div>
+
+                        {/* Download Button */}
+                        <Button
+                          className="w-full rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground"
+                          onClick={() => {
+                            // Generate simple text invoice for download
+                            const content = [
+                              `فاتورة: ${selectedInvoice.invoiceNumber}`,
+                              `الفترة: ${selectedInvoice.period}`,
+                              `تاريخ الإصدار: ${selectedInvoice.issueDate}`,
+                              `الحالة: ${st.label}`,
+                              ``,
+                              `--- تفاصيل الخدمات ---`,
+                              ...selectedInvoice.services.map(s => `${s.name}: ${s.amount.toLocaleString()} ر.س (${s.details})`),
+                              ``,
+                              `الإجمالي: ${selectedInvoice.totalAmount.toLocaleString()} ر.س`,
+                            ].join('\n');
+                            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `${selectedInvoice.invoiceNumber}.txt`;
+                            a.click();
+                            URL.revokeObjectURL(url);
+                          }}
+                        >
+                          <Download className="w-4 h-4 ml-2" />
+                          تحميل الفاتورة
+                        </Button>
+                      </div>
+                    </>
+                  );
+                })()}
+              </DialogContent>
+            </Dialog>
           </TabsContent>
 
           {/* ════════ TRANSACTIONS TAB ════════ */}
@@ -646,6 +744,59 @@ export default function WalletPage() {
                   </div>
                 );
               })}
+            </div>
+
+            {/* بضاعة هلا شري & استيراد بضاعة للمسوق */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* بضاعة هلا شري */}
+              <div className="bg-primary/[0.02] rounded-2xl p-5 border border-primary/10">
+                <SectionHeader title="بضاعة هلا شري" icon={ShoppingCart} accentColor="bg-primary" badge={`${reportData.halaGoods.length} منتجات`} />
+                <div className="space-y-2 mb-4">
+                  {reportData.halaGoods.map((item, i) => (
+                    <div key={i} className="flex flex-row-reverse items-center justify-between bg-card rounded-xl border border-border p-3.5">
+                      <div className="flex flex-row-reverse items-center gap-3 text-right">
+                        <div className="p-2 rounded-lg bg-primary/10">
+                          <ShoppingCart className="w-4 h-4 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-foreground">{item.label}</p>
+                          <p className="text-[11px] text-muted-foreground">{item.count.toLocaleString()} قطعة × {item.unitCost} ر.س</p>
+                        </div>
+                      </div>
+                      <span className="text-sm font-bold text-foreground">{item.total.toLocaleString()} ر.س</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex flex-row-reverse items-center justify-between pt-3 border-t border-primary/10">
+                  <span className="text-sm font-bold text-foreground">إجمالي بضاعة هلا</span>
+                  <span className="text-lg font-bold text-primary">{reportData.halaGoods.reduce((s, i) => s + i.total, 0).toLocaleString()} ر.س</span>
+                </div>
+              </div>
+
+              {/* استيراد بضاعة للمسوق */}
+              <div className="bg-violet-500/[0.02] rounded-2xl p-5 border border-violet-500/10">
+                <SectionHeader title="استيراد بضاعة للمسوق" icon={Package} accentColor="bg-violet-500" badge={`${reportData.marketerGoods.length} شحنات`} />
+                <div className="space-y-2 mb-4">
+                  {reportData.marketerGoods.map((item, i) => (
+                    <div key={i} className="flex flex-row-reverse items-center justify-between bg-card rounded-xl border border-border p-3.5">
+                      <div className="flex flex-row-reverse items-center gap-3 text-right">
+                        <div className="p-2 rounded-lg bg-violet-500/10">
+                          <Package className="w-4 h-4 text-violet-500" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-foreground">{item.label}</p>
+                          <p className="text-[11px] text-muted-foreground">{item.count.toLocaleString()} قطعة × {item.unitCost} ر.س</p>
+                        </div>
+                      </div>
+                      <span className="text-sm font-bold text-foreground">{item.total.toLocaleString()} ر.س</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex flex-row-reverse items-center justify-between pt-3 border-t border-violet-500/10">
+                  <span className="text-sm font-bold text-foreground">إجمالي استيراد البضاعة</span>
+                  <span className="text-lg font-bold text-violet-500">{reportData.marketerGoods.reduce((s, i) => s + i.total, 0).toLocaleString()} ر.س</span>
+                </div>
+              </div>
             </div>
 
             {/* Ad Balance & Goods Balance */}
