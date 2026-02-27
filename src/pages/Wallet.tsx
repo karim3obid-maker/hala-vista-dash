@@ -249,12 +249,29 @@ const transactionTypes = [
   { value: 'import_goods', label: 'استيراد' },
 ];
 
+const products = [
+  { value: 'all', label: 'كل المنتجات' },
+  { value: 'earbuds', label: 'سماعة بلوتوث' },
+  { value: 'smartwatch', label: 'ساعة ذكية' },
+  { value: 'powerbank', label: 'شاحن متنقل' },
+  { value: 'phone_case', label: 'كفر جوال' },
+];
+
+const stores = [
+  { value: 'all', label: 'كل المتاجر' },
+  { value: 'store_sa', label: 'متجر السعودية' },
+  { value: 'store_ae', label: 'متجر الإمارات' },
+  { value: 'store_kw', label: 'متجر الكويت' },
+];
+
 /* ── Main ── */
 export default function WalletPage() {
   const [activeTab, setActiveTab] = useState("invoices");
   const [txFilter, setTxFilter] = useState("all");
   const [dateFrom, setDateFrom] = useState<Date | undefined>();
   const [dateTo, setDateTo] = useState<Date | undefined>();
+  const [selectedProduct, setSelectedProduct] = useState("all");
+  const [selectedStore, setSelectedStore] = useState("all");
 
   const balance = 3500;
 
@@ -287,17 +304,19 @@ export default function WalletPage() {
   const handleResetDates = () => {
     setDateFrom(undefined);
     setDateTo(undefined);
+    setSelectedProduct("all");
+    setSelectedStore("all");
   };
 
   const DateFilter = () => (
-    <div className="flex flex-row-reverse items-center gap-3 flex-wrap">
+    <div className="flex flex-row-reverse items-center gap-3 flex-wrap bg-card rounded-2xl border border-border p-4">
       <div className="flex flex-row-reverse items-center gap-2">
         <CalendarIcon className="w-4 h-4 text-muted-foreground" />
         <span className="text-sm font-medium text-foreground">الفترة</span>
       </div>
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline" className={cn("w-[160px] h-10 rounded-xl text-right text-sm", !dateFrom && "text-muted-foreground")}>
+          <Button variant="outline" className={cn("w-[150px] h-10 rounded-xl text-right text-sm", !dateFrom && "text-muted-foreground")}>
             <CalendarIcon className="w-4 h-4 ml-2" />
             {dateFrom ? format(dateFrom, "yyyy/MM/dd") : "من تاريخ"}
           </Button>
@@ -308,7 +327,7 @@ export default function WalletPage() {
       </Popover>
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline" className={cn("w-[160px] h-10 rounded-xl text-right text-sm", !dateTo && "text-muted-foreground")}>
+          <Button variant="outline" className={cn("w-[150px] h-10 rounded-xl text-right text-sm", !dateTo && "text-muted-foreground")}>
             <CalendarIcon className="w-4 h-4 ml-2" />
             {dateTo ? format(dateTo, "yyyy/MM/dd") : "إلى تاريخ"}
           </Button>
@@ -317,9 +336,34 @@ export default function WalletPage() {
           <Calendar mode="single" selected={dateTo} onSelect={setDateTo} initialFocus className={cn("p-3 pointer-events-auto")} />
         </PopoverContent>
       </Popover>
-      {(dateFrom || dateTo) && (
+
+      <div className="w-px h-8 bg-border mx-1" />
+
+      <Select value={selectedProduct} onValueChange={setSelectedProduct}>
+        <SelectTrigger className="w-[150px] h-10 rounded-xl text-sm">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {products.map(p => (
+            <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <Select value={selectedStore} onValueChange={setSelectedStore}>
+        <SelectTrigger className="w-[150px] h-10 rounded-xl text-sm">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {stores.map(s => (
+            <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      {(dateFrom || dateTo || selectedProduct !== "all" || selectedStore !== "all") && (
         <Button variant="ghost" size="sm" onClick={handleResetDates} className="text-xs text-muted-foreground hover:text-destructive rounded-lg">
-          مسح الفلتر
+          مسح الكل
         </Button>
       )}
     </div>
