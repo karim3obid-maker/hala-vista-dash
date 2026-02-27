@@ -405,25 +405,77 @@ export default function WalletPage() {
           </div>
         </div>
 
-        {/* Balance Banner (matches Flow Banner style) */}
-        <div className="bg-card rounded-2xl border border-border p-5 mb-6">
-          <div className="flex flex-row-reverse items-center gap-2 mb-4">
-            <BarChart3 className="w-4 h-4 text-primary" />
-            <h3 className="text-sm font-bold text-foreground">ملخص الأرصدة</h3>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="flex flex-row-reverse items-center gap-3 p-4 rounded-xl bg-gradient-to-bl from-primary/10 to-accent/10 border border-primary/20">
-              <div className="p-2.5 rounded-lg bg-primary shrink-0">
-                <Wallet className="w-5 h-5 text-white" />
+        {/* Balance & Financial Summary Banner */}
+        <div className="bg-card rounded-2xl border border-border p-5 mb-6 space-y-5">
+          {/* ملخص الأرصدة */}
+          <div>
+            <div className="flex flex-row-reverse items-center gap-2 mb-4">
+              <BarChart3 className="w-4 h-4 text-primary" />
+              <h3 className="text-sm font-bold text-foreground">ملخص الأرصدة</h3>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="flex flex-row-reverse items-center gap-3 p-4 rounded-xl bg-gradient-to-bl from-primary/10 to-accent/10 border border-primary/20">
+                <div className="p-2.5 rounded-lg bg-primary shrink-0">
+                  <Wallet className="w-5 h-5 text-white" />
+                </div>
+                <div className="text-right">
+                  <p className="text-2xl font-bold text-foreground">{balance.toLocaleString()}</p>
+                  <p className="text-[11px] text-muted-foreground">الرصيد الحالي (ر.س)</p>
+                </div>
               </div>
-              <div className="text-right">
-                <p className="text-2xl font-bold text-foreground">{balance.toLocaleString()}</p>
-                <p className="text-[11px] text-muted-foreground">الرصيد الحالي (ر.س)</p>
+              <StatCard item={{ label: "إجمالي الإيداعات", value: totalDeposits.toLocaleString(), suffix: "ر.س", icon: Download, color: "text-emerald-500", bgColor: "bg-emerald-500/10" }} />
+              <StatCard item={{ label: "إجمالي المسحوبات", value: totalWithdrawals.toLocaleString(), suffix: "ر.س", icon: Upload, color: "text-orange-500", bgColor: "bg-orange-500/10" }} />
+              <StatCard item={{ label: "إجمالي المعاملات", value: transactions.length.toString(), icon: ArrowLeftRight, color: "text-blue-500", bgColor: "bg-blue-500/10" }} />
+            </div>
+          </div>
+
+          {/* الفاصل */}
+          <div className="h-px bg-gradient-to-l from-transparent via-border to-transparent" />
+
+          {/* الملخص المالي */}
+          <div>
+            <div className="flex flex-row-reverse items-center gap-2 mb-4">
+              <DollarSign className="w-4 h-4 text-primary" />
+              <h3 className="text-sm font-bold text-foreground">الملخص المالي</h3>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div className="flex flex-row-reverse items-center gap-4 p-4 rounded-2xl bg-gradient-to-l from-primary/10 to-primary/5 border border-primary/20">
+                <div className="p-2.5 rounded-xl bg-primary/15 shrink-0">
+                  <DollarSign className="w-5 h-5 text-primary" />
+                </div>
+                <div className="text-right flex-1">
+                  <p className="text-xl font-bold text-foreground">{reportData.totalSales.toLocaleString()}<span className="text-xs font-medium text-muted-foreground mr-1">ر.س</span></p>
+                  <p className="text-[11px] text-muted-foreground">إجمالي المبيعات</p>
+                </div>
+              </div>
+              <div className="flex flex-row-reverse items-center gap-4 p-4 rounded-2xl bg-gradient-to-l from-green-600/10 to-green-600/5 border border-green-600/20">
+                <div className="p-2.5 rounded-xl bg-green-600/15 shrink-0">
+                  <PackageCheck className="w-5 h-5 text-green-600" />
+                </div>
+                <div className="text-right flex-1">
+                  <p className="text-xl font-bold text-foreground">{reportData.deliveredSales.toLocaleString()}<span className="text-xs font-medium text-muted-foreground mr-1">ر.س</span></p>
+                  <p className="text-[11px] text-muted-foreground">إجمالي المبيعات المسلمة</p>
+                </div>
+              </div>
+              <div className="flex flex-row-reverse items-center gap-4 p-4 rounded-2xl bg-gradient-to-l from-red-500/10 to-red-500/5 border border-red-500/20">
+                <div className="p-2.5 rounded-xl bg-red-500/15 shrink-0">
+                  <TrendingDown className="w-5 h-5 text-red-500" />
+                </div>
+                <div className="text-right flex-1">
+                  <p className="text-xl font-bold text-foreground">{reportData.totalExpenses.toLocaleString()}<span className="text-xs font-medium text-muted-foreground mr-1">ر.س</span></p>
+                  <p className="text-[11px] text-muted-foreground">إجمالي المصروفات</p>
+                </div>
+              </div>
+              <div className="flex flex-row-reverse items-center gap-4 p-4 rounded-2xl bg-gradient-to-l from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20">
+                <div className="p-2.5 rounded-xl bg-emerald-500/15 shrink-0">
+                  <TrendingUp className="w-5 h-5 text-emerald-500" />
+                </div>
+                <div className="text-right flex-1">
+                  <p className="text-xl font-bold text-foreground">{reportData.netProfit.toLocaleString()}<span className="text-xs font-medium text-muted-foreground mr-1">ر.س</span></p>
+                  <p className="text-[11px] text-muted-foreground">صافي الربح</p>
+                </div>
               </div>
             </div>
-            <StatCard item={{ label: "إجمالي الإيداعات", value: totalDeposits.toLocaleString(), suffix: "ر.س", icon: Download, color: "text-emerald-500", bgColor: "bg-emerald-500/10" }} />
-            <StatCard item={{ label: "إجمالي المسحوبات", value: totalWithdrawals.toLocaleString(), suffix: "ر.س", icon: Upload, color: "text-orange-500", bgColor: "bg-orange-500/10" }} />
-            <StatCard item={{ label: "إجمالي المعاملات", value: transactions.length.toString(), icon: ArrowLeftRight, color: "text-blue-500", bgColor: "bg-blue-500/10" }} />
           </div>
         </div>
 
@@ -657,53 +709,6 @@ export default function WalletPage() {
           <TabsContent value="reports" className="animate-fade-in space-y-6">
             {/* Date Filter */}
             <DateFilter />
-            {/* KPI Overview */}
-            <div className="bg-card rounded-2xl border border-border p-6">
-              <SectionHeader title="الملخص المالي" icon={DollarSign} accentColor="bg-primary" />
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" dir="rtl">
-                {/* إجمالي المبيعات */}
-                <div className="flex flex-row-reverse items-center gap-4 p-5 rounded-2xl bg-gradient-to-l from-primary/10 to-primary/5 border border-primary/20 hover:shadow-md transition-all">
-                  <div className="p-3 rounded-xl bg-primary/15 shrink-0">
-                    <DollarSign className="w-6 h-6 text-primary" />
-                  </div>
-                  <div className="text-right flex-1">
-                    <p className="text-2xl font-bold text-foreground">{reportData.totalSales.toLocaleString()}<span className="text-xs font-medium text-muted-foreground mr-1">ر.س</span></p>
-                    <p className="text-xs text-muted-foreground mt-0.5">إجمالي المبيعات</p>
-                  </div>
-                </div>
-                {/* إجمالي المبيعات المسلمة */}
-                <div className="flex flex-row-reverse items-center gap-4 p-5 rounded-2xl bg-gradient-to-l from-green-600/10 to-green-600/5 border border-green-600/20 hover:shadow-md transition-all">
-                  <div className="p-3 rounded-xl bg-green-600/15 shrink-0">
-                    <PackageCheck className="w-6 h-6 text-green-600" />
-                  </div>
-                  <div className="text-right flex-1">
-                    <p className="text-2xl font-bold text-foreground">{reportData.deliveredSales.toLocaleString()}<span className="text-xs font-medium text-muted-foreground mr-1">ر.س</span></p>
-                    <p className="text-xs text-muted-foreground mt-0.5">إجمالي المبيعات المسلمة</p>
-                  </div>
-                </div>
-                {/* إجمالي المصروفات */}
-                <div className="flex flex-row-reverse items-center gap-4 p-5 rounded-2xl bg-gradient-to-l from-red-500/10 to-red-500/5 border border-red-500/20 hover:shadow-md transition-all">
-                  <div className="p-3 rounded-xl bg-red-500/15 shrink-0">
-                    <TrendingDown className="w-6 h-6 text-red-500" />
-                  </div>
-                  <div className="text-right flex-1">
-                    <p className="text-2xl font-bold text-foreground">{reportData.totalExpenses.toLocaleString()}<span className="text-xs font-medium text-muted-foreground mr-1">ر.س</span></p>
-                    <p className="text-xs text-muted-foreground mt-0.5">إجمالي المصروفات</p>
-                  </div>
-                </div>
-                {/* صافي الربح */}
-                <div className="flex flex-row-reverse items-center gap-4 p-5 rounded-2xl bg-gradient-to-l from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20 hover:shadow-md transition-all">
-                  <div className="p-3 rounded-xl bg-emerald-500/15 shrink-0">
-                    <TrendingUp className="w-6 h-6 text-emerald-500" />
-                  </div>
-                  <div className="text-right flex-1">
-                    <p className="text-2xl font-bold text-foreground">{reportData.netProfit.toLocaleString()}<span className="text-xs font-medium text-muted-foreground mr-1">ر.س</span></p>
-                    <p className="text-xs text-muted-foreground mt-0.5">صافي الربح</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             {/* Services Cost Breakdown */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {reportData.services.map((svc, idx) => {
