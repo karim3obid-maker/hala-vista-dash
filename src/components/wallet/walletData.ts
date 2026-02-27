@@ -142,10 +142,7 @@ export const transactionTypes = [
   { value: 'deposit', label: 'إيداع' },
   { value: 'withdrawal', label: 'سحب' },
   { value: 'purchase', label: 'شراء بضاعة' },
-  { value: 'transfer', label: 'تحويل' },
-  { value: 'ads_tiktok', label: 'تيك توك' },
-  { value: 'ads_snapchat', label: 'سناب شات' },
-  { value: 'import_goods', label: 'استيراد' },
+  { value: 'ads', label: 'إعلانات' },
 ];
 
 export const products = [
