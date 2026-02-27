@@ -70,7 +70,9 @@ export default function WalletPage() {
 
   const filteredTransactions = txFilter === 'all'
     ? dateFilteredTransactions
-    : dateFilteredTransactions.filter(t => t.type === txFilter);
+    : txFilter === 'ads'
+      ? dateFilteredTransactions.filter(t => t.type === 'ads_tiktok' || t.type === 'ads_snapchat')
+      : dateFilteredTransactions.filter(t => t.type === txFilter);
 
   const txSummary = dateFilteredTransactions.reduce((acc, t) => {
     const key = t.type;
