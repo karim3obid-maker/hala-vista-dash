@@ -232,7 +232,7 @@ const statusConfig: Record<string, { label: string; variant: 'default' | 'second
 function StatCard({ item }: { item: { label: string; value: string | number; icon: any; color: string; bgColor: string; suffix?: string; highlight?: boolean } }) {
   const Icon = item.icon;
   return (
-    <div className={`flex flex-row-reverse items-center gap-3 p-3.5 rounded-xl border transition-all hover:shadow-sm ${
+    <div className={`flex items-center gap-3 p-3.5 rounded-xl border transition-all hover:shadow-sm ${
       item.highlight
         ? "bg-primary/5 border-primary/20 hover:border-primary/40"
         : "bg-card border-border hover:border-primary/20"
@@ -254,7 +254,7 @@ function StatCard({ item }: { item: { label: string; value: string | number; ico
 /* ── Section Header (matches analytics) ── */
 function SectionHeader({ title, icon: Icon, accentColor, badge }: { title: string; icon: any; accentColor: string; badge?: string }) {
   return (
-    <div className="flex flex-row-reverse items-center gap-2 mb-4">
+    <div className="flex items-center gap-2 mb-4">
       <div className={`p-1.5 rounded-lg ${accentColor}`}>
         <Icon className="w-4 h-4 text-white" />
       </div>
@@ -346,35 +346,33 @@ export default function WalletPage() {
   };
 
   const DateFilter = () => (
-    <div className="flex flex-row-reverse items-center gap-3 flex-wrap bg-card rounded-2xl border border-border p-4 mb-6">
-      <div className="flex flex-row-reverse items-center gap-2">
-        <CalendarIcon className="w-4 h-4 text-muted-foreground" />
+    <div className="flex items-center gap-3 flex-wrap bg-card rounded-2xl border border-border p-4 mb-6">
+      <div className="flex items-center gap-2">
         <span className="text-sm font-medium text-foreground">الفترة</span>
+        <CalendarIcon className="w-4 h-4 text-muted-foreground" />
       </div>
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline" className={cn("w-[150px] h-10 rounded-xl text-right text-sm", !dateFrom && "text-muted-foreground")}>
-            <CalendarIcon className="w-4 h-4 ml-2" />
+          <Button variant="outline" className={cn("w-[150px] h-10 rounded-xl text-sm", !dateFrom && "text-muted-foreground")}>
             {dateFrom ? format(dateFrom, "yyyy/MM/dd") : "من تاريخ"}
+            <CalendarIcon className="w-4 h-4 mr-2" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="end">
+        <PopoverContent className="w-auto p-0" align="start">
           <Calendar mode="single" selected={dateFrom} onSelect={setDateFrom} initialFocus className={cn("p-3 pointer-events-auto")} />
         </PopoverContent>
       </Popover>
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline" className={cn("w-[150px] h-10 rounded-xl text-right text-sm", !dateTo && "text-muted-foreground")}>
-            <CalendarIcon className="w-4 h-4 ml-2" />
+          <Button variant="outline" className={cn("w-[150px] h-10 rounded-xl text-sm", !dateTo && "text-muted-foreground")}>
             {dateTo ? format(dateTo, "yyyy/MM/dd") : "إلى تاريخ"}
+            <CalendarIcon className="w-4 h-4 mr-2" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="end">
+        <PopoverContent className="w-auto p-0" align="start">
           <Calendar mode="single" selected={dateTo} onSelect={setDateTo} initialFocus className={cn("p-3 pointer-events-auto")} />
         </PopoverContent>
       </Popover>
-
-      <div className="w-px h-8 bg-border mx-1" />
 
       <Select value={selectedProduct} onValueChange={setSelectedProduct}>
         <SelectTrigger className="w-[150px] h-10 rounded-xl text-sm">
@@ -399,7 +397,7 @@ export default function WalletPage() {
       </Select>
 
       {(dateFrom || dateTo || selectedProduct !== "all" || selectedStore !== "all") && (
-        <Button variant="ghost" size="sm" onClick={handleResetDates} className="text-xs text-muted-foreground hover:text-destructive rounded-lg">
+        <Button variant="ghost" size="sm" onClick={handleResetDates} className="text-xs text-muted-foreground hover:text-destructive rounded-lg mr-auto">
           مسح الكل
         </Button>
       )}
@@ -411,8 +409,8 @@ export default function WalletPage() {
       <main className="container max-w-[1280px] mx-auto px-6 py-8" dir="rtl">
         {/* Header */}
         <div className="mb-6">
-          <div className="flex flex-row-reverse items-center justify-between">
-            <div className="flex flex-row-reverse items-center gap-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
               <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20">
                 <Wallet className="w-5 h-5 text-primary-foreground" />
               </div>
@@ -451,16 +449,19 @@ export default function WalletPage() {
           </div>
         </div>
 
+        {/* Global Filters */}
+        <DateFilter />
+
         {/* Balance & Financial Summary Banner */}
         <div className="bg-card rounded-2xl border border-border p-5 mb-6 space-y-5">
           {/* الملخص المالي */}
           <div>
-            <div className="flex flex-row-reverse items-center gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-4">
               <DollarSign className="w-4 h-4 text-primary" />
               <h3 className="text-sm font-bold text-foreground">الملخص المالي</h3>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              <div className="flex flex-row-reverse items-center gap-4 p-4 rounded-2xl bg-gradient-to-l from-primary/10 to-primary/5 border border-primary/20">
+              <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-l from-primary/10 to-primary/5 border border-primary/20">
                 <div className="p-2.5 rounded-xl bg-primary/15 shrink-0">
                   <DollarSign className="w-5 h-5 text-primary" />
                 </div>
@@ -469,7 +470,7 @@ export default function WalletPage() {
                   <p className="text-[11px] text-muted-foreground">إجمالي المبيعات</p>
                 </div>
               </div>
-              <div className="flex flex-row-reverse items-center gap-4 p-4 rounded-2xl bg-gradient-to-l from-green-600/10 to-green-600/5 border border-green-600/20">
+              <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-l from-green-600/10 to-green-600/5 border border-green-600/20">
                 <div className="p-2.5 rounded-xl bg-green-600/15 shrink-0">
                   <PackageCheck className="w-5 h-5 text-green-600" />
                 </div>
@@ -478,7 +479,7 @@ export default function WalletPage() {
                   <p className="text-[11px] text-muted-foreground">إجمالي المبيعات المسلمة</p>
                 </div>
               </div>
-              <div className="flex flex-row-reverse items-center gap-4 p-4 rounded-2xl bg-gradient-to-l from-red-500/10 to-red-500/5 border border-red-500/20">
+              <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-l from-red-500/10 to-red-500/5 border border-red-500/20">
                 <div className="p-2.5 rounded-xl bg-red-500/15 shrink-0">
                   <TrendingDown className="w-5 h-5 text-red-500" />
                 </div>
@@ -487,7 +488,7 @@ export default function WalletPage() {
                   <p className="text-[11px] text-muted-foreground">إجمالي المصروفات</p>
                 </div>
               </div>
-              <div className="flex flex-row-reverse items-center gap-4 p-4 rounded-2xl bg-gradient-to-l from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20">
+              <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-l from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20">
                 <div className="p-2.5 rounded-xl bg-emerald-500/15 shrink-0">
                   <TrendingUp className="w-5 h-5 text-emerald-500" />
                 </div>
@@ -504,12 +505,12 @@ export default function WalletPage() {
 
           {/* ملخص الأرصدة */}
           <div>
-            <div className="flex flex-row-reverse items-center gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-4">
               <BarChart3 className="w-4 h-4 text-primary" />
               <h3 className="text-sm font-bold text-foreground">ملخص الأرصدة</h3>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="flex flex-row-reverse items-center gap-3 p-4 rounded-xl bg-gradient-to-bl from-primary/10 to-accent/10 border border-primary/20">
+              <div className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-bl from-primary/10 to-accent/10 border border-primary/20">
                 <div className="p-2.5 rounded-lg bg-primary shrink-0">
                   <Wallet className="w-5 h-5 text-white" />
                 </div>
@@ -525,8 +526,7 @@ export default function WalletPage() {
           </div>
         </div>
 
-        {/* Global Filters */}
-        <DateFilter />
+        {/* Filters moved above financial summary */}
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
@@ -565,8 +565,8 @@ export default function WalletPage() {
                   onClick={() => setSelectedInvoice(inv)}
                   className="bg-card rounded-2xl border border-border p-4 hover:shadow-md hover:border-primary/20 transition-all cursor-pointer group"
                 >
-                  <div className="flex flex-row-reverse items-center justify-between">
-                    <div className="flex flex-row-reverse items-center gap-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
                       <div className="p-2.5 rounded-xl bg-primary/10 group-hover:bg-primary/15 transition-colors">
                         <Receipt className="w-5 h-5 text-primary" />
                       </div>
@@ -769,7 +769,7 @@ export default function WalletPage() {
             </div>
 
             {/* Filter Buttons */}
-            <div className="flex flex-row-reverse flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2">
               {transactionTypes.map(t => (
                 <Button
                   key={t.value}
@@ -795,7 +795,7 @@ export default function WalletPage() {
                     const status = statusConfig[tx.status];
                     const Icon = config.icon;
                     return (
-                      <div key={tx.id} className="flex flex-row-reverse items-center gap-3 px-5 py-4 hover:bg-muted/30 transition-colors">
+                      <div key={tx.id} className="flex items-center gap-3 px-5 py-4 hover:bg-muted/30 transition-colors">
                         <div className={`w-10 h-10 rounded-xl ${config.bg} flex items-center justify-center shrink-0`}>
                           <Icon className={`w-5 h-5 ${config.color}`} />
                         </div>
@@ -837,8 +837,8 @@ export default function WalletPage() {
 
                     <div className="space-y-2 mb-4">
                       {svc.items.map((item, i) => (
-                        <div key={i} className="flex flex-row-reverse items-center justify-between bg-card rounded-xl border border-border p-3.5">
-                          <div className="flex flex-row-reverse items-center gap-3 text-right">
+                        <div key={i} className="flex items-center justify-between bg-card rounded-xl border border-border p-3.5">
+                          <div className="flex items-center gap-3 text-right">
                             <div className={`p-2 rounded-lg ${svc.bgColor}`}>
                               <Icon className={`w-4 h-4 ${svc.color}`} />
                             </div>
@@ -857,7 +857,7 @@ export default function WalletPage() {
                       ))}
                     </div>
 
-                    <div className="flex flex-row-reverse items-center justify-between pt-3 border-t border-border">
+                    <div className="flex items-center justify-between pt-3 border-t border-border">
                       <span className="text-sm font-bold text-foreground">إجمالي {svc.name}</span>
                       <span className={`text-lg font-bold ${svc.color}`}>{svcTotal.toLocaleString()} ر.س</span>
                     </div>
@@ -873,8 +873,8 @@ export default function WalletPage() {
                 <SectionHeader title="بضاعة هلا شري" icon={ShoppingCart} accentColor="bg-primary" badge={`${reportData.halaGoods.length} منتجات`} />
                 <div className="space-y-2 mb-4">
                   {reportData.halaGoods.map((item, i) => (
-                    <div key={i} className="flex flex-row-reverse items-center justify-between bg-card rounded-xl border border-border p-3.5">
-                      <div className="flex flex-row-reverse items-center gap-3 text-right">
+                    <div key={i} className="flex items-center justify-between bg-card rounded-xl border border-border p-3.5">
+                      <div className="flex items-center gap-3 text-right">
                         <div className="p-2 rounded-lg bg-primary/10">
                           <ShoppingCart className="w-4 h-4 text-primary" />
                         </div>
@@ -887,7 +887,7 @@ export default function WalletPage() {
                     </div>
                   ))}
                 </div>
-                <div className="flex flex-row-reverse items-center justify-between pt-3 border-t border-primary/10">
+                <div className="flex items-center justify-between pt-3 border-t border-primary/10">
                   <span className="text-sm font-bold text-foreground">إجمالي بضاعة هلا</span>
                   <span className="text-lg font-bold text-primary">{reportData.halaGoods.reduce((s, i) => s + i.total, 0).toLocaleString()} ر.س</span>
                 </div>
@@ -898,8 +898,8 @@ export default function WalletPage() {
                 <SectionHeader title="استيراد بضاعة للمسوق" icon={Package} accentColor="bg-violet-500" badge={`${reportData.marketerGoods.length} شحنات`} />
                 <div className="space-y-2 mb-4">
                   {reportData.marketerGoods.map((item, i) => (
-                    <div key={i} className="flex flex-row-reverse items-center justify-between bg-card rounded-xl border border-border p-3.5">
-                      <div className="flex flex-row-reverse items-center gap-3 text-right">
+                    <div key={i} className="flex items-center justify-between bg-card rounded-xl border border-border p-3.5">
+                      <div className="flex items-center gap-3 text-right">
                         <div className="p-2 rounded-lg bg-violet-500/10">
                           <Package className="w-4 h-4 text-violet-500" />
                         </div>
@@ -912,7 +912,7 @@ export default function WalletPage() {
                     </div>
                   ))}
                 </div>
-                <div className="flex flex-row-reverse items-center justify-between pt-3 border-t border-violet-500/10">
+                <div className="flex items-center justify-between pt-3 border-t border-violet-500/10">
                   <span className="text-sm font-bold text-foreground">إجمالي استيراد البضاعة</span>
                   <span className="text-lg font-bold text-violet-500">{reportData.marketerGoods.reduce((s, i) => s + i.total, 0).toLocaleString()} ر.س</span>
                 </div>
@@ -927,7 +927,7 @@ export default function WalletPage() {
                 <div className="grid grid-cols-1 gap-3">
                   <StatCard item={{ label: "إعلانات تيك توك", value: reportData.adBalance.tiktok.toLocaleString(), suffix: "ر.س", icon: Megaphone, color: "text-pink-500", bgColor: "bg-pink-500/10" }} />
                   <StatCard item={{ label: "إعلانات سناب شات", value: reportData.adBalance.snapchat.toLocaleString(), suffix: "ر.س", icon: Camera, color: "text-yellow-500", bgColor: "bg-yellow-500/10" }} />
-                  <div className="flex flex-row-reverse items-center justify-between pt-3 border-t border-orange-500/10">
+                  <div className="flex items-center justify-between pt-3 border-t border-orange-500/10">
                     <span className="text-sm font-bold text-foreground">إجمالي السحب الإعلاني</span>
                     <span className="text-lg font-bold text-orange-500">{reportData.adBalance.total.toLocaleString()} ر.س</span>
                   </div>
@@ -940,7 +940,7 @@ export default function WalletPage() {
                 <div className="grid grid-cols-1 gap-3">
                   <StatCard item={{ label: "تكاليف بضاعة هلا", value: Math.abs(reportData.goodsBalance.halaBalance).toLocaleString(), suffix: "ر.س", icon: ShoppingCart, color: "text-primary", bgColor: "bg-primary/10" }} />
                   <StatCard item={{ label: "فاند استيراد بضاعة", value: Math.abs(reportData.goodsBalance.importBalance).toLocaleString(), suffix: "ر.س", icon: Package, color: "text-violet-500", bgColor: "bg-violet-500/10" }} />
-                  <div className="flex flex-row-reverse items-center justify-between pt-3 border-t border-violet-500/10">
+                  <div className="flex items-center justify-between pt-3 border-t border-violet-500/10">
                     <span className="text-sm font-bold text-foreground">إجمالي تكاليف البضاعة</span>
                     <span className="text-lg font-bold text-violet-500">{Math.abs(reportData.goodsBalance.total).toLocaleString()} ر.س</span>
                   </div>
@@ -954,7 +954,7 @@ export default function WalletPage() {
         <Dialog open={showDeposit} onOpenChange={setShowDeposit}>
           <DialogContent className="max-w-md" dir="rtl">
             <DialogHeader>
-              <DialogTitle className="flex flex-row-reverse items-center gap-2 text-right">
+              <DialogTitle className="flex items-center gap-2 text-right">
                 <div className="p-2 rounded-xl bg-emerald-500/10">
                   <Plus className="w-5 h-5 text-emerald-500" />
                 </div>
@@ -987,7 +987,7 @@ export default function WalletPage() {
                 </Select>
               </div>
               <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3 text-right">
-                <div className="flex flex-row-reverse items-center gap-2 mb-1">
+                <div className="flex items-center gap-2 mb-1">
                   <AlertCircle className="w-4 h-4 text-amber-500" />
                   <span className="text-xs font-bold text-amber-600">ملاحظة</span>
                 </div>
@@ -1005,7 +1005,7 @@ export default function WalletPage() {
         <Dialog open={showWithdraw} onOpenChange={setShowWithdraw}>
           <DialogContent className="max-w-md" dir="rtl">
             <DialogHeader>
-              <DialogTitle className="flex flex-row-reverse items-center gap-2 text-right">
+              <DialogTitle className="flex items-center gap-2 text-right">
                 <div className="p-2 rounded-xl bg-orange-500/10">
                   <Upload className="w-5 h-5 text-orange-500" />
                 </div>
@@ -1087,7 +1087,7 @@ export default function WalletPage() {
 
               {/* Deposit Instructions */}
               <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-2xl p-5">
-                <div className="flex flex-row-reverse items-center gap-2 mb-4">
+                <div className="flex items-center gap-2 mb-4">
                   <Info className="w-5 h-5 text-destructive" />
                   <h4 className="text-sm font-bold text-destructive">تعليمات مهمة للإيداع</h4>
                 </div>
