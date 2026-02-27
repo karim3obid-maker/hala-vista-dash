@@ -94,8 +94,8 @@ export default function WalletPage() {
       <main className="container max-w-[1280px] mx-auto px-6 py-8" dir="rtl">
         {/* Header */}
         <div className="mb-6">
-          <div className="flex items-center justify-between flex-wrap gap-4 flex-row-reverse">
-            <div className="flex items-center gap-3 flex-row-reverse">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-3">
               <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20">
                 <Wallet className="w-5 h-5 text-primary-foreground" />
               </div>
@@ -104,7 +104,7 @@ export default function WalletPage() {
                 <p className="text-sm text-muted-foreground">إدارة الفواتير والمعاملات والتقارير المالية</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 flex-wrap flex-row-reverse">
+            <div className="flex items-center gap-3 flex-wrap">
               <Button onClick={() => setShowDeposit(true)} variant="outline" className="rounded-xl h-10 gap-2 border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/10 w-full sm:w-auto">
                 <Plus className="w-4 h-4" /> إيداع رصيد
               </Button>
