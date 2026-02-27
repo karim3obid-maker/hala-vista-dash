@@ -24,11 +24,11 @@ export function StatCard({ item }: { item: { label: string; value: string | numb
 
 export function SectionHeader({ title, icon: Icon, accentColor, badge }: { title: string; icon: any; accentColor: string; badge?: string }) {
   return (
-    <div className="flex items-center gap-2 mb-4">
+    <div className="flex items-center gap-2 mb-4 flex-row-reverse justify-end">
+      <h3 className="text-sm font-bold text-foreground">{title}</h3>
       <div className={`p-1.5 rounded-lg ${accentColor}`}>
         <Icon className="w-4 h-4 text-white" />
       </div>
-      <h3 className="text-sm font-bold text-foreground">{title}</h3>
       {badge && (
         <span className="text-[10px] font-medium bg-muted text-muted-foreground px-2 py-0.5 rounded-full">{badge}</span>
       )}

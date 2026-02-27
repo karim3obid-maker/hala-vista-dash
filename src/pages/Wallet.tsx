@@ -370,16 +370,16 @@ export default function WalletPage() {
                     const status = statusConfig[tx.status];
                     const Icon = config.icon;
                     return (
-                      <div key={tx.id} className="flex items-center gap-3 px-5 py-4 hover:bg-muted/30 transition-colors">
+                      <div key={tx.id} className="flex items-center gap-3 px-5 py-4 hover:bg-muted/30 transition-colors flex-row-reverse">
                         <div className={`w-10 h-10 rounded-xl ${config.bg} flex items-center justify-center shrink-0`}><Icon className={`w-5 h-5 ${config.color}`} /></div>
-                        <div className="flex-1 min-w-0">
+                        <div className="flex-1 min-w-0 text-right">
                           <p className="text-sm font-medium text-foreground truncate">{tx.description}</p>
-                          <div className="flex items-center gap-2 mt-0.5">
+                          <div className="flex items-center gap-2 mt-0.5 justify-end">
                             <span className="text-xs text-muted-foreground">{tx.date} • {tx.time}</span>
                             {tx.reference && <span className="text-[10px] text-muted-foreground/60 bg-muted px-1.5 py-0.5 rounded">{tx.reference}</span>}
                           </div>
                         </div>
-                        <div className="flex flex-col items-start gap-1 shrink-0">
+                        <div className="flex flex-col items-end gap-1 shrink-0">
                           <span className={`text-sm font-bold ${tx.amount > 0 ? 'text-emerald-500' : 'text-foreground'}`}>
                             {tx.amount > 0 ? '+' : ''}{tx.amount.toLocaleString()} ر.س
                           </span>
@@ -407,25 +407,29 @@ export default function WalletPage() {
               {reportData.services.map((svc, idx) => {
                 const Icon = svc.icon;
                 const svcTotal = svc.items.reduce((s, i) => s + i.total, 0);
+                const svcOrderCount = svc.items.reduce((s, i) => s + (i.count ?? 0), 0);
                 return (
                   <div key={idx} className={`rounded-2xl p-5 border ${idx === 0 ? 'bg-emerald-500/[0.02] border-emerald-500/10' : 'bg-blue-500/[0.02] border-blue-500/10'}`}>
                     <SectionHeader title={svc.name} icon={Icon} accentColor={svc.accentBg} badge={`${svc.items.length} عناصر`} />
                     <div className="space-y-2 mb-4">
                       {svc.items.map((item, i) => (
-                        <div key={i} className="flex items-center justify-between bg-card rounded-xl border border-border p-3.5">
-                          <div className="flex items-center gap-3">
+                        <div key={i} className="flex items-center justify-between bg-card rounded-xl border border-border p-3.5 flex-row-reverse">
+                          <div className="flex items-center gap-3 flex-row-reverse">
                             <div className={`p-2 rounded-lg ${svc.bgColor}`}><Icon className={`w-4 h-4 ${svc.color}`} /></div>
-                            <div>
+                            <div className="text-right">
                               <p className="text-sm font-medium text-foreground">{item.label}</p>
                               <p className="text-[11px] text-muted-foreground">{item.count !== null && item.unitCost !== null ? `${item.count.toLocaleString()} طلب × ${item.unitCost} ر.س` : 'رسوم نسبية'}</p>
                             </div>
                           </div>
-                          <div className="text-left"><span className="text-base font-bold text-foreground">{item.total.toLocaleString()}</span><span className="text-xs text-muted-foreground mr-1">ر.س</span></div>
+                          <div className="text-right"><span className="text-base font-bold text-foreground">{item.total.toLocaleString()}</span><span className="text-xs text-muted-foreground mr-1">ر.س</span></div>
                         </div>
                       ))}
                     </div>
-                    <div className="flex items-center justify-between pt-3 border-t border-border">
-                      <span className="text-sm font-bold text-foreground">إجمالي {svc.name}</span>
+                    <div className="flex items-center justify-between pt-3 border-t border-border flex-row-reverse">
+                      <div className="text-right">
+                        <span className="text-sm font-bold text-foreground">إجمالي {svc.name}</span>
+                        <p className="text-[11px] text-muted-foreground">{svcOrderCount.toLocaleString()} طلب</p>
+                      </div>
                       <span className={`text-lg font-bold ${svc.color}`}>{svcTotal.toLocaleString()} ر.س</span>
                     </div>
                   </div>
@@ -439,8 +443,8 @@ export default function WalletPage() {
                 <SectionHeader title="بضاعة هلا شري" icon={ShoppingCart} accentColor="bg-primary" badge={`${reportData.halaGoods.length} منتجات`} />
                 <div className="space-y-2 mb-4">
                   {reportData.halaGoods.map((item, i) => (
-                    <div key={i} className="flex items-center justify-between bg-card rounded-xl border border-border p-3.5">
-                      <div className="flex items-center gap-3 text-right">
+                    <div key={i} className="flex items-center justify-between bg-card rounded-xl border border-border p-3.5 flex-row-reverse">
+                      <div className="flex items-center gap-3 text-right flex-row-reverse">
                         <div className="p-2 rounded-lg bg-primary/10"><ShoppingCart className="w-4 h-4 text-primary" /></div>
                         <div><p className="text-sm font-medium text-foreground">{item.label}</p><p className="text-[11px] text-muted-foreground">{item.count.toLocaleString()} قطعة × {item.unitCost} ر.س</p></div>
                       </div>
@@ -458,8 +462,8 @@ export default function WalletPage() {
                 <SectionHeader title="استيراد بضاعة للمسوق" icon={Package} accentColor="bg-violet-500" badge={`${reportData.marketerGoods.length} شحنات`} />
                 <div className="space-y-2 mb-4">
                   {reportData.marketerGoods.map((item, i) => (
-                    <div key={i} className="flex items-center justify-between bg-card rounded-xl border border-border p-3.5">
-                      <div className="flex items-center gap-3 text-right">
+                    <div key={i} className="flex items-center justify-between bg-card rounded-xl border border-border p-3.5 flex-row-reverse">
+                      <div className="flex items-center gap-3 text-right flex-row-reverse">
                         <div className="p-2 rounded-lg bg-violet-500/10"><Package className="w-4 h-4 text-violet-500" /></div>
                         <div><p className="text-sm font-medium text-foreground">{item.label}</p><p className="text-[11px] text-muted-foreground">{item.count.toLocaleString()} قطعة × {item.unitCost} ر.س</p></div>
                       </div>
