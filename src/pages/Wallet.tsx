@@ -31,14 +31,14 @@ import {
   ChevronLeft,
   Store,
   Box,
-  Building2,
   Plus,
   Landmark,
   Smartphone,
-  Bitcoin,
   AlertCircle,
   Info,
+  Copy,
 } from "lucide-react";
+import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -346,6 +346,38 @@ export default function WalletPage() {
     setSelectedStore("all");
   };
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast.success("تم النسخ بنجاح");
+    });
+  };
+
+  const handleDeposit = () => {
+    const amount = parseFloat(depositAmount);
+    if (!amount || amount <= 0) {
+      toast.error("يرجى إدخال مبلغ صحيح أكبر من صفر");
+      return;
+    }
+    toast.success("تم إرسال طلب الإيداع بنجاح");
+    setDepositAmount("");
+    setShowDeposit(false);
+  };
+
+  const handleWithdraw = () => {
+    const amount = parseFloat(withdrawAmount);
+    if (!amount || amount <= 0) {
+      toast.error("يرجى إدخال مبلغ صحيح أكبر من صفر");
+      return;
+    }
+    if (amount > balance) {
+      toast.error(`المبلغ يتجاوز الرصيد المتاح (${balance.toLocaleString()} ر.س)`);
+      return;
+    }
+    toast.success("تم إرسال طلب السحب بنجاح");
+    setWithdrawAmount("");
+    setShowWithdraw(false);
+  };
+
   const DateFilter = () => (
     <div className="flex items-center gap-3 flex-wrap bg-card rounded-2xl border border-border p-4 mb-6">
       <div className="flex items-center gap-2">
@@ -421,11 +453,11 @@ export default function WalletPage() {
               </div>
             </div>
             {/* Action Buttons */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               <Button
                 onClick={() => setShowDeposit(true)}
                 variant="outline"
-                className="rounded-xl h-10 gap-2 border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/10"
+                className="rounded-xl h-10 gap-2 border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/10 w-full sm:w-auto"
               >
                 <Plus className="w-4 h-4" />
                 إيداع رصيد
@@ -433,7 +465,7 @@ export default function WalletPage() {
               <Button
                 onClick={() => setShowWithdraw(true)}
                 variant="outline"
-                className="rounded-xl h-10 gap-2 border-orange-500/30 text-orange-600 hover:bg-orange-500/10"
+                className="rounded-xl h-10 gap-2 border-orange-500/30 text-orange-600 hover:bg-orange-500/10 w-full sm:w-auto"
               >
                 <Upload className="w-4 h-4" />
                 طلب سحب
@@ -441,7 +473,7 @@ export default function WalletPage() {
               <Button
                 onClick={() => setShowBankAccounts(true)}
                 variant="outline"
-                className="rounded-xl h-10 gap-2 border-primary/30 text-primary hover:bg-primary/10"
+                className="rounded-xl h-10 gap-2 border-primary/30 text-primary hover:bg-primary/10 w-full sm:w-auto"
               >
                 <Landmark className="w-4 h-4" />
                 الحسابات البنكية
@@ -970,6 +1002,7 @@ export default function WalletPage() {
                 <label className="text-sm font-medium text-foreground">المبلغ (ر.س)</label>
                 <Input
                   type="number"
+                  min="0"
                   placeholder="أدخل المبلغ"
                   value={depositAmount}
                   onChange={(e) => setDepositAmount(e.target.value)}
@@ -997,7 +1030,7 @@ export default function WalletPage() {
                 </div>
                 <p className="text-xs text-muted-foreground">سيتم تفعيل الرصيد خلال 24 ساعة بعد مراجعة البيانات</p>
               </div>
-              <Button className="w-full rounded-xl h-12 bg-emerald-500 hover:bg-emerald-600 text-white">
+              <Button onClick={handleDeposit} className="w-full rounded-xl h-12 bg-emerald-500 hover:bg-emerald-600 text-white">
                 <Plus className="w-4 h-4 ml-2" />
                 إرسال طلب الإيداع
               </Button>
@@ -1021,6 +1054,7 @@ export default function WalletPage() {
                 <label className="text-sm font-medium text-foreground">المبلغ (ر.س)</label>
                 <Input
                   type="number"
+                  min="0"
                   placeholder="أدخل المبلغ"
                   value={withdrawAmount}
                   onChange={(e) => setWithdrawAmount(e.target.value)}
@@ -1043,7 +1077,7 @@ export default function WalletPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <Button className="w-full rounded-xl h-12 bg-orange-500 hover:bg-orange-600 text-white">
+              <Button onClick={handleWithdraw} className="w-full rounded-xl h-12 bg-orange-500 hover:bg-orange-600 text-white">
                 <Upload className="w-4 h-4 ml-2" />
                 إرسال طلب السحب
               </Button>
@@ -1073,8 +1107,18 @@ export default function WalletPage() {
                       <span className="text-sm font-bold text-foreground">{acc.name}</span>
                       <acc.icon className={`w-7 h-7 ${acc.iconColor}`} />
                     </div>
-                    <p className="text-[11px] text-muted-foreground break-all">{acc.sub1}</p>
-                    <p className="text-[11px] text-muted-foreground break-all font-mono">{acc.sub2}</p>
+                    <div className="flex items-center gap-1 justify-end">
+                      <button onClick={() => copyToClipboard(acc.sub1)} className="p-1 rounded-md hover:bg-muted/50 transition-colors shrink-0">
+                        <Copy className="w-3 h-3 text-muted-foreground" />
+                      </button>
+                      <p className="text-[11px] text-muted-foreground break-all">{acc.sub1}</p>
+                    </div>
+                    <div className="flex items-center gap-1 justify-end">
+                      <button onClick={() => copyToClipboard(acc.sub2)} className="p-1 rounded-md hover:bg-muted/50 transition-colors shrink-0">
+                        <Copy className="w-3 h-3 text-muted-foreground" />
+                      </button>
+                      <p className="text-[11px] text-muted-foreground break-all font-mono">{acc.sub2}</p>
+                    </div>
                   </div>
                 ))}
               </div>
