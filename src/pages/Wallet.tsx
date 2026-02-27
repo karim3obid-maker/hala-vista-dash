@@ -411,31 +411,6 @@ export default function WalletPage() {
 
         {/* Balance & Financial Summary Banner */}
         <div className="bg-card rounded-2xl border border-border p-5 mb-6 space-y-5">
-          {/* ملخص الأرصدة */}
-          <div>
-            <div className="flex flex-row-reverse items-center gap-2 mb-4">
-              <BarChart3 className="w-4 h-4 text-primary" />
-              <h3 className="text-sm font-bold text-foreground">ملخص الأرصدة</h3>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="flex flex-row-reverse items-center gap-3 p-4 rounded-xl bg-gradient-to-bl from-primary/10 to-accent/10 border border-primary/20">
-                <div className="p-2.5 rounded-lg bg-primary shrink-0">
-                  <Wallet className="w-5 h-5 text-white" />
-                </div>
-                <div className="text-right">
-                  <p className="text-2xl font-bold text-foreground">{balance.toLocaleString()}</p>
-                  <p className="text-[11px] text-muted-foreground">الرصيد الحالي (ر.س)</p>
-                </div>
-              </div>
-              <StatCard item={{ label: "إجمالي الإيداعات", value: totalDeposits.toLocaleString(), suffix: "ر.س", icon: Download, color: "text-emerald-500", bgColor: "bg-emerald-500/10" }} />
-              <StatCard item={{ label: "إجمالي المسحوبات", value: totalWithdrawals.toLocaleString(), suffix: "ر.س", icon: Upload, color: "text-orange-500", bgColor: "bg-orange-500/10" }} />
-              <StatCard item={{ label: "إجمالي المعاملات", value: transactions.length.toString(), icon: ArrowLeftRight, color: "text-blue-500", bgColor: "bg-blue-500/10" }} />
-            </div>
-          </div>
-
-          {/* الفاصل */}
-          <div className="h-px bg-gradient-to-l from-transparent via-border to-transparent" />
-
           {/* الملخص المالي */}
           <div>
             <div className="flex flex-row-reverse items-center gap-2 mb-4">
@@ -479,6 +454,31 @@ export default function WalletPage() {
                   <p className="text-[11px] text-muted-foreground">صافي الربح</p>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* الفاصل */}
+          <div className="h-px bg-gradient-to-l from-transparent via-border to-transparent" />
+
+          {/* ملخص الأرصدة */}
+          <div>
+            <div className="flex flex-row-reverse items-center gap-2 mb-4">
+              <BarChart3 className="w-4 h-4 text-primary" />
+              <h3 className="text-sm font-bold text-foreground">ملخص الأرصدة</h3>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="flex flex-row-reverse items-center gap-3 p-4 rounded-xl bg-gradient-to-bl from-primary/10 to-accent/10 border border-primary/20">
+                <div className="p-2.5 rounded-lg bg-primary shrink-0">
+                  <Wallet className="w-5 h-5 text-white" />
+                </div>
+                <div className="text-right">
+                  <p className="text-2xl font-bold text-foreground">{balance.toLocaleString()}</p>
+                  <p className="text-[11px] text-muted-foreground">الرصيد الحالي (ر.س)</p>
+                </div>
+              </div>
+              <StatCard item={{ label: "إجمالي الإيداعات", value: totalDeposits.toLocaleString(), suffix: "ر.س", icon: Download, color: "text-emerald-500", bgColor: "bg-emerald-500/10" }} />
+              <StatCard item={{ label: "إجمالي المسحوبات", value: totalWithdrawals.toLocaleString(), suffix: "ر.س", icon: Upload, color: "text-orange-500", bgColor: "bg-orange-500/10" }} />
+              <StatCard item={{ label: "إجمالي المعاملات", value: transactions.length.toString(), icon: ArrowLeftRight, color: "text-blue-500", bgColor: "bg-blue-500/10" }} />
             </div>
           </div>
         </div>
