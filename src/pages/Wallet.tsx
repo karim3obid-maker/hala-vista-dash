@@ -387,12 +387,6 @@ export default function WalletPage() {
 
           {/* ════════ REPORTS TAB ════════ */}
           <TabsContent value="reports" className="animate-fade-in space-y-6">
-            {/* Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <FinancialTrendChart />
-              <ExpenseBreakdownChart />
-            </div>
-            <MonthlyProfitChart />
 
             {/* Services Cost Breakdown */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -459,6 +453,13 @@ export default function WalletPage() {
                 </div>
               </div>
             </div>
+
+            {/* Charts Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <FinancialTrendChart />
+              <ExpenseBreakdownChart />
+            </div>
+            <MonthlyProfitChart />
           </TabsContent>
         </Tabs>
 
