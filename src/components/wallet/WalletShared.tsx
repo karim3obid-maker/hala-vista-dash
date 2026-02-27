@@ -3,7 +3,7 @@
 export function StatCard({ item }: { item: { label: string; value: string | number; icon: any; color: string; bgColor: string; suffix?: string; highlight?: boolean } }) {
   const Icon = item.icon;
   return (
-    <div className={`flex items-center gap-3 p-3.5 rounded-xl border transition-all hover:shadow-sm ${
+    <div className={`flex items-center gap-3 p-3.5 rounded-xl border transition-all hover:shadow-sm flex-row-reverse ${
       item.highlight
         ? "bg-primary/5 border-primary/20 hover:border-primary/40"
         : "bg-card border-border hover:border-primary/20"
