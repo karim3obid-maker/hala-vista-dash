@@ -141,12 +141,16 @@ export const transactionTypes = [
   { value: 'all', label: 'الكل' },
   { value: 'deposit', label: 'إيداع' },
   { value: 'withdrawal', label: 'سحب' },
-  { value: 'purchase', label: 'شراء بضاعة' },
+  { value: 'products', label: 'رصيد منتجات' },
   { value: 'transfer', label: 'تحويل' },
-  { value: 'ads_tiktok', label: 'تيك توك' },
-  { value: 'ads_snapchat', label: 'سناب شات' },
-  { value: 'import_goods', label: 'استيراد' },
+  { value: 'ads', label: 'إعلانات' },
 ];
+
+// Grouped filter mapping
+export const filterGroups: Record<string, string[]> = {
+  ads: ['ads_tiktok', 'ads_snapchat'],
+  products: ['purchase', 'import_goods'],
+};
 
 export const products = [
   { value: 'all', label: 'كل المنتجات' },
