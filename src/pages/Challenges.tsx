@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Trophy, Package, DollarSign, Clock, Target, Star, Flame, Shield, Award, Download, Medal } from "lucide-react";
+import { Trophy, Package, DollarSign, Clock, Target, Star, Flame, Shield, Award, Download } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -38,13 +38,6 @@ const bonusLog = [
   { id: 4, date: "2026-01-15", type: "تحدي الاستمرارية", amount: 30, status: "مكتمل" },
 ];
 
-const leaderboard = [
-  { rank: 1, name: "أحمد محمد", delivered: 890, bonus: 210 },
-  { rank: 2, name: "سارة علي", delivered: 720, bonus: 155 },
-  { rank: 3, name: "محمد خالد", delivered: 650, bonus: 140 },
-  { rank: 4, name: "أنت", delivered: 320, bonus: 55, isYou: true },
-  { rank: 5, name: "فاطمة أحمد", delivered: 280, bonus: 40 },
-];
 
 const statusConfig = {
   achieved: { label: "تم تحقيقه ✅", cls: "bg-primary/10 text-primary border-primary/20" },
@@ -238,55 +231,6 @@ const Challenges = () => {
             </Card>
           </div>
         </div>
-
-        {/* Leaderboard */}
-        <Card className="rounded-2xl mb-6">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Medal className="w-5 h-5 text-accent" />
-                لوحة المتصدرين
-              </CardTitle>
-              <Select defaultValue="this_month">
-                <SelectTrigger className="w-[140px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="this_month">هذا الشهر</SelectItem>
-                  <SelectItem value="last_month">الشهر الماضي</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-right">الترتيب</TableHead>
-                  <TableHead className="text-right">الاسم</TableHead>
-                  <TableHead className="text-right">المُسلَّم</TableHead>
-                  <TableHead className="text-right">البونص</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {leaderboard.map((entry) => (
-                  <TableRow key={entry.rank} className={entry.isYou ? "bg-primary/5 font-bold" : ""}>
-                    <TableCell>
-                      <span className={`inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold ${
-                        entry.rank <= 3 ? "bg-accent/10 text-accent" : "bg-muted text-muted-foreground"
-                      }`}>
-                        {entry.rank}
-                      </span>
-                    </TableCell>
-                    <TableCell>{entry.name} {entry.isYou && <Badge variant="secondary" className="text-[10px] mr-2">أنت</Badge>}</TableCell>
-                    <TableCell>{entry.delivered}</TableCell>
-                    <TableCell className="text-primary font-bold">${entry.bonus}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
 
         {/* Bonus Log */}
         <Card className="rounded-2xl mb-8">
