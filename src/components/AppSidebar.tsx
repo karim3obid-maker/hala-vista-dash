@@ -12,8 +12,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const menuItems = [
-  { title: "الصفحة الرئيسية", url: "/", icon: ShoppingBag },
-  { title: "التحليلات", url: "/analytics", icon: BarChart3 },
+  { title: "التحليلات", url: "/", icon: BarChart3 },
   { title: "حاسبة الأسعار", url: "/calculator", icon: Calculator },
   { title: "هلا جملة", url: "/wholesale", icon: ShoppingBag },
   { title: "الأسعار", url: "/pricing", icon: Tag },
