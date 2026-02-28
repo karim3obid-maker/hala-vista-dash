@@ -1,25 +1,32 @@
 
 
-## Plan: Create Affiliate Page (الأفلييت)
+## Plan: Create "تحديات هلا" (Hala Challenges) Page
 
-### Files to create
-1. **`src/pages/Affiliate.tsx`** — New page with:
-   - Header with title and icon
-   - Affiliate link section with copy button
-   - Summary cards: withdrawable balance, total registered accounts, total commission earned
-   - Table of registered accounts showing: account name, registration date, total orders delivered, balance/commission earned
+Based on the screenshot reference, this is a bonus & delivery challenges system with milestones, active challenges, progress tracking, and a leaderboard.
+
+### New file: `src/pages/Challenges.tsx`
+
+Full-featured page with these sections:
+
+1. **Header**: Title "تحديات هلا — البونص & التسليم" with filter controls (period selector, account info) and "طلب سحب البونص" button
+2. **Summary Cards Row** (4 cards):
+   - Delivered هذا الشهر (e.g. 320 delivered)
+   - البونص المكتسب (e.g. USD 55 earned)
+   - قيد المعالجة (e.g. USD 20 pending)
+   - الهدف القادم (e.g. Milestone 500, remaining 180)
+3. **Progress Section**: "تقدمك نحو الهدف" with progress bar showing current/target, percentage, and note about Delivered-only counting
+4. **Two-column layout**:
+   - **Right: التحديات الحالية** — Active challenge cards (تحدي 500 مُسلَّم, تحدي الاستمرارية, تحدي التفعيل, تحدي الجودة) each with bonus amount, progress bar, and details button
+   - **Left: سُلَّم المكافآت (Milestones)** — Tiered milestone list (100/250/500/1000 delivered) with bonus amounts and status badges (achieved/close/target/elite)
+5. **Bottom Section**: Leaderboard header with period filter + bonus log section with PDF/CSV export buttons
 
 ### Files to modify
-2. **`src/components/AppSidebar.tsx`** — Add "الأفلييت" menu item with `Users` icon and `/affiliate` route
-3. **`src/App.tsx`** — Add `/affiliate` route
+- **`src/components/AppSidebar.tsx`** — Add "تحديات هلا" menu item with `Trophy` icon at `/challenges`
+- **`src/App.tsx`** — Add `/challenges` route
 
-### Page structure (Affiliate.tsx)
-- **Top section**: Affiliate link display with copy-to-clipboard button
-- **Stats cards row** (3 cards):
-  - الرصيد القابل للسحب (Withdrawable balance)
-  - عدد الحسابات المسجلة (Registered accounts count)
-  - إجمالي العمولات (Total commissions)
-- **Registered accounts table**: columns for account name, registration date, orders delivered, commission earned per account
-- Sample mock data for 4-5 affiliate accounts
-- RTL design matching existing wallet page style
+### Design approach
+- RTL layout matching existing pages
+- Mock data for all stats, challenges, milestones
+- Purple accent for progress bars (matching screenshot)
+- Consistent card/border styling with rest of app
 
