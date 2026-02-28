@@ -95,6 +95,9 @@ export default function Affiliate() {
               {copied ? "تم النسخ" : "نسخ الرابط"}
             </Button>
           </div>
+          <div className="mt-4 rounded-xl border-2 border-primary/30 bg-primary/5 p-4 text-center">
+            <p className="text-lg font-bold text-primary">💰 مع كل طلب مُسلَّم هتاخد <span className="text-2xl font-extrabold">0.25$</span> عمولة!</p>
+          </div>
         </div>
 
         {/* Balance Card */}
