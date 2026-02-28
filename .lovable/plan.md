@@ -1,30 +1,25 @@
 
 
-## Plan: Add Goods Account Section to Wallet
+## Plan: Create Affiliate Page (الأفلييت)
 
-### What will change
-
-1. **Remove "شراء بضاعة" from transaction filters** (`walletData.ts`) — remove the `purchase` option from `transactionTypes`
-
-2. **Add new "كشف حساب البضاعة" (Goods Account Statement) section** above the tabs in `Wallet.tsx`:
-   - **4 summary cards** at the top:
-     - رصيد مدين (Debit balance)
-     - تكاليف بضاعة هلا شير (Hala Share costs)
-     - تكاليف استيراد من الصين (China import costs)
-     - تكاليف استيراد من مصر (Egypt import costs)
-   - **Goods transactions table** below the cards with columns: التاريخ، النوع، المصدر، المبلغ، المرجع (matching the reference screenshot)
-   - Each entry shows: amount paid, percentage deducted, source (Hala Inventory / China Fund / Egypt Fund)
-
-3. **Add goods account data** (`walletData.ts`):
-   - `goodsAccountSummary` — balances for debit, Hala, China, Egypt
-   - `goodsTransactions` — sample entries for خصم بضاعة هلا, فاند استيراد الصين, فاند استيراد مصر
-   - Each transaction includes quantity withdrawn and per-unit cost breakdown
-
-4. **Add Hala product withdrawal report** within the goods section:
-   - Shows product name, quantity withdrawn, unit cost, total deducted
-   - Example: سحب 100 قطعة × 15 ر.س = 1,500 ر.س
+### Files to create
+1. **`src/pages/Affiliate.tsx`** — New page with:
+   - Header with title and icon
+   - Affiliate link section with copy button
+   - Summary cards: withdrawable balance, total registered accounts, total commission earned
+   - Table of registered accounts showing: account name, registration date, total orders delivered, balance/commission earned
 
 ### Files to modify
-- `src/components/wallet/walletData.ts` — add goods account data, remove purchase from transaction types
-- `src/pages/Wallet.tsx` — add goods account section with cards + table above tabs
+2. **`src/components/AppSidebar.tsx`** — Add "الأفلييت" menu item with `Users` icon and `/affiliate` route
+3. **`src/App.tsx`** — Add `/affiliate` route
+
+### Page structure (Affiliate.tsx)
+- **Top section**: Affiliate link display with copy-to-clipboard button
+- **Stats cards row** (3 cards):
+  - الرصيد القابل للسحب (Withdrawable balance)
+  - عدد الحسابات المسجلة (Registered accounts count)
+  - إجمالي العمولات (Total commissions)
+- **Registered accounts table**: columns for account name, registration date, orders delivered, commission earned per account
+- Sample mock data for 4-5 affiliate accounts
+- RTL design matching existing wallet page style
 
