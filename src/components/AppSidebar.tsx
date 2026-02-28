@@ -1,4 +1,4 @@
-import { BarChart3, Calculator, ShoppingBag, Tag, ClipboardList, Package, Wallet, Users } from "lucide-react";
+import { BarChart3, Calculator, ShoppingBag, Tag, ClipboardList, Package, Wallet, Users, Trophy } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
   Sidebar,
@@ -20,6 +20,7 @@ const menuItems = [
   { title: "المنتجات", url: "/products", icon: Package },
   { title: "المحفظة", url: "/wallet", icon: Wallet },
   { title: "الأفلييت", url: "/affiliate", icon: Users },
+  { title: "تحديات هلا", url: "/challenges", icon: Trophy },
 ];
 
 export function AppSidebar() {
