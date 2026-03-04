@@ -4,7 +4,6 @@ import { AddToMyProductsDialog } from "@/components/products/AddToMyProductsDial
 import { ProductPricingCalculator } from "@/components/products/ProductPricingCalculator";
 import {
   ArrowRight,
-
   Package,
   Ruler,
   Tag,
@@ -13,16 +12,14 @@ import {
   RefreshCw,
   Store,
   Plus,
-  Minus,
-  ChevronLeft,
-  ChevronRight,
-  Box,
   Copy,
-  CheckCircle2 } from
-"lucide-react";
+  CheckCircle2,
+  Weight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 
 interface ProductDetailProps {
@@ -32,14 +29,8 @@ interface ProductDetailProps {
 
 export function ProductDetail({ product, onBack }: ProductDetailProps) {
   const [selectedImage, setSelectedImage] = useState(0);
-  const [quantity, setQuantity] = useState(1);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [skuCopied, setSkuCopied] = useState(false);
-
-  const totalPrice = (product.costPrice * quantity).toFixed(2);
-
-  const nextImage = () => setSelectedImage((i) => (i + 1) % product.images.length);
-  const prevImage = () => setSelectedImage((i) => (i - 1 + product.images.length) % product.images.length);
 
   const copySku = () => {
     navigator.clipboard.writeText(product.sku);
@@ -49,217 +40,175 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-6 overflow-y-auto h-[calc(100vh-3.5rem)]">
-      {/* Breadcrumb & Back */}
-      <div className="flex items-center justify-end">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <button onClick={onBack} className="hover:text-primary transition-colors flex items-center gap-1">
-            <ArrowRight className="w-4 h-4" />
-            <span>العودة</span>
-          </button>
+    <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-8 overflow-y-auto h-[calc(100vh-3.5rem)]" dir="rtl">
+      {/* Breadcrumb */}
+      <nav className="flex items-center gap-2 text-sm text-muted-foreground">
+        <button onClick={onBack} className="hover:text-primary transition-colors flex items-center gap-1.5">
+          <span>العودة</span>
           <span>/</span>
-          <span>المنتجات</span>
-          <span>/</span>
-          <span className="text-foreground font-medium">{product.name}</span>
-        </div>
-      </div>
+        </button>
+        <span>المنتجات</span>
+        <span>/</span>
+        <span className="text-foreground font-medium">{product.name}</span>
+      </nav>
 
-      {/* Product Title */}
-      <h1 className="text-xl font-bold text-foreground text-right">{product.name}</h1>
+      {/* Product Title - Mobile */}
+      <h1 className="text-2xl font-bold text-foreground lg:hidden">{product.name}</h1>
 
-      {/* Main Content - Two Columns */}
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Right Side - Product Info (appears first in RTL) */}
-        <div className="lg:w-[380px] shrink-0 space-y-5 order-1 lg:order-2">
-          {/* Name & Rating */}
-          <div className="space-y-2 text-right">
-            <p className="text-sm text-muted-foreground">{product.nameEn}</p>
-            <div className="flex items-center gap-3 justify-end">
-              <Badge className={`text-xs border-0 ${product.status === "متاح" ? "bg-success/15 text-success" : "bg-destructive/15 text-destructive"}`}>
-                {product.status}
-              </Badge>
-              <div className="flex items-center gap-1">
-                <span className="text-xs text-muted-foreground">({product.stock} قطعة)</span>
-                
-                <span className="text-sm font-semibold">4.8</span>
-              </div>
-            </div>
+      {/* Main Grid: Right = Info, Left = Image */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        {/* Right Column - Info */}
+        <div className="space-y-5 order-2 lg:order-1">
+          {/* Title - Desktop */}
+          <h1 className="text-2xl font-bold text-foreground hidden lg:block">{product.name}</h1>
+          <p className="text-sm text-muted-foreground">{product.nameEn}</p>
+
+          {/* Status & Rating */}
+          <div className="flex items-center gap-3">
+            <Badge className={`text-xs border-0 rounded-md px-3 py-1 ${product.status === "متاح" ? "bg-success/15 text-success" : "bg-destructive/15 text-destructive"}`}>
+              {product.status}
+            </Badge>
+            <span className="text-sm text-muted-foreground">({product.stock} قطعة)</span>
+            <span className="text-sm font-semibold">4.8</span>
           </div>
 
-          {/* Prices - highlighted cost price */}
-          <div className="flex items-center gap-4 justify-end border-b border-border pb-4">
-            <div className="text-right">
-              <p className="text-xs text-muted-foreground mb-1">سعر البيع الموصى به</p>
+          {/* Price Block */}
+          <div className="flex items-end gap-6">
+            <div className="bg-primary/8 border border-primary/15 rounded-2xl px-6 py-4">
+              <p className="text-[11px] text-muted-foreground mb-1">سعر القطعة</p>
+              <p className="text-3xl font-extrabold text-primary">
+                <span className="text-base font-bold text-muted-foreground ml-1">{product.currency}</span>
+                {product.costPrice.toFixed(2)}
+              </p>
+            </div>
+            <div>
+              <p className="text-[11px] text-muted-foreground mb-1">سعر البيع الموصى به</p>
               <p className="text-lg font-bold text-foreground">
-                {product.recommendedPrice.toFixed(2)} <span className="text-sm text-muted-foreground">{product.currency}</span>
-              </p>
-            </div>
-            <div className="text-right bg-primary/10 rounded-xl px-5 py-3 border border-primary/20">
-              <p className="text-[11px] text-primary/70 mb-0.5">سعر القطعة</p>
-              <p className="text-2xl font-extrabold text-primary">
-                {product.costPrice.toFixed(2)} <span className="text-sm font-bold text-primary/70">{product.currency}</span>
+                <span className="text-sm text-muted-foreground ml-1">{product.currency}</span>
+                {product.recommendedPrice.toFixed(2)}
               </p>
             </div>
           </div>
 
-          {/* Stock - highlighted */}
-          <div className={`flex items-center justify-between rounded-xl px-4 py-3 ${
-          product.stock > 0 ?
-          "bg-success/10 border border-success/20" :
-          "bg-destructive/10 border border-destructive/20"}`
-          }>
-            <span className={`text-lg font-extrabold ${product.stock > 0 ? "text-success" : "text-destructive"}`}>
+          <Separator />
+
+          {/* Stock */}
+          <div className={`flex items-center justify-between rounded-2xl px-5 py-4 ${
+            product.stock > 0
+              ? "bg-success/8 border border-success/15"
+              : "bg-destructive/8 border border-destructive/15"
+          }`}>
+            <div className={`flex items-center gap-2.5 text-sm font-semibold ${product.stock > 0 ? "text-success" : "text-destructive"}`}>
+              <Package className="w-5 h-5" />
+              <span>المخزون المتاح</span>
+            </div>
+            <span className={`text-xl font-extrabold ${product.stock > 0 ? "text-success" : "text-destructive"}`}>
               {product.stock} <span className="text-xs font-medium">قطعة</span>
             </span>
-            <div className={`flex items-center gap-2 text-sm font-semibold ${product.stock > 0 ? "text-success" : "text-destructive"}`}>
-              <span>المخزون المتاح</span>
-              <Box className="w-5 h-5" />
-            </div>
           </div>
 
-          {/* SKU - copyable */}
-          <div className="flex items-center justify-between border-b border-border pb-4">
+          <Separator />
+
+          {/* SKU */}
+          <InfoRow label="SKU">
             <button
               onClick={copySku}
-              className="flex items-center gap-2 font-mono text-xs bg-muted/50 hover:bg-muted rounded-lg px-3 py-2 border border-border transition-colors cursor-pointer group">
-
-              {skuCopied ?
-              <CheckCircle2 className="w-3.5 h-3.5 text-success" /> :
-
-              <Copy className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
-              }
+              className="flex items-center gap-2 font-mono text-xs bg-muted/40 hover:bg-muted rounded-lg px-3 py-2 border border-border transition-colors group"
+            >
+              {skuCopied ? (
+                <CheckCircle2 className="w-3.5 h-3.5 text-success" />
+              ) : (
+                <Copy className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+              )}
               <span>{product.sku}</span>
             </button>
-            <span className="text-sm text-muted-foreground">SKU</span>
-          </div>
+          </InfoRow>
 
-          {/* Details Grid */}
-          <div className="space-y-2 border-b border-border pb-4">
-            <DetailRow icon={Package} label="الوزن" value={product.weight} />
-            <DetailRow icon={Ruler} label="الأبعاد" value={product.dimensions} />
-            <div className="flex items-center justify-between py-2">
+          <Separator />
+
+          {/* Specs */}
+          <div className="space-y-0">
+            <InfoRow label="الوزن" icon={Weight} value={product.weight} />
+            <InfoRow label="الأبعاد" icon={Ruler} value={product.dimensions} />
+            <InfoRow label="التصنيف" icon={Tag}>
               <Badge className="bg-primary/10 text-primary border-0 text-xs">{product.category}</Badge>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span>التصنيف</span>
-                <Tag className="w-4 h-4" />
+            </InfoRow>
+            <InfoRow label="الدول" icon={Globe}>
+              <div className="flex flex-wrap gap-1.5">
+                {product.countries.map((c) => (
+                  <Badge key={c} variant="secondary" className="text-[10px]">{c}</Badge>
+                ))}
               </div>
-            </div>
-            <div className="flex items-center justify-between py-2">
-              <div className="flex flex-wrap gap-1">
-                {product.countries.map((c) =>
-                <Badge key={c} variant="secondary" className="text-[10px]">{c}</Badge>
-                )}
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground shrink-0">
-                <span>الدول</span>
-                <Globe className="w-4 h-4" />
-              </div>
-            </div>
+            </InfoRow>
           </div>
 
-          {/* Quantity & Buy */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3 justify-end">
-              
+          <Separator />
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-            </div>
-
+          {/* Actions */}
+          <div className="space-y-3 pt-1">
             <Button
               onClick={() => setShowAddDialog(true)}
-              className="w-full rounded-xl h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-base gap-2">
-
+              className="w-full rounded-2xl h-13 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-base gap-2"
+            >
               <Plus className="w-5 h-5" />
-              <span>إضافة الى منتجاتي</span>
+              إضافة الى منتجاتي
             </Button>
-
             <Button
               onClick={() => toast.success("تمت إضافة المنتج إلى هلا ستور")}
               variant="outline"
-              className="w-full rounded-xl h-11 border-accent text-accent hover:bg-accent/10 font-semibold gap-2">
-
+              className="w-full rounded-2xl h-12 border-accent text-accent hover:bg-accent/10 font-semibold gap-2"
+            >
               <Store className="w-4 h-4" />
-              <span>إضافة الى هلا ستور</span>
+              إضافة الى هلا ستور
             </Button>
           </div>
         </div>
 
-        {/* Left Side - Image Gallery (appears second in RTL) */}
-        <div className="flex-1 space-y-4 order-2 lg:order-1">
-          {/* Main Image */}
-          <div className="relative bg-card rounded-2xl border border-border overflow-hidden aspect-square max-h-[500px]">
+        {/* Left Column - Image */}
+        <div className="space-y-4 order-1 lg:order-2">
+          <div className="bg-card rounded-3xl border border-border overflow-hidden aspect-square flex items-center justify-center">
             <img
               src={product.images[selectedImage]}
               alt={product.name}
-              className="w-full h-full object-contain p-6" />
-
-            {product.images.length > 1 &&
-            <>
-                <button
-                onClick={prevImage}
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-card/90 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-card transition-colors shadow-md">
-
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <button
-                onClick={nextImage}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-card/90 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-card transition-colors shadow-md">
-
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </>
-            }
+              className="w-full h-full object-contain p-4"
+            />
           </div>
-
-          {/* Thumbnails */}
-          {product.images.length > 1 &&
-          <div className="flex items-center justify-center gap-3">
-              {product.images.map((img, i) =>
-            <button
-              key={i}
-              onClick={() => setSelectedImage(i)}
-              className={`w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
-              i === selectedImage ? "border-primary shadow-md scale-105" : "border-border opacity-60 hover:opacity-100"}`
-              }>
-
+          {product.images.length > 1 && (
+            <div className="flex items-center justify-center gap-3">
+              {product.images.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setSelectedImage(i)}
+                  className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${
+                    i === selectedImage
+                      ? "border-primary shadow-md scale-105"
+                      : "border-border opacity-50 hover:opacity-100"
+                  }`}
+                >
                   <img src={img} alt="" className="w-full h-full object-cover" />
                 </button>
-            )}
+              ))}
             </div>
-          }
+          )}
         </div>
       </div>
 
-      {/* Tabs Section */}
+      {/* Tabs */}
       <Tabs defaultValue="description" dir="rtl" className="border-t border-border pt-6">
-        <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-start gap-6 h-auto p-0">
-          <TabsTrigger
-            value="description"
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 text-sm font-semibold">
-            الوصف
-          </TabsTrigger>
-          <TabsTrigger
-            value="info"
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 text-sm font-semibold">
-            معلومات إضافية
-          </TabsTrigger>
-          <TabsTrigger
-            value="pricing"
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 text-sm font-semibold">
-            سعر البيع المقترح
-          </TabsTrigger>
+        <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-start gap-8 h-auto p-0">
+          {[
+            { value: "description", label: "الوصف" },
+            { value: "info", label: "معلومات إضافية" },
+            { value: "pricing", label: "سعر البيع المقترح" },
+          ].map((tab) => (
+            <TabsTrigger
+              key={tab.value}
+              value={tab.value}
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 text-sm font-semibold"
+            >
+              {tab.label}
+            </TabsTrigger>
+          ))}
         </TabsList>
 
         <TabsContent value="description" className="pt-6 text-right">
@@ -268,22 +217,18 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
         </TabsContent>
 
         <TabsContent value="info" className="pt-6">
-          <div className="space-y-3 text-right">
-            <DetailRow icon={Calendar} label="تاريخ الإضافة" value={product.dateAdded} />
-            <DetailRow icon={RefreshCw} label="آخر تحديث" value={product.lastUpdated} />
-            <DetailRow icon={Package} label="الوزن" value={product.weight} />
-            <DetailRow icon={Ruler} label="الأبعاد" value={product.dimensions} />
-            <div className="flex items-center justify-between py-2">
-              <div className="flex flex-wrap gap-1">
-                {product.countries.map((c) =>
-                <Badge key={c} variant="secondary" className="text-[10px]">{c}</Badge>
-                )}
+          <div className="space-y-0 text-right">
+            <InfoRow label="تاريخ الإضافة" icon={Calendar} value={product.dateAdded} />
+            <InfoRow label="آخر تحديث" icon={RefreshCw} value={product.lastUpdated} />
+            <InfoRow label="الوزن" icon={Package} value={product.weight} />
+            <InfoRow label="الأبعاد" icon={Ruler} value={product.dimensions} />
+            <InfoRow label="الدول المتاحة" icon={Globe}>
+              <div className="flex flex-wrap gap-1.5">
+                {product.countries.map((c) => (
+                  <Badge key={c} variant="secondary" className="text-[10px]">{c}</Badge>
+                ))}
               </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span>الدول المتاحة</span>
-                <Globe className="w-4 h-4" />
-              </div>
-            </div>
+            </InfoRow>
           </div>
         </TabsContent>
 
@@ -293,18 +238,28 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
       </Tabs>
 
       <AddToMyProductsDialog product={product} open={showAddDialog} onOpenChange={setShowAddDialog} />
-    </div>);
-
+    </div>
+  );
 }
 
-function DetailRow({ icon: Icon, label, value }: {icon: any;label: string;value: string;}) {
+function InfoRow({
+  label,
+  value,
+  icon: Icon,
+  children,
+}: {
+  label: string;
+  value?: string;
+  icon?: any;
+  children?: React.ReactNode;
+}) {
   return (
-    <div className="flex items-center justify-between py-2">
-      <span className="text-sm font-medium text-foreground">{value}</span>
+    <div className="flex items-center justify-between py-3">
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        {Icon && <Icon className="w-4 h-4" />}
         <span>{label}</span>
-        <Icon className="w-4 h-4" />
       </div>
-    </div>);
-
+      {children || <span className="text-sm font-medium text-foreground">{value}</span>}
+    </div>
+  );
 }
