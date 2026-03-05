@@ -217,6 +217,11 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
       </div>
 
       {/* Tabs */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.35 }}
+      >
       <Tabs defaultValue="description" dir="rtl" className="border-t border-border pt-6">
         <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-start gap-8 h-auto p-0">
           {[
