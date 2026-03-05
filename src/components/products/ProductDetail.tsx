@@ -58,8 +58,12 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
         <span className="text-foreground font-medium">{product.name}</span>
       </motion.nav>
 
-      {/* Product Title - Mobile */}
-      <h1 className="text-2xl font-bold text-foreground lg:hidden">{product.name}</h1>
+      <motion.h1
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+        className="text-2xl font-bold text-foreground lg:hidden"
+      >{product.name}</motion.h1>
 
       {/* Main Grid: Right = Info, Left = Image */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
