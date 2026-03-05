@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Product } from "@/data/productsData";
 import { AddToMyProductsDialog } from "@/components/products/AddToMyProductsDialog";
 import { ProductPricingCalculator } from "@/components/products/ProductPricingCalculator";
+import { motion } from "framer-motion";
 import {
   ArrowRight,
   Package,
@@ -42,7 +43,12 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-8 overflow-y-auto h-[calc(100vh-3.5rem)]" dir="rtl">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-muted-foreground">
+      <motion.nav
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="flex items-center gap-2 text-sm text-muted-foreground"
+      >
         <button onClick={onBack} className="hover:text-primary transition-colors flex items-center gap-1.5">
           <span>العودة</span>
           <span>/</span>
@@ -50,15 +56,23 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
         <span>المنتجات</span>
         <span>/</span>
         <span className="text-foreground font-medium">{product.name}</span>
-      </nav>
+      </motion.nav>
 
-      {/* Product Title - Mobile */}
-      <h1 className="text-2xl font-bold text-foreground lg:hidden">{product.name}</h1>
+      <motion.h1
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+        className="text-2xl font-bold text-foreground lg:hidden"
+      >{product.name}</motion.h1>
 
       {/* Main Grid: Right = Info, Left = Image */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-        {/* Right Column - Info */}
-        <div className="space-y-5 order-2 lg:order-1">
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="space-y-5 order-2 lg:order-1"
+        >
           {/* Title - Desktop */}
           <h1 className="text-2xl font-bold text-foreground hidden lg:block">{product.name}</h1>
           <p className="text-sm text-muted-foreground">{product.nameEn}</p>
@@ -162,12 +176,21 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
               إضافة الى هلا ستور
             </Button>
           </div>
-        </div>
+        </motion.div>
 
         {/* Left Column - Image */}
-        <div className="space-y-4 order-1 lg:order-2">
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="space-y-4 order-1 lg:order-2"
+        >
           <div className="bg-card rounded-3xl border border-border overflow-hidden aspect-square flex items-center justify-center">
-            <img
+            <motion.img
+              key={selectedImage}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
               src={product.images[selectedImage]}
               alt={product.name}
               className="w-full h-full object-contain p-4"
@@ -190,10 +213,15 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
               ))}
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
 
       {/* Tabs */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.35 }}
+      >
       <Tabs defaultValue="description" dir="rtl" className="border-t border-border pt-6">
         <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-start gap-8 h-auto p-0">
           {[
@@ -236,6 +264,7 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
           <ProductPricingCalculator product={product} />
         </TabsContent>
       </Tabs>
+      </motion.div>
 
       <AddToMyProductsDialog product={product} open={showAddDialog} onOpenChange={setShowAddDialog} />
     </div>
