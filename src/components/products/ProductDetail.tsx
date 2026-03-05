@@ -67,8 +67,12 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
 
       {/* Main Grid: Right = Info, Left = Image */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-        {/* Right Column - Info */}
-        <div className="space-y-5 order-2 lg:order-1">
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="space-y-5 order-2 lg:order-1"
+        >
           {/* Title - Desktop */}
           <h1 className="text-2xl font-bold text-foreground hidden lg:block">{product.name}</h1>
           <p className="text-sm text-muted-foreground">{product.nameEn}</p>
