@@ -176,7 +176,7 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
               إضافة الى هلا ستور
             </Button>
           </div>
-        </div>
+        </motion.div>
 
         {/* Left Column - Image */}
         <div className="space-y-4 order-1 lg:order-2">
