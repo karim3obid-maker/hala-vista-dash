@@ -264,6 +264,7 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
           <ProductPricingCalculator product={product} />
         </TabsContent>
       </Tabs>
+      </motion.div>
 
       <AddToMyProductsDialog product={product} open={showAddDialog} onOpenChange={setShowAddDialog} />
     </div>
