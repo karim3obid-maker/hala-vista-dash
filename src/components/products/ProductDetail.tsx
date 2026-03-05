@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Product } from "@/data/productsData";
 import { AddToMyProductsDialog } from "@/components/products/AddToMyProductsDialog";
 import { ProductPricingCalculator } from "@/components/products/ProductPricingCalculator";
+import { motion } from "framer-motion";
 import {
   ArrowRight,
   Package,
