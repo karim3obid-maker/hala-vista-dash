@@ -179,9 +179,18 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
         </motion.div>
 
         {/* Left Column - Image */}
-        <div className="space-y-4 order-1 lg:order-2">
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="space-y-4 order-1 lg:order-2"
+        >
           <div className="bg-card rounded-3xl border border-border overflow-hidden aspect-square flex items-center justify-center">
-            <img
+            <motion.img
+              key={selectedImage}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
               src={product.images[selectedImage]}
               alt={product.name}
               className="w-full h-full object-contain p-4"
@@ -204,7 +213,7 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
               ))}
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
 
       {/* Tabs */}
