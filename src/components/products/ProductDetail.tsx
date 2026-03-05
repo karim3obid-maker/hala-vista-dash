@@ -43,7 +43,12 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-8 overflow-y-auto h-[calc(100vh-3.5rem)]" dir="rtl">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-muted-foreground">
+      <motion.nav
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="flex items-center gap-2 text-sm text-muted-foreground"
+      >
         <button onClick={onBack} className="hover:text-primary transition-colors flex items-center gap-1.5">
           <span>العودة</span>
           <span>/</span>
@@ -51,7 +56,7 @@ export function ProductDetail({ product, onBack }: ProductDetailProps) {
         <span>المنتجات</span>
         <span>/</span>
         <span className="text-foreground font-medium">{product.name}</span>
-      </nav>
+      </motion.nav>
 
       {/* Product Title - Mobile */}
       <h1 className="text-2xl font-bold text-foreground lg:hidden">{product.name}</h1>
