@@ -35,6 +35,7 @@ const App = () => (
             <Route path="/wallet" element={<Wallet />} />
             <Route path="/affiliate" element={<Affiliate />} />
             <Route path="/challenges" element={<Challenges />} />
+            <Route path="/validation" element={<Validation />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

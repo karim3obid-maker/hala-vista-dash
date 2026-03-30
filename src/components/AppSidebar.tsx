@@ -21,6 +21,7 @@ const menuItems = [
   { title: "المحفظة", url: "/wallet", icon: Wallet },
   { title: "الأفلييت", url: "/affiliate", icon: Users },
   { title: "تحديات هلا", url: "/challenges", icon: Trophy },
+  { title: "فالديشن", url: "/validation", icon: ShieldCheck },
 ];
 
 export function AppSidebar() {
