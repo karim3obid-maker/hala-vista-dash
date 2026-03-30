@@ -171,6 +171,71 @@ const ValidationModal = ({ open, onClose, caseData, onSave }: Props) => {
         </div>
 
         <div className="px-6 py-5 space-y-6">
+          {/* تفاصيل الطلب */}
+          <div className="border border-border rounded-2xl overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-3 bg-muted/20 border-b border-border">
+              <h3 className="text-sm font-bold text-foreground">تفاصيل الطلب</h3>
+              <span className="text-xs text-muted-foreground">بيانات العميل والمنتج</span>
+            </div>
+            <div className="p-5">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-4">
+                <div>
+                  <p className="text-[11px] text-muted-foreground mb-1">اسم العميل</p>
+                  <p className="text-sm font-semibold text-foreground">{caseData.customerName}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-muted-foreground mb-1">هاتف العميل</p>
+                  <a href={`tel:${caseData.customerPhone}`} className="text-sm font-semibold text-primary hover:underline flex items-center gap-1">
+                    <Phone className="w-3 h-3" /> {caseData.customerPhone}
+                  </a>
+                </div>
+                <div>
+                  <p className="text-[11px] text-muted-foreground mb-1">الدولة</p>
+                  <p className="text-sm font-semibold text-foreground">{caseData.country}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-muted-foreground mb-1">المدينة</p>
+                  <p className="text-sm font-semibold text-foreground">{caseData.city}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-muted-foreground mb-1">اسم المنتج</p>
+                  <p className="text-sm font-semibold text-foreground">{caseData.productName}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-muted-foreground mb-1">الكمية</p>
+                  <p className="text-sm font-semibold text-foreground">{caseData.productCount}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-muted-foreground mb-1">قيمة التحصيل</p>
+                  <p className="text-sm font-bold text-foreground">{caseData.orderValue} {caseData.currency}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-muted-foreground mb-1">شركة الشحن</p>
+                  <p className="text-sm font-semibold text-foreground">{caseData.carrierName}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-muted-foreground mb-1">الموظف المسؤول</p>
+                  <p className="text-sm font-semibold text-foreground">{caseData.assignedAgent}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-muted-foreground mb-1">تاريخ الدخول</p>
+                  <p className="text-sm font-semibold text-foreground">{caseData.entryDate} — {caseData.entryTime}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-muted-foreground mb-1">آخر تحديث كاريير</p>
+                  <p className="text-sm font-semibold text-foreground">{caseData.lastCarrierTimestamp}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-muted-foreground mb-1">سبب الدخول</p>
+                  <span className="text-xs px-2.5 py-1 rounded-full font-medium inline-block mt-0.5"
+                    style={{ background: entryReasonColors[caseData.entryReason].bg, color: entryReasonColors[caseData.entryReason].text }}>
+                    {entryReasonLabels[caseData.entryReason]}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* سجل محاولات الاتصال */}
           <div className="border border-border rounded-2xl overflow-hidden">
             <div className="flex items-center justify-between px-5 py-3 bg-muted/20 border-b border-border">
