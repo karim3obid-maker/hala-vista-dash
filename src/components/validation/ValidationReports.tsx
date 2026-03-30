@@ -246,8 +246,8 @@ const ValidationReports = ({ cases }: Props) => {
                     <TableCell className="text-sm text-muted-foreground">{log.attemptDate} {log.attemptTime}</TableCell>
                     <TableCell>
                       <span className="text-xs px-2 py-0.5 rounded-full font-medium"
-                        style={{ background: (await import("@/data/validationData")).contactResultColors[log.contactResult].bg, color: (await import("@/data/validationData")).contactResultColors[log.contactResult].text }}>
-                        {(await import("@/data/validationData")).contactResultLabels[log.contactResult]}
+                        style={{ background: contactResultColors[log.contactResult].bg, color: contactResultColors[log.contactResult].text }}>
+                        {contactResultLabels[log.contactResult]}
                       </span>
                     </TableCell>
                     <TableCell className="text-sm">{log.agentName}</TableCell>
