@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 import {
   ValidationCase, ProblemSource, problemSourceLabels, problemSourceColors, validationAgents,
+  contactResultLabels, contactResultColors,
 } from "@/data/validationData";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
