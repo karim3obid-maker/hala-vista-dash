@@ -13,6 +13,7 @@ import Products from "./pages/Products";
 import Wallet from "./pages/Wallet";
 import Affiliate from "./pages/Affiliate";
 import Challenges from "./pages/Challenges";
+import Validation from "./pages/Validation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
