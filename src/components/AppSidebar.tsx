@@ -1,4 +1,4 @@
-import { BarChart3, Calculator, ShoppingBag, Tag, ClipboardList, Package, Wallet, Users, Trophy } from "lucide-react";
+import { BarChart3, Calculator, ShoppingBag, Tag, ClipboardList, Package, Wallet, Users, Trophy, ShieldCheck } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
   Sidebar,
