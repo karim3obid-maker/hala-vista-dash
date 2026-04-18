@@ -1,4 +1,4 @@
-import { BarChart3, Calculator, ShoppingBag, Tag, ClipboardList, Package, Wallet, Users, Trophy, ShieldCheck } from "lucide-react";
+import { BarChart3, Calculator, ShoppingBag, Tag, ClipboardList, Package, Wallet, Users, Trophy, ShieldCheck, XCircle } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
   Sidebar,
@@ -22,6 +22,7 @@ const menuItems = [
   { title: "الأفلييت", url: "/affiliate", icon: Users },
   { title: "تحديات هلا", url: "/challenges", icon: Trophy },
   { title: "فالديشن", url: "/validation", icon: ShieldCheck },
+  { title: "طلبات الملغاة", url: "/cancelled-orders", icon: XCircle },
 ];
 
 export function AppSidebar() {
