@@ -14,6 +14,7 @@ import Wallet from "./pages/Wallet";
 import Affiliate from "./pages/Affiliate";
 import Challenges from "./pages/Challenges";
 import Validation from "./pages/Validation";
+import CancelledOrders from "./pages/CancelledOrders";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/affiliate" element={<Affiliate />} />
             <Route path="/challenges" element={<Challenges />} />
             <Route path="/validation" element={<Validation />} />
+            <Route path="/cancelled-orders" element={<CancelledOrders />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
