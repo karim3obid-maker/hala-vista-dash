@@ -6,7 +6,8 @@ export function AppLayout() {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
-        <div className="flex-1 flex flex-col min-w-0 overflow-hidden me-4">
+        <AppSidebar />
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           <header className="h-14 flex items-center justify-end border-b border-border px-4 bg-card sticky top-0 z-30 shrink-0">
             <SidebarTrigger />
           </header>
@@ -14,7 +15,6 @@ export function AppLayout() {
             <Outlet />
           </main>
         </div>
-        <AppSidebar />
       </div>
     </SidebarProvider>
   );
