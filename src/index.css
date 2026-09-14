@@ -9,44 +9,50 @@
     /* Hala Kommers Design System */
     --font-cairo: 'Cairo', sans-serif;
     
-    /* Brand Colors - Hala Kommers */
-    --hala-purple: 256 58% 30%; /* Deep Purple #3D2C8D */
-    --hala-orange: 18 100% 60%; /* Vibrant Orange #FF6B35 */
-    
-    /* Semantic Colors - Soft and Light */
-    --background: 250 50% 98%; /* Light lavender #FAFAFF */
-    --foreground: 256 40% 20%; /* Dark purple text */
+    /* Brand Colors - Hala Kommers (logo derived) */
+    --hala-purple-deep: 264 100% 25%; /* #31007D */
+    --hala-purple: 265 76% 34%; /* #4B1596 */
+    --hala-orange: 16 100% 56%; /* #FF5A1F */
+
+    /* Semantic Colors - Purple dominant (90%), orange accent (5%) */
+    --background: 255 43% 98%; /* #F8F7FC */
+    --foreground: 264 45% 16%;
 
     --card: 0 0% 100%;
-    --card-foreground: 256 40% 20%;
+    --card-foreground: 264 45% 16%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 256 40% 20%;
+    --popover-foreground: 264 45% 16%;
 
-    --primary: 256 58% 35%; /* Hala Purple #4A3A9F */
+    --primary: 265 76% 34%; /* #4B1596 */
     --primary-foreground: 0 0% 100%;
+    --primary-deep: 264 100% 25%;
+    --primary-soft: 265 60% 95%;
 
-    --secondary: 250 50% 96%;
-    --secondary-foreground: 256 40% 20%;
+    --secondary: 260 40% 96%;
+    --secondary-foreground: 264 45% 18%;
 
-    --muted: 250 20% 92%;
-    --muted-foreground: 256 20% 50%;
+    --muted: 258 25% 94%;
+    --muted-foreground: 264 15% 48%;
 
-    --accent: 18 100% 60%; /* Hala Orange #FF6B35 */
+    --accent: 16 100% 56%; /* #FF5A1F */
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 55%;
+    --destructive: 0 72% 52%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 152 60% 42%;
+    --success: 160 70% 36%;
     --success-foreground: 0 0% 100%;
 
-    --warning: 38 92% 50%;
+    --warning: 16 100% 56%;
     --warning-foreground: 0 0% 100%;
 
-    --border: 250 30% 90%;
-    --input: 250 30% 90%;
-    --ring: 256 58% 35%;
+    --info: 265 45% 55%;
+    --info-foreground: 0 0% 100%;
+
+    --border: 262 30% 91%;
+    --input: 262 30% 91%;
+    --ring: 265 76% 34%;
 
     --radius: 1rem;
 
