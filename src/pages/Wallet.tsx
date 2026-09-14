@@ -105,10 +105,10 @@ export default function WalletPage() {
               </div>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
-              <Button onClick={() => setShowDeposit(true)} variant="outline" className="rounded-xl h-10 gap-2 border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/10 w-full sm:w-auto">
+              <Button onClick={() => setShowDeposit(true)} className="rounded-xl h-10 gap-2 bg-primary hover:bg-primary-deep text-primary-foreground w-full sm:w-auto">
                 <Plus className="w-4 h-4" /> إيداع رصيد
               </Button>
-              <Button onClick={() => setShowWithdraw(true)} variant="outline" className="rounded-xl h-10 gap-2 border-orange-500/30 text-orange-600 hover:bg-orange-500/10 w-full sm:w-auto">
+              <Button onClick={() => setShowWithdraw(true)} variant="outline" className="rounded-xl h-10 gap-2 border-accent/40 text-accent hover:bg-accent/10 w-full sm:w-auto">
                 <Upload className="w-4 h-4" /> طلب سحب
               </Button>
               <Button onClick={() => setShowBankAccounts(true)} variant="outline" className="rounded-xl h-10 gap-2 border-primary/30 text-primary hover:bg-primary/10 w-full sm:w-auto">
@@ -168,10 +168,10 @@ export default function WalletPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {[
-                { value: reportData.totalSales, label: "إجمالي المبيعات", icon: DollarSign, from: "from-primary/10", to: "to-primary/5", border: "border-primary/20", iconBg: "bg-primary/15", iconColor: "text-primary" },
-                { value: reportData.deliveredSales, label: "إجمالي المبيعات المسلمة", icon: PackageCheck, from: "from-green-600/10", to: "to-green-600/5", border: "border-green-600/20", iconBg: "bg-green-600/15", iconColor: "text-green-600" },
-                { value: reportData.totalExpenses, label: "إجمالي المصروفات", icon: TrendingDown, from: "from-red-500/10", to: "to-red-500/5", border: "border-red-500/20", iconBg: "bg-red-500/15", iconColor: "text-red-500" },
-                { value: reportData.netProfit, label: "صافي الربح", icon: TrendingUp, from: "from-emerald-500/10", to: "to-emerald-500/5", border: "border-emerald-500/20", iconBg: "bg-emerald-500/15", iconColor: "text-emerald-500" },
+                { value: reportData.totalSales, label: "إجمالي المبيعات", icon: DollarSign, from: "from-primary-deep/10", to: "to-primary-deep/5", border: "border-primary-deep/20", iconBg: "bg-primary-deep/15", iconColor: "text-primary-deep" },
+                { value: reportData.deliveredSales, label: "إجمالي المبيعات المسلمة", icon: PackageCheck, from: "from-primary/10", to: "to-primary/5", border: "border-primary/20", iconBg: "bg-primary/15", iconColor: "text-primary" },
+                { value: reportData.totalExpenses, label: "إجمالي المصروفات", icon: TrendingDown, from: "from-destructive/10", to: "to-destructive/5", border: "border-destructive/20", iconBg: "bg-destructive/15", iconColor: "text-destructive" },
+                { value: reportData.netProfit, label: "صافي الربح", icon: TrendingUp, from: "from-accent/10", to: "to-accent/5", border: "border-accent/20", iconBg: "bg-accent/15", iconColor: "text-accent" },
               ].map((item, i) => {
                 const Icon = item.icon;
                 return (
@@ -195,16 +195,16 @@ export default function WalletPage() {
               <h3 className="text-sm font-bold text-foreground">ملخص الأرصدة</h3>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-bl from-primary/10 to-accent/10 border border-primary/20 flex-row-reverse">
-                <div className="p-2.5 rounded-lg bg-primary shrink-0"><Wallet className="w-5 h-5 text-white" /></div>
+              <div className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-bl from-primary-deep to-primary border border-primary-deep/20 flex-row-reverse">
+                <div className="p-2.5 rounded-lg bg-accent shrink-0"><Wallet className="w-5 h-5 text-accent-foreground" /></div>
                 <div className="text-right">
-                  <p className="text-2xl font-bold text-foreground">{balance.toLocaleString()}</p>
-                  <p className="text-[11px] text-muted-foreground">الرصيد الحالي (ر.س)</p>
+                  <p className="text-2xl font-bold text-primary-foreground">{balance.toLocaleString()}</p>
+                  <p className="text-[11px] text-primary-foreground/70">الرصيد الحالي (ر.س)</p>
                 </div>
               </div>
-              <StatCard item={{ label: "إجمالي الإيداعات", value: totalDeposits.toLocaleString(), suffix: "ر.س", icon: Download, color: "text-emerald-500", bgColor: "bg-emerald-500/10" }} />
-              <StatCard item={{ label: "إجمالي المسحوبات", value: totalWithdrawals.toLocaleString(), suffix: "ر.س", icon: Upload, color: "text-orange-500", bgColor: "bg-orange-500/10" }} />
-              <StatCard item={{ label: "إجمالي المعاملات", value: transactions.length.toString(), icon: ArrowLeftRight, color: "text-blue-500", bgColor: "bg-blue-500/10" }} />
+              <StatCard item={{ label: "إجمالي الإيداعات", value: totalDeposits.toLocaleString(), suffix: "ر.س", icon: Download, color: "text-primary", bgColor: "bg-primary/10" }} />
+              <StatCard item={{ label: "إجمالي المسحوبات", value: totalWithdrawals.toLocaleString(), suffix: "ر.س", icon: Upload, color: "text-accent", bgColor: "bg-accent/10" }} />
+              <StatCard item={{ label: "إجمالي المعاملات", value: transactions.length.toString(), icon: ArrowLeftRight, color: "text-primary-deep", bgColor: "bg-primary-deep/10" }} />
             </div>
           </div>
         </div>
@@ -350,10 +350,10 @@ export default function WalletPage() {
             {/* 4 Summary Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {[
-                { value: goodsAccountSummary.debitBalance, label: "رصيد مدين", icon: TrendingDown, color: "text-red-500", bgColor: "bg-red-500/10" },
+                { value: goodsAccountSummary.debitBalance, label: "رصيد مدين", icon: TrendingDown, color: "text-destructive", bgColor: "bg-destructive/10" },
                 { value: goodsAccountSummary.halaCosts, label: "تكاليف بضاعة هلا شير", icon: ShoppingCart, color: "text-primary", bgColor: "bg-primary/10" },
-                { value: goodsAccountSummary.chinaCosts, label: "تكاليف استيراد من الصين", icon: Package, color: "text-violet-500", bgColor: "bg-violet-500/10" },
-                { value: goodsAccountSummary.egyptCosts, label: "تكاليف استيراد من مصر", icon: Package, color: "text-amber-500", bgColor: "bg-amber-500/10" },
+                { value: goodsAccountSummary.chinaCosts, label: "تكاليف استيراد من الصين", icon: Package, color: "text-primary-deep", bgColor: "bg-primary-deep/10" },
+                { value: goodsAccountSummary.egyptCosts, label: "تكاليف استيراد من مصر", icon: Package, color: "text-accent", bgColor: "bg-accent/10" },
               ].map((item, i) => (
                 <StatCard key={i} item={{ ...item, value: item.value.toLocaleString(), suffix: "ر.س" }} />
               ))}
@@ -377,8 +377,8 @@ export default function WalletPage() {
                         <tr key={gt.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
                           <td className="py-3 px-4 text-foreground text-xs font-medium">{gt.totalCost.toLocaleString()} ر.س</td>
                           <td className="py-3 px-4 text-muted-foreground text-xs">{gt.percentage}%</td>
-                          <td className="py-3 px-4 font-bold text-red-500 text-xs">{gt.amountPaid.toLocaleString()}- ر.س</td>
-                          <td className="py-3 px-4 text-xs font-medium">{gt.remaining > 0 ? <span className="text-amber-500">{gt.remaining.toLocaleString()} ر.س</span> : <span className="text-emerald-500">0 ر.س</span>}</td>
+                          <td className="py-3 px-4 font-bold text-destructive text-xs">{gt.amountPaid.toLocaleString()}- ر.س</td>
+                          <td className="py-3 px-4 text-xs font-medium">{gt.remaining > 0 ? <span className="text-accent">{gt.remaining.toLocaleString()} ر.س</span> : <span className="text-success">0 ر.س</span>}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -470,7 +470,7 @@ export default function WalletPage() {
                 const svcTotal = svc.items.reduce((s, i) => s + i.total, 0);
                 const svcOrderCount = svc.items.reduce((s, i) => s + (i.count ?? 0), 0);
                 return (
-                  <div key={idx} className={`rounded-2xl p-5 border ${idx === 0 ? 'bg-emerald-500/[0.02] border-emerald-500/10' : 'bg-blue-500/[0.02] border-blue-500/10'}`}>
+                  <div className="rounded-2xl p-5 border bg-primary/[0.03] border-primary/10 shadow-card" key={idx}>
                     <SectionHeader title={svc.name} icon={Icon} accentColor={svc.accentBg} badge={`${svc.items.length} عناصر`} />
                     <div className="space-y-2 mb-4">
                       {svc.items.map((item, i) => (
