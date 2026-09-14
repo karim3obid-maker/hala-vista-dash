@@ -6,6 +6,10 @@ import { monthlyFinancialData, expenseBreakdownData } from "./walletData";
 import { SectionHeader } from "./WalletShared";
 import { TrendingUp, BarChart3 } from "lucide-react";
 
+const CHART_SALES = "hsl(var(--primary-deep))";
+const CHART_EXPENSES = "hsl(var(--accent))";
+const CHART_PROFIT = "hsl(var(--primary))";
+
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload) return null;
   return (
@@ -22,32 +26,32 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export function FinancialTrendChart() {
   return (
-    <div className="bg-card rounded-2xl border border-border p-5">
+    <div className="bg-card rounded-2xl border border-border p-5 shadow-card">
       <SectionHeader title="اتجاه المبيعات والمصروفات" icon={TrendingUp} accentColor="bg-primary" badge="آخر 6 أشهر" />
       <div className="h-[280px] mt-4">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={monthlyFinancialData}>
             <defs>
               <linearGradient id="salesGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                <stop offset="5%" stopColor={CHART_SALES} stopOpacity={0.35} />
+                <stop offset="95%" stopColor={CHART_SALES} stopOpacity={0} />
               </linearGradient>
               <linearGradient id="expGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                <stop offset="5%" stopColor={CHART_EXPENSES} stopOpacity={0.3} />
+                <stop offset="95%" stopColor={CHART_EXPENSES} stopOpacity={0} />
               </linearGradient>
               <linearGradient id="profitGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                <stop offset="5%" stopColor={CHART_PROFIT} stopOpacity={0.3} />
+                <stop offset="95%" stopColor={CHART_PROFIT} stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis dataKey="month" tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
             <Tooltip content={<CustomTooltip />} />
-            <Area type="monotone" dataKey="sales" name="المبيعات" stroke="#3b82f6" fill="url(#salesGrad)" strokeWidth={2} />
-            <Area type="monotone" dataKey="expenses" name="المصروفات" stroke="#ef4444" fill="url(#expGrad)" strokeWidth={2} />
-            <Area type="monotone" dataKey="profit" name="صافي الربح" stroke="#10b981" fill="url(#profitGrad)" strokeWidth={2} />
+            <Area type="monotone" dataKey="sales" name="المبيعات" stroke={CHART_SALES} fill="url(#salesGrad)" strokeWidth={2} />
+            <Area type="monotone" dataKey="expenses" name="المصروفات" stroke={CHART_EXPENSES} fill="url(#expGrad)" strokeWidth={2} />
+            <Area type="monotone" dataKey="profit" name="صافي الربح" stroke={CHART_PROFIT} fill="url(#profitGrad)" strokeWidth={2} />
           </AreaChart>
         </ResponsiveContainer>
       </div>
@@ -57,8 +61,8 @@ export function FinancialTrendChart() {
 
 export function ExpenseBreakdownChart() {
   return (
-    <div className="bg-card rounded-2xl border border-border p-5">
-      <SectionHeader title="توزيع المصروفات" icon={BarChart3} accentColor="bg-orange-500" />
+    <div className="bg-card rounded-2xl border border-border p-5 shadow-card">
+      <SectionHeader title="توزيع المصروفات" icon={BarChart3} accentColor="bg-accent" />
       <div className="h-[280px] mt-4">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -102,8 +106,8 @@ export function ExpenseBreakdownChart() {
 
 export function MonthlyProfitChart() {
   return (
-    <div className="bg-card rounded-2xl border border-border p-5">
-      <SectionHeader title="صافي الربح الشهري" icon={TrendingUp} accentColor="bg-emerald-500" badge="آخر 6 أشهر" />
+    <div className="bg-card rounded-2xl border border-border p-5 shadow-card">
+      <SectionHeader title="صافي الربح الشهري" icon={TrendingUp} accentColor="bg-primary-deep" badge="آخر 6 أشهر" />
       <div className="h-[250px] mt-4">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={monthlyFinancialData}>
@@ -111,7 +115,7 @@ export function MonthlyProfitChart() {
             <XAxis dataKey="month" tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
             <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="profit" name="صافي الربح" fill="#10b981" radius={[6, 6, 0, 0]} />
+            <Bar dataKey="profit" name="صافي الربح" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

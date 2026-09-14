@@ -79,9 +79,9 @@ export const reportData = {
         { label: 'طلب مسلم', count: 2654, unitCost: 5, total: 13270 },
       ],
       icon: CheckCircle2,
-      color: 'text-emerald-500',
-      bgColor: 'bg-emerald-500/10',
-      accentBg: 'bg-emerald-500',
+      color: 'text-primary',
+      bgColor: 'bg-primary/10',
+      accentBg: 'bg-primary',
     },
     {
       name: 'خدمات الشحن',
@@ -92,9 +92,9 @@ export const reportData = {
         { label: 'نسبة COD 5%', count: null, unitCost: null, total: 9450 },
       ],
       icon: Truck,
-      color: 'text-blue-500',
-      bgColor: 'bg-blue-500/10',
-      accentBg: 'bg-blue-500',
+      color: 'text-primary-deep',
+      bgColor: 'bg-primary-deep/10',
+      accentBg: 'bg-primary-deep',
     },
   ],
   halaGoods: [
@@ -119,13 +119,13 @@ export const reportData = {
 };
 
 export const typeConfig: Record<string, { label: string; icon: any; color: string; bg: string }> = {
-  deposit: { label: 'إيداع', icon: Download, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-  withdrawal: { label: 'سحب', icon: Upload, color: 'text-orange-500', bg: 'bg-orange-500/10' },
+  deposit: { label: 'إيداع', icon: Download, color: 'text-success', bg: 'bg-success/10' },
+  withdrawal: { label: 'سحب', icon: Upload, color: 'text-accent', bg: 'bg-accent/10' },
   purchase: { label: 'شراء بضاعة', icon: ShoppingCart, color: 'text-primary', bg: 'bg-primary/10' },
-  transfer: { label: 'تحويل', icon: ArrowLeftRight, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-  ads_tiktok: { label: 'إعلانات تيك توك', icon: Megaphone, color: 'text-pink-500', bg: 'bg-pink-500/10' },
-  ads_snapchat: { label: 'إعلانات سناب شات', icon: Camera, color: 'text-yellow-500', bg: 'bg-yellow-500/10' },
-  import_goods: { label: 'استيراد بضاعة', icon: Package, color: 'text-violet-500', bg: 'bg-violet-500/10' },
+  transfer: { label: 'تحويل', icon: ArrowLeftRight, color: 'text-info', bg: 'bg-info/10' },
+  ads_tiktok: { label: 'إعلانات تيك توك', icon: Megaphone, color: 'text-primary-deep', bg: 'bg-primary-deep/10' },
+  ads_snapchat: { label: 'إعلانات سناب شات', icon: Camera, color: 'text-accent', bg: 'bg-accent/10' },
+  import_goods: { label: 'استيراد بضاعة', icon: Package, color: 'text-info', bg: 'bg-info/10' },
 };
 
 export const statusConfig: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' }> = {
@@ -192,10 +192,10 @@ export const monthlyFinancialData = [
 ];
 
 export const expenseBreakdownData = [
-  { name: 'تأكيد الطلبات', value: 29254, color: '#10b981' },
-  { name: 'خدمات الشحن', value: 32554, color: '#3b82f6' },
-  { name: 'بضاعة هلا', value: 7950, color: '#8b5cf6' },
-  { name: 'استيراد بضاعة', value: 3000, color: '#a855f7' },
-  { name: 'إعلانات تيك توك', value: 12500, color: '#ec4899' },
-  { name: 'إعلانات سناب شات', value: 8200, color: '#eab308' },
+  { name: 'تأكيد الطلبات', value: 29254, color: 'hsl(264 100% 25%)' },
+  { name: 'خدمات الشحن', value: 32554, color: 'hsl(265 76% 34%)' },
+  { name: 'بضاعة هلا', value: 7950, color: 'hsl(265 60% 46%)' },
+  { name: 'استيراد بضاعة', value: 3000, color: 'hsl(265 50% 60%)' },
+  { name: 'إعلانات تيك توك', value: 12500, color: 'hsl(265 40% 76%)' },
+  { name: 'إعلانات سناب شات', value: 8200, color: 'hsl(16 100% 56%)' },
 ];
