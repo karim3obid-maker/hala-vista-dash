@@ -501,29 +501,29 @@ export default function WalletPage() {
 
             {/* Ad & Goods Balance */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-orange-500/[0.02] rounded-2xl p-5 border border-orange-500/10">
-                <SectionHeader title="رصيد السحب الإعلاني" icon={Megaphone} accentColor="bg-orange-500" />
+              <div className="bg-accent/[0.03] rounded-2xl p-5 border border-accent/15 shadow-card">
+                <SectionHeader title="رصيد السحب الإعلاني" icon={Megaphone} accentColor="bg-accent" />
                 <div className="grid grid-cols-1 gap-3">
-                  <StatCard item={{ label: "إعلانات تيك توك", value: reportData.adBalance.tiktok.toLocaleString(), suffix: "ر.س", icon: Megaphone, color: "text-pink-500", bgColor: "bg-pink-500/10" }} />
-                  <StatCard item={{ label: "إعلانات سناب شات", value: reportData.adBalance.snapchat.toLocaleString(), suffix: "ر.س", icon: Camera, color: "text-yellow-500", bgColor: "bg-yellow-500/10" }} />
-                  <div className="flex items-center justify-between pt-3 border-t border-orange-500/10 flex-row-reverse">
+                  <StatCard item={{ label: "إعلانات تيك توك", value: reportData.adBalance.tiktok.toLocaleString(), suffix: "ر.س", icon: Megaphone, color: "text-primary-deep", bgColor: "bg-primary-deep/10" }} />
+                  <StatCard item={{ label: "إعلانات سناب شات", value: reportData.adBalance.snapchat.toLocaleString(), suffix: "ر.س", icon: Camera, color: "text-accent", bgColor: "bg-accent/10" }} />
+                  <div className="flex items-center justify-between pt-3 border-t border-accent/15 flex-row-reverse">
                     <div className="text-right">
                       <span className="text-sm font-bold text-foreground">إجمالي السحب الإعلاني</span>
                     </div>
-                    <span className="text-lg font-bold text-orange-500">{reportData.adBalance.total.toLocaleString()} ر.س</span>
+                    <span className="text-lg font-bold text-accent">{reportData.adBalance.total.toLocaleString()} ر.س</span>
                   </div>
                 </div>
               </div>
-              <div className="bg-violet-500/[0.02] rounded-2xl p-5 border border-violet-500/10">
-                <SectionHeader title="رصيد شراء البضاعة" icon={Package} accentColor="bg-violet-500" />
+              <div className="bg-primary/[0.03] rounded-2xl p-5 border border-primary/15 shadow-card">
+                <SectionHeader title="رصيد شراء البضاعة" icon={Package} accentColor="bg-primary" />
                 <div className="grid grid-cols-1 gap-3">
                   <StatCard item={{ label: "تكاليف بضاعة هلا", value: Math.abs(reportData.goodsBalance.halaBalance).toLocaleString(), suffix: "ر.س", icon: ShoppingCart, color: "text-primary", bgColor: "bg-primary/10" }} />
-                  <StatCard item={{ label: "فاند استيراد بضاعة", value: Math.abs(reportData.goodsBalance.importBalance).toLocaleString(), suffix: "ر.س", icon: Package, color: "text-violet-500", bgColor: "bg-violet-500/10" }} />
-                  <div className="flex items-center justify-between pt-3 border-t border-violet-500/10 flex-row-reverse">
+                  <StatCard item={{ label: "فاند استيراد بضاعة", value: Math.abs(reportData.goodsBalance.importBalance).toLocaleString(), suffix: "ر.س", icon: Package, color: "text-primary-deep", bgColor: "bg-primary-deep/10" }} />
+                  <div className="flex items-center justify-between pt-3 border-t border-primary/15 flex-row-reverse">
                     <div className="text-right">
                       <span className="text-sm font-bold text-foreground">إجمالي تكاليف البضاعة</span>
                     </div>
-                    <span className="text-lg font-bold text-violet-500">{Math.abs(reportData.goodsBalance.total).toLocaleString()} ر.س</span>
+                    <span className="text-lg font-bold text-primary">{Math.abs(reportData.goodsBalance.total).toLocaleString()} ر.س</span>
                   </div>
                 </div>
               </div>

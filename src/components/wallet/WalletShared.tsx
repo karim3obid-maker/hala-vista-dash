@@ -27,7 +27,7 @@ export function SectionHeader({ title, icon: Icon, accentColor, badge }: { title
     <div className="flex items-center gap-2 mb-4 flex-row-reverse">
       <h3 className="text-sm font-bold text-foreground">{title}</h3>
       <div className={`p-1.5 rounded-lg ${accentColor}`}>
-        <Icon className="w-4 h-4 text-white" />
+        <Icon className="w-4 h-4 text-primary-foreground" />
       </div>
       {badge && (
         <span className="text-[10px] font-medium bg-muted text-muted-foreground px-2 py-0.5 rounded-full">{badge}</span>
