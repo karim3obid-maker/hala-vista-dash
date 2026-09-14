@@ -57,29 +57,29 @@
     --radius: 1rem;
 
     /* KPI Card Specific */
-    --kpi-up: 152 60% 42%;
-    --kpi-down: 0 72% 55%;
-    --kpi-neutral: 250 20% 60%;
+    --kpi-up: 160 70% 36%;
+    --kpi-down: 0 72% 52%;
+    --kpi-neutral: 264 15% 60%;
 
     /* Shadows - Softer with purple tint */
-    --shadow-card: 0 6px 20px hsla(256, 58%, 30%, 0.06);
-    --shadow-hover: 0 10px 30px hsla(256, 58%, 35%, 0.12);
+    --shadow-card: 0 6px 20px hsla(264, 100%, 25%, 0.06);
+    --shadow-hover: 0 10px 30px hsla(264, 100%, 25%, 0.12);
 
-    /* Chart Colors - Brand aligned */
-    --chart-1: 256 58% 35%;
-    --chart-2: 18 100% 60%;
-    --chart-3: 152 60% 42%;
-    --chart-4: 0 72% 55%;
-    --chart-5: 250 20% 60%;
+    /* Chart Colors - Purple scale with orange accent */
+    --chart-1: 264 100% 25%;
+    --chart-2: 265 76% 34%;
+    --chart-3: 265 55% 52%;
+    --chart-4: 265 45% 70%;
+    --chart-5: 16 100% 56%;
 
-    --sidebar-background: 256 45% 12%;
-    --sidebar-foreground: 250 50% 95%;
-    --sidebar-primary: 256 58% 50%;
+    --sidebar-background: 264 100% 15%;
+    --sidebar-foreground: 260 50% 95%;
+    --sidebar-primary: 265 76% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 256 40% 20%;
-    --sidebar-accent-foreground: 250 50% 95%;
-    --sidebar-border: 256 30% 22%;
-    --sidebar-ring: 256 58% 35%;
+    --sidebar-accent: 264 60% 22%;
+    --sidebar-accent-foreground: 260 50% 95%;
+    --sidebar-border: 264 40% 24%;
+    --sidebar-ring: 265 76% 45%;
   }
 
   .dark {
