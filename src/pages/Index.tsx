@@ -13,6 +13,7 @@ import { MediaBuyersTable } from "@/components/analytics/MediaBuyersTable";
 import { ConfirmationAgentsTable } from "@/components/analytics/ConfirmationAgentsTable";
 import { FinancialTable } from "@/components/analytics/FinancialTable";
 import { FooterActions } from "@/components/analytics/FooterActions";
+import { CashOpsPanel } from "@/components/analytics/CashOpsPanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Package, MapPin, AlertCircle, Users, Phone, Wallet } from "lucide-react";
 
@@ -78,19 +79,15 @@ const Index = () => {
           </p>
         </div>
 
+        <CashOpsPanel />
+
         {/* Order Counts Bar - 4 Sections */}
         <OrderCountsBar />
 
-        {/* Charts Grid - Row 1 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* Charts Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <RatesChart />
           <OrderStatusChart />
-        </div>
-
-        {/* Charts Grid - Row 2 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <CancellationReasonsChart />
-          <ReturnReasonsChart />
         </div>
 
         {/* Tabbed Tables Section */}
@@ -160,7 +157,11 @@ const Index = () => {
             <ConfirmationAgentsTable />
           </TabsContent>
 
-          <TabsContent value="reasons" className="animate-fade-in">
+          <TabsContent value="reasons" className="animate-fade-in space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <CancellationReasonsChart />
+              <ReturnReasonsChart />
+            </div>
             <ReasonsTable />
           </TabsContent>
         </Tabs>
