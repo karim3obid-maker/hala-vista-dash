@@ -14,6 +14,7 @@ import { ConfirmationAgentsTable } from "@/components/analytics/ConfirmationAgen
 import { FinancialTable } from "@/components/analytics/FinancialTable";
 import { FooterActions } from "@/components/analytics/FooterActions";
 import { CashOpsPanel } from "@/components/analytics/CashOpsPanel";
+import { ExtraInsights } from "@/components/analytics/ExtraInsights";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Package, MapPin, AlertCircle, Users, Phone, Wallet } from "lucide-react";
 
@@ -165,6 +166,8 @@ const Index = () => {
             <ReasonsTable />
           </TabsContent>
         </Tabs>
+
+        <ExtraInsights />
       </main>
 
       {/* Footer Actions */}
